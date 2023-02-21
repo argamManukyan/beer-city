@@ -1,0 +1,147 @@
+{% load static %}{% load i18n %}{% load mptt_tags %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset='utf-8'/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>{% if category.meta_title %}{{ category.meta_title }}{% else %}{{ category.name|capfirst }} |
+        {{ domain }}{% endif %}</title>
+    <meta name="Description" content="{% if category.meta_description %}{{ category.meta_description }}{% endif %}">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+</head>
+
+<body>
+
+<div id="root">
+    <!-- Header -->
+    {% include 'includes/header.html' %}
+    <!-- Header end -->
+    
+    <main class="content">
+        <section id="shop-page-content" class="section page-content">
+
+            <!-- Page Banner -->
+            <div class="page-banner" style="background-image: url({% if category.breadcrumb_image %}{{ category.breadcrumb_image.url }}{% else %}{% static 'img/shop-banner.jpg' %}{% endif %});">
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col">
+                            <div class="page-banner-text">
+                                <h1>{{ category.name }}</h1>
+                                {% if category.short_description %}
+                                <p>{{ category.short_description|safe }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <!-- Breadcrumbs -->
+                        <div class="col">
+                            <div class="breadcrumbs">
+                                <ul class="breadcrumbs-list align-items-center">
+                                    <li class="breadcrumbs-item">
+                                        <a href="{% url 'home_page' %}" class="breadcrumbs-link">
+                                            <span>{% trans 'Գլխավոր' %}</span>
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumbs-item">
+                                        <a href="{% url 'catalog' %}" class="breadcrumbs-link">
+                                            <span>{% trans 'Բաժիններ' %}</span>
+                                        </a>
+                                    </li>
+                                    {% if breadcrumbs %}
+                                    {% for b_cumb in breadcrumbs %}
+                                    <li class="breadcrumbs-item">
+                                        <a href="{{ b_cumb.get_absolute_url }}" class="breadcrumbs-link">
+                                            <span>{{ b_cumb.name }}</span>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <li class="breadcrumbs-item">
+                                        <span>{{ category.name|capfirst }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Breadcrumbs end-->
+                    </div>
+                </div>
+            </div>
+            <!-- Page Banner end -->
+            
+            <!-- Shop -->
+            <div class="section all-shop-cnt">
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col col-4 sh-pg">
+                            <div class="br-shpage">
+                                <div class="nav-offcanvas-content">
+                                    <div id="op-time" class="params-on-tit">
+                                        <h3 class="align-items-center">
+                                            <img src="{% static 'img/icons/catalog-white.svg' %}" class="cat-name-mr"
+                                                 alt="{% trans 'Բաժիններ' %}"><span>{% trans 'Բաժիններ' %}</span>
+                                            <img src="{% static 'img/icons/cat-down.svg' %}" class="d-none ml-auto"
+                                                 alt="{% trans 'Բաժիններ' %}">
+                                        </h3>
+                                    </div>
+                                    {% include 'includes/category_dropdown.html' %}
+                                </div>
+                                {% include 'includes/filter.html' %}
+                            </div>
+                        </div>
+                        <div class="col col-9">
+                            {% if category.notification_text %}
+                                <div class="alert alert-warning">
+                                    <div class="align-items-center">
+                                        <img src="{% static 'img/icons/alert-warning.svg' %}" class="alert-img"
+                                             alt="{% trans 'Ծանուցում' %}">
+                                        <span>{{ category.notification_text|safe }}
+                                            <strong>{{ category.working_hours_from|time:"H:i" }} - {{ category.working_hours_to|time:"H:i" }}</strong>:
+                                 </span>
+                                    </div>
+                                    <img src="{% static 'img/icons/catalog-close.svg' %}" class="errorClose"
+                                         alt="{% trans 'Փակել' %}">
+                                </div>
+                            {% endif %}
+                            {% include 'includes/mob_filter.html' %}
+                            {% if page_obj.object_list|length < 1 %}
+                                <div class="no-result">
+                                    <div class="alert alert-danger">
+                                        <div class="align-items-center">
+                                            <span>{% trans 'Որոնման արդյունքում ոչինչ չգտնվեց:' %}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div id="products-cont">
+                                    {% include 'includes/filter_product.html' %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Shop end -->
+            
+        </section>
+        
+    </main>
+    
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+    <!-- Footer end -->
+    
+</div>
+
+<script src="{% static 'js/canapea3.6_main.js' %}"></script>
+<script src="{% static 'js/canapea_script.js' %}"></script>
+<script src="{% static 'js/canapea_swiper.js' %}"></script>
+<script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+<script src="{% static 'js/filter.js' %}"></script>
+<script src="{% static 'js/wish.js' %}"></script>
+<script src="{% static 'js/cart.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,356 @@
+{% load currency %}
+{% load static %}
+{% load i18n %}
+<header>
+    <div class="top-header m-none">
+        <div class="cnt">
+            <div class="row">
+                <div class="col-no-100 top-left align-items-center">
+                    <ul class="align-items-center">
+                        {% for top_header_item in to_header_items %}
+                            <li class="list-inline ">
+                                <a href="{{ top_header_item.url }}" class="align-items-center">
+                                    <img src="{{ top_header_item.icon.url }}" class="top-icon"
+                                         alt="{{ top_header_item.title }}">
+                                    <span>{{ top_header_item.title }}</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-no-100 top-right">
+                    <ul class="align-items-center">
+                        {% if to_header_items_two %}
+                            {% for top_header_item in to_header_items_two|slice:2 %}
+                                <li class="list-inline ">
+                                    <a href="{{ top_header_item.url }}" class="align-items-center">
+                                        <img src="{{ top_header_item.icon.url }}" class="top-icon"
+                                             alt="{{ top_header_item.title }}">
+                                        <span>{{ top_header_item.title }}</span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                        {% if request.LANGUAGE_CODE == 'ru' %}
+                            <li class="web_langs">
+                                <a href="javascript:void(0);" class="choose"> <span class="menus align-items-center">
+                                РУС<img src="{% static 'img/icons/arrow-down-w.svg' %}" class="down-icon" alt="">
+                            </span> </a>
+                                <ul class="choose_lang">
+                                    <li>
+                                        <a href="{{ site }}{{ request.get_full_path|cut:'/ru' }}">ՀԱՅ</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ site }}/en{{ request.get_full_path|cut:'/ru' }}">ENG</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% elif  request.LANGUAGE_CODE == 'en' %}
+                            <li class="web_langs">
+                                <a href="javascript:void(0);" class="choose"> <span class="menus align-items-center">
+                                ENG<img src="{% static 'img/icons/arrow-down-w.svg' %}" class="down-icon" alt="">
+                            </span> </a>
+                                <ul class="choose_lang">
+                                    <li>
+                                        <a href="{{ site }}{{ request.get_full_path|cut:'/en' }}">ՀԱՅ</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ site }}/ru{{ request.get_full_path|cut:'/en' }}">РУС</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="web_langs">
+                                <a href="javascript:void(0);" class="choose"> <span class="menus align-items-center">
+                                ՀԱՅ<img src="{% static 'img/icons/arrow-down-w.svg' %}" class="down-icon" alt="">
+                            </span> </a>
+                                <ul class="choose_lang">
+                                    <li>
+                                        <a href="{{ site }}/en{{ request.get_full_path }}">ENG</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ site }}/ru{{ request.get_full_path }}">РУС</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                        <li class="web_valyut">
+                            <form id="currency_switcher" method="POST" action="{% url 'setcurrency' %}"
+                                  onchange="submit()">
+                                {% csrf_token %}
+                                <select name="currency" id="curr_sel">
+                                    {% for curr in CURRENCIES %}
+                                        <option value="{{ curr.code }}"
+                                                {% ifequal curr.code request.session.currency %}selected="selected" {% endifequal %}>
+                                            &nbsp;&nbsp;{{ curr.code }} {{ curr.symbol }} 
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="middle-header">
+        <div class="cnt">
+
+            <div class="row flex-center-between">
+               
+                <div class="col col-auto m-none">
+                  <ul class="main-memu-links align-items-center">
+                       <li class="menu-butt">
+                            <a href="{% url 'menu' %}" class="button button-outline-dark flex-content-center">
+                                <img src="{% static 'img/icons/menu-icon.svg' %}"
+                                     alt="{% trans 'Մենյու' %}">
+                                {% trans 'Մենյու' %}
+                            </a>
+                        </li>
+                        {% for bottom_header_item in bottom_header_items %}
+                            <li class="{% if bottom_header_item.url in request.build_absolute_uri %}active{% endif %}">
+                                <a class="{% if bottom_header_item.with_underscore %}link_underscore {% endif %}"
+                                   href="{{ bottom_header_item.url }}">{{ bottom_header_item.title }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>  
+                </div>
+                
+                <div class="col col-auto lg-none">
+                    <ul class="middle-cart-wish middle-cat-search align-items-center">
+                        <li class="catalog-fully">
+                            <a href="#">
+                                <span class="only_icon_des flex-content-center">
+                                    <img src="{% static 'img/icons/mobile-menu.svg' %}" alt="{% trans 'Մենյու' %}">
+                                </span>
+                                <span class="cqs trs">{% trans 'Մենյու' %}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'wishlist' %}">
+                                <span class="only_icon_des flex-content-center">
+                                    <img src="{% static 'img/icons/wish-middle.svg' %}"
+                                         alt="{% trans 'Ցանկությունների ցուցակ' %}">
+                                 <span class="in-cart-qty flex-content-center" id="wishCount">{{ wish_ids|length }}</span>
+                                </span>
+                                <span class="cqs trs">{% trans 'Ցանկալի' %}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col col-auto logo">
+                    <div class="logo-main">
+                        <a href="{% url 'home_page' %}" class="m-none">
+                            <img src="{% static 'img/logo.svg' %}" alt="Beer City">
+                        </a>
+                        <a href="{% url 'home_page' %}" class="lg-none">
+                            <img src="{% static 'img/logo-md.svg' %}" alt="Beer City">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col col-auto">
+                    <ul class="middle-cart-wish align-items-center">
+                       <li id="search-show">
+                           <span class="only_icon_des flex-content-center">
+                               <img src="{% static 'img/icons/serachmm.svg' %}" alt="{% trans 'Որոնել' %}">
+                           </span>
+                           <span class="cqs trs">{% trans 'Որոնում' %}</span>
+                       </li>
+                        
+                        <!-- Wishlist -->
+                        <li class="m-none">
+                            <a href="{% url 'wishlist' %}">
+                                <span class="only_icon_des flex-content-center">
+                                    <img src="{% static 'img/icons/wish-middle.svg' %}"
+                                         alt="{% trans 'Ցանկությունների ցուցակ' %}">
+                                 <span class="in-cart-qty flex-content-center" id="wishCount">{{ wish_ids|length }}</span>
+                                </span>
+                                <span class="cqs trs">{% trans 'Ցանկալի' %}</span>
+                            </a>
+                        </li>
+                        <!-- Wishlist end -->
+                        
+                        <!-- Cart -->
+                        <li>
+                            <a href="{% url 'cart' %}" class="">
+                                <span class="only_icon_des flex-content-center">
+                                    <img src="{% static 'img/icons/cart-middle.svg' %}" alt="{% trans 'Զամբյուղ' %}">
+                                    <span class="in-cart-qty flex-content-center" id="cartCount">{{ cart_items.count }}</span>
+                                </span>
+                                <span class="cqs trs lg-none">{% trans 'Զամբյուղ' %}</span>
+                                <span class="cqs m-none">
+                                    <span class="wh-point" id="cartHeaderTotal">{{ cart.cart_total|currency:request.session.currency }}</span>
+                                    <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                </span>
+                            </a>
+                        </li>
+                        <!-- Cart end -->
+                        
+                        {% if not user.is_authenticated %}
+                            <li class="middle-login m-none">
+                                <a href="{% url 'users:signin' %}" class="button button-outline-dark flex-content-center">{% trans 'Մուտք' %}
+                                    <img src="{% static 'img/icons/login-middle.svg' %}" alt="{% trans 'Մուտք' %}"></a>
+                                <a href="{% url 'users:signup' %}" class="cqs trs">
+                                    <span>{% trans 'Գրանցում' %}</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="middle-login m-none">
+                                <a href="{% url 'users:profile' %}" class="button button-outline-dark flex-content-center">{% trans 'Իմ էջը' %}
+                                    <img src="{% static 'img/icons/login.svg' %}" alt="{% trans 'Իմ էջը' %}"></a>
+                                <a href="{% url 'users:logout' %}" class="cqs trs"><span>{% trans 'Դուրս գալ' %}</span></a>
+                            </li>
+                        {% endif %}
+                        
+                    </ul>
+                </div>
+                
+                <div class="hide main-search fixed-seach-bl">
+                    <form class="search-bar" id="searching" action="{% url 'search' %}" data-url="">
+                        <div class="res_modal_header flex-center-between">
+                            <span>{% trans 'Ապրանքի Որոնում' %}</span>
+                            <img src="{% static 'img/icons/close-alter.svg' %}" id="search-close" alt="{% trans 'Փակել' %}">
+                        </div>
+
+                        <div class="serach-header">
+                            <div class="fast-search align-items-center">
+                                    <input
+                                            type="text"
+                                            id="searchproduct"
+                                            class="fast-search-input"
+                                            name="q"
+                                            oninput="searchItems(this.value)"
+                                            autocomplete="off"
+                                            placeholder="{% trans 'Որոնել' %} ...">
+                                    <button type="submit" id="" class="search-butt-fl">
+                                        <img src="{% static 'img/icons/search-middle.svg' %}"
+                                             alt="{% trans 'Որոնել' %} ...">
+                                    </button>
+                                <!--  Search result-->
+                                <div class="all-lists" id="search-list-items">
+                                    <ul id="search_list" style="display: none">
+
+                                    </ul>
+                                </div>
+                                <!--  Search result end -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</header>
+<!--Full Catalog-->
+<div class="nav-offcanvas d-none">
+    <div class="mob-menu-head">
+        <ul class="mob-top-header cutter flex-center-between">
+            <li class="catalog-first-name align-items-center">
+                <img src="{% static 'img/icons/logo-green.svg' %}" alt="Beer City"></li>
+            <li id="offCanvasClose">
+                <img src="{% static 'img/icons/catalog-close.svg' %}" class="catalog-fully-close" alt="Close">
+            </li>
+        </ul>
+        <ul class="mob-langs align-items-center">
+            {% if request.LANGUAGE_CODE == 'ru' %}
+                <li><a href="javascript:void(0);" class="active">Рус</a></li>
+                <li><a href="{{ site }}{{ request.get_full_path|cut:'/ru' }}">Հայ</a></li>
+                <li><a href="{{ site }}/en{{ request.get_full_path|cut:'/ru' }}">Eng</a></li>
+            {% elif request.LANGUAGE_CODE == 'en' %}
+                <li><a href="javascript:void(0);" class="active">Eng</a></li>
+                <li><a href="{{ site }}{{ request.get_full_path|cut:'/en' }}">Հայ</a></li>
+                <li><a href="{{ site }}/ru{{ request.get_full_path|cut:'/en' }}">Рус</a></li>
+            {% else %}
+                <li><a href="javascript:void(0);" class="active">Հայ</a></li>
+                <li><a href="{{ site }}/ru{{ request.get_full_path }}">Рус</a></li>
+                <li><a href="{{ site }}/en{{ request.get_full_path }}">Eng</a></li>
+
+            {% endif %}
+
+            <li class="web_valyut">
+                <form id="currency_switcher" method="POST" action="{% url 'setcurrency' %}"
+                      onchange="submit()">
+                    {% csrf_token %}
+                    <select name="currency" id="curr_sel">
+                        {% for curr in CURRENCIES %}
+                            <option value="{{ curr.code }}"
+                                    {% ifequal curr.code request.session.currency %}selected="selected" {% endifequal %}>
+                                {{ curr.code }} {{ curr.symbol }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </li>
+        </ul>
+        <ul class="cutter text-center sign-in-head-mob flex-center-evenly">
+            {% if not user.is_authenticated %}
+                <li>
+                    <a href="{% url 'users:signin' %}" class="flex-content-center">
+                        <img src="{% static 'img/icons/login-mobile.svg' %}" class="top-icon">{% trans 'Մուտք / Գրանցում' %}
+                    </a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% url 'users:profile' %}" class="flex-content-center">
+                        <img src="{% static 'img/icons/login-mobile.svg' %}" class="top-icon" alt="{% trans 'Իմ Էջը' %}">
+                        {% trans 'Իմ Էջը' %}
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'users:logout' %}" class="flex-content-center">
+                        <img src="{% static 'img/icons/login-middle-mobile.svg' %}" class="top-icon"
+                             alt="{% trans 'Դուրս գալ' %}">
+                        {% trans 'Դուրս գալ' %}
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+
+    </div>
+    <div class="nav-offcanvas-menu">
+        <ul class="another-links">
+            <li class="menu-butt-mobile">
+                <a href="{% url 'menu' %}">
+                    <span class="mbm-name align-items-center">
+                        <img src="{% static 'img/icons/menu-icon-mobile.svg' %}"
+                             alt="{% trans 'Մենյու' %}">{% trans 'Մենյու' %}
+                    </span>
+                    <span class="mbm-icon">
+                        <img src="{% static 'img/icons/m-menu.svg' %}" alt="{% trans 'Մենյու' %}">
+                    </span>
+                </a>
+            </li>
+
+            {% for bottom_header_item in bottom_header_items %}
+                <li>
+                    <a class="link_underscore" href="{{ bottom_header_item.url }}">{{ bottom_header_item.title }}</a>
+                </li>
+            {% endfor %}
+
+            <li class="sale-link">
+                <a href="{% url 'offers' %}?type=sale" class="align-items-center">
+                    <img src="{% static 'img/icons/mob-sale.svg' %}"
+                         alt="{% trans 'Ակցիա' %}">
+                    {% trans 'Ակցիա' %}
+                </a>
+            </li>
+            <li class="new-link decoration-link">
+                <a href="{% url 'offers' %}?type=new" class="align-items-center {% if request.GET.type == 'new' %}active{% endif %}">
+                    <img src="{% static 'img/icons/mob-new.svg' %}" alt="{% trans 'Նորույթ' %}">
+                    {% trans 'Նորույթ' %}
+                </a>
+            </li>
+            <li class="offer-link decoration-link">
+                <a href="{% url 'offers' %}?type=special_offer" class="align-items-center {% if request.GET.type == 'special_offer' %}active{% endif %}">
+                    <img src="{% static 'img/icons/mob-offer.svg' %}" alt="{% trans 'Հատուկ առաջարկ' %}">
+                    {% trans 'Հատուկ առաջարկ' %}
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="offcanvas-overlay"></div>
+<!--Full Catalog end -->

@@ -1,0 +1,144 @@
+{% extends 'users/forgot_pass.html' %}
+{% load i18n %}
+{% block newPass %}
+    <h1>{% trans 'Հաստատման կոդ' %}</h1>
+    <a href="{% url 'users:signin' %}" class="backToHomePage">{% trans 'Հետ մուտքի էջ' %}</a>
+    <p class="click-hide">{% trans 'Մուտքագրեք SMS-ի միջոցով ստացված հաստատման կոդը' %}</p>
+{% endblock newPass %}
+{% block tabs %}
+{% endblock tabs %}
+{% block content %}
+    {% include 'includes/otp-code.html' %}
+{% endblock content %}
+
+{% block js %}
+    <script>
+        function animateFailure() {
+            function getCustomPropertyValue(name) {
+                const styles = getComputedStyle(root);
+                return styles.getPropertyValue(name);
+            }
+
+            function getDelay() {
+                const firstStepDuration = getCustomPropertyValue(
+                    "--transition-duration-step-1"
+                );
+                const secondStepDuration = getCustomPropertyValue(
+                    "--transition-duration-step-2"
+                );
+
+                return parseInt(firstStepDuration) + parseInt(secondStepDuration);
+            }
+
+            const fieldset = document.querySelector(".fieldset");
+            const boxes = document.querySelectorAll(".box");
+
+            fieldset.classList.add("animate-failure");
+            const delay = getDelay();
+
+            setTimeout(() => {
+                fieldset.classList.remove("animate-failure");
+            }, delay);
+        }
+        function otpInputFields() {
+            const root = document.documentElement;
+            const fields = document.querySelectorAll(".field");
+
+            function handleInputField({target}) {
+                const value = target.value.slice(0, 1);
+                target.value = value;
+
+                const step = value ? 1 : -1;
+                const fieldIndex = [...fields].findIndex((field) => field === target);
+                const focusToIndex = fieldIndex + step;
+
+                if (focusToIndex < 0 || focusToIndex >= fields.length) return;
+                fields[focusToIndex].focus();
+            }
+
+            fields.forEach((field) => {
+                field.addEventListener("input", handleInputField);
+            });
+            /* End SMS Code input logic */
+
+// Controls
+            const failureBtn = document.querySelector(".failure-btn");
+            if (failureBtn)
+                failureBtn.addEventListener("click", (event) => {
+                    animateFailure();
+                });
+        }
+
+        otpInputFields()
+            document.getElementById('ContinueRegistration').addEventListener('click', function (e) {
+            e.preventDefault()
+            async function checkOtpCode() {
+                const phoneNumber = `{{ request.session.phone_number }}`
+
+                const otpCodeElements = document.getElementsByClassName('otpCode')
+
+                let givenDigits = ''
+                for (let i in otpCodeElements) {
+                    if (otpCodeElements[i].value) {
+                        givenDigits += otpCodeElements[i].value
+                    }
+                }
+
+                if (givenDigits.length < 5) {
+                    return false
+                }
+
+                const data = JSON.stringify({"phone_number": phoneNumber, 'verify_code': givenDigits})
+                const response = await fetch(`{% url 'users:check_otp' %}`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': "XMLHttpRequest"
+                    },
+                    body: data
+                })
+
+                const respData =  response.status
+                console.log(await response.json())
+                if(response.json().not_found){
+                    window.location.replace(`{% url 'users:signin' %}`)
+                }
+                return respData === 200
+
+            }
+
+            async function CallCreatePass() {
+                if (await checkOtpCode()) {
+                   window.location.replace(`{% url 'users:password-reset-confirm' uid64="DCP" token="not" %}`)
+                } else {
+                    document.getElementById('ContinueRegistration').classList.add('failure-btn')
+                    animateFailure()
+                }
+            }
+
+            CallCreatePass()
+
+            });
+
+                    $(document).on('click', '#resendCode', async function (e) {
+
+                const response = await fetch(`{% url 'users:resend_otp_code' %}`, {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: JSON.stringify({"phone_number": localStorage.getItem('phone_number') || ''})
+                })
+
+                const result = await response.json()
+
+                if (result.url) {
+                    localStorage.removeItem('sent_code')
+                    localStorage.removeItem('phone_number')
+                    window.location.replace(result.url)
+                }
+
+            })
+
+    </script>
+{% endblock js %}

@@ -1,0 +1,231 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://canapea.am/static/css/canapea_color.css">
+    <link rel="stylesheet" href="https://canapea.am/static/css/canapea_style.css">
+    <style>
+        .col-30 {
+            -ms-flex: 0 0 30% !important;
+            flex: 0 0 30% !important;
+            max-width: 30% !important;
+        }
+
+        .col-70 {
+            -ms-flex: 0 0 70% !important;
+            flex: 0 0 70% !important;
+            max-width: 70% !important;
+        }
+        .row {
+    position: absolute;
+    left: -100%;
+    top: 0;
+    width: 100%;
+    border: 2px solid #ffba40;
+    border-radius: 18px;
+    margin: 5px 0;
+    z-index: 1000;
+    transform: translate(100%, 0);
+}
+        #root {
+            width: 1000px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .pdf-logo {
+            padding: 15px 0;
+        }
+
+        #pdf-profile .s_cv-design p {
+            font-size: 16px;
+            line-height: 27px;
+        }
+
+        .cv_img_avatar .profile-image .user_img-all {
+            width: 220px;
+            height: 220px;
+        }
+
+        .lf-fields .dis-fields:last-child {
+            margin-bottom: 0;
+        }
+
+        .all-cv_fileds .input-fields.all-auth:last-child {
+            margin-bottom: 0;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div id="root">
+
+
+    <!-- Main content -->
+    <main class="content">
+        <section class="section page-content">
+
+            <!-- Account -->
+            <div id="pdf-profile">
+                <form method="POST" id="cv_create">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col">
+                                <div class="flex-center-between">
+                                    <div class="pdf-text">
+                                        <h3 style="margin-bottom:0;font-size: 22px;color: #0a474d;">{{ job.name }}</h3>
+                                    </div>
+                                    <div class="pdf-logo">
+                                        <div class="logo-main">
+                                            <img src="http://{{ request.get_host }}/static/img/logo.svg"
+                                                 alt="Canapea Catering" style="width: 170px;">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col col-30">
+                                <div class="user-info-left">
+
+                                    <div class="cv_img_avatar">
+                                        <div class="profile-image">
+                                            <div class="image-previewer user_img-all">
+                                                <div class="image-wrapper img_only_div">
+                                                    {% if job.avatar %}
+                                                    <img src="http://{{ request.get_host }}{{ job.avatar.url }}"
+                                                         class="default-user-img" alt="Username">
+                                                    {% else %}
+                                                    <img src="http://{{ request.get_host }}/static/img/icons/cv-user.png"
+                                                         class="default-user-img" alt="Username">
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+
+                                            <div class="user_name_date_of_birth text-center">
+                                                <div class="for_full_username">
+                                                    <span class="user_full_name">{{ cv.name }}</span>
+                                                </div>
+
+                                                <div class="for_date_of_birth">
+                                                    <span>{{ cv.birthday }}</span>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="lf-fields">
+
+                                        <div class="dis-fields">
+                                            <p class="label-dis-in">Սեռ</p>
+                                            <p class="info-dis-in">{{ cv.gender.get_gender_display }}</p>
+                                        </div>
+                                        {% for phone in cv.phone.all %}
+                                            <div class="dis-fields">
+                                                <p class="label-dis-in">Հեռախոսահամար</p>
+                                                <p class="info-dis-in">{{ phone }}</p>
+                                            </div>
+                                        {% endfor %}
+
+                                        <div class="dis-fields">
+                                            <p class="label-dis-in">Email</p>
+                                            <p class="info-dis-in">cv.email</p>
+                                        </div>
+
+                                        <div class="dis-fields">
+                                            <p class="label-dis-in">Հասցե</p>
+                                            <p class="info-dis-in"
+                                               style="height: auto;padding: 20px;">{{ cv.address }}</p>
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col col-70">
+                                <div class="all-head-info">
+
+                                    <div class="all-cv_fileds">
+
+                                        <div class="input-fields all-auth">
+                                            <label for="editor1">Մասնագիտական փորձ</label>
+                                            <div class="s_cv-design" id="editor1">
+                                                {{ cv.editor1|safe }}
+                                            </div>
+
+                                        </div>
+
+                                        <div class="input-fields all-auth">
+                                            <label for="editor2">Կրթություն և դասընթաց</label>
+
+                                            <div class="s_cv-design" id="editor2">
+                                                {{ cv.editor2|safe }}
+                                            </div>
+
+                                        </div>
+
+                                        <div class="input-fields all-auth">
+                                            <label for="editor3">Մասնագիտական հմտություններ</label>
+
+                                            <div class="s_cv-design" id="editor3">
+                                                {{ cv.editor3|safe }}
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="input-fields all-auth">
+                                            <label for="editor4">Անձնական հմտություններ</label>
+
+                                            <div class="s_cv-design" id="editor4">
+                                                {{ cv.editor4|safe }}
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="input-fields all-auth">
+                                            <label for="editor5">Լեզուներ</label>
+
+                                            <div id="editor5">
+                                                {{ cv.editor5|safe }}
+                                            </div>
+
+                                        </div>
+
+                                        <div class="input-fields all-auth">
+                                            <label for="editor6">Այլ տեղեկություններ</label>
+
+                                            <div id="editor6">
+                                                {{ cv.edito6|safe }}
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Account end -->
+
+        </section>
+    </main>
+    <!-- Main content end -->
+
+</div>
+
+
+</body>
+
+</html>

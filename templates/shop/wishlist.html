@@ -1,0 +1,117 @@
+{% load static %}{% load i18n %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset='utf-8'/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport'content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>{% trans 'Նախընտրածներ' %} | {{ domain }}</title>
+    <meta name="Description" content="">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+</head>
+
+<body>
+
+<div id="root">
+   
+    <!-- Header -->
+    {% include 'includes/header.html' %}
+    <!-- Header end -->
+    
+    <!-- Main content -->
+    <main class="content">
+        <section class="section page-content">
+            <div class="no-page-banner" style="background-image: url({% static 'img/shop-banner.jpg' %})"></div>
+            
+            <!-- Breadcrumbs -->
+            <div class="breadcrumbs">
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col">
+                            <ul class="breadcrumbs-list align-items-center">
+                                <li class="breadcrumbs-item">
+                                    <a href="{% url 'home_page' %}" class="breadcrumbs-link">
+                                        <span>{% trans 'Գլխավոր' %}</span>
+                                    </a>
+                                </li>
+                                <li class="breadcrumbs-item">
+                                    <span>{% trans 'Նախընտրածներ' %}</span>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Breadcrumbs end-->
+
+            <!-- Wish list -->
+            <div class="section all-shop-cnt">
+                <div class="cnt">
+
+                    <!-- Page title -->
+                    <div class="row">
+                        <div class="col">
+                            <div class="two-version-title">
+                                <h1>{% trans 'Նախընտրածներ' %}</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Page tTitle end -->
+                    {% if page_obj.object_list|length < 1 %}
+                        <!-- Wish lsit is empty -->
+                        <div class="empty-content">
+                            <div class="row">
+                                <div class="col">
+                                    <h3 class="text-center">{% trans 'Նախընտրածներ բաժինը դեռ դատարկ է' %}</h3>
+                                    <p class="text-center">{% trans 'Ապրանքը որպես նախընտրած ավելացնելու համար սեղմեք ❤ նշանի վրա:' %}</p>
+                                    <div class="cont-check">
+                                        <a href="{% url 'menu' %}"
+                                           class="button dark normal">← {% trans 'Հետ խանութ' %}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Wish lsit is empty end -->
+                    {% else %}
+
+                        <div id="products-cont">
+                            <div class="row full-ban">
+                                {% for product in page_obj %}
+                                    <div class="col col-4" id="item-{{ product.product.id }}">
+                                        {% include 'includes/product.html' with product=product.product %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% if page_obj.paginator.num_pages > 1 %}
+                                {% include 'includes/pagination.html' %}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Wish list end -->
+
+        </section>
+    </main>
+    <!-- Main content end -->
+    
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+    <!-- Footer end -->
+    
+</div>
+
+<script src="{% static 'js/canapea3.6_main.js' %}"></script>
+<script src="{% static 'js/canapea_script.js' %}"></script>
+<script src="{% static 'js/canapea_swiper.js' %}"></script>
+<script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+<script src="{% static 'js/wish.js' %}"></script>
+<script src="{% static 'js/cart.js' %}"></script>
+</body>
+
+</html>

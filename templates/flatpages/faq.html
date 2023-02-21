@@ -1,0 +1,92 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>{% trans 'Հաճախակի Տրվող Հարցեր' %} | {{ domain }}</title>
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+</head>
+   
+   <body>
+   
+   <div id="root">
+        {% include 'includes/header.html' %}
+        <!-- Main content -->
+        <main class="content">
+            <section class="section page-content">
+            <div class="no-page-banner" style="background-image: url({% static 'img/shop-banner.jpg' %})"></div>
+                <!-- Breadcrumbs -->
+                <div class="breadcrumbs">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col">
+
+                                <ul class="breadcrumbs-list align-items-center">
+                                    <li class="breadcrumbs-item">
+                                        <a href="{% url 'home_page' %}" class="breadcrumbs-link">
+                                            <span>{% trans 'Գլխավոր' %}</span>
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumbs-item">
+                                        <span>{% trans 'Հաճախակի Տրվող Հարցեր' %}</span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Breadcrumbs end-->
+
+                <!-- Faq-->
+                <div class="faq-page bot-prods">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col">
+                                <div class="two-version-title">
+                                    <h1>{% trans 'Հաճախակի Տրվող Հարցեր' %}</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="faq-list">
+                                    {% for question in questions %}
+                                    <div class="nav-item">
+                                        <h2 class="nav-item-inner-heading">
+                                            <span>{{ question.question }}</span>
+                                        </h2>
+                                        <div class="nav-sub-list">
+                                            <p>{{ question.answer }}</p>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Faq end-->
+               
+        </section>
+      </main>
+        <!-- Main content end -->
+        {% include 'includes/footer.html' %}
+    </div>
+
+    <script src="{% static 'js/canapea3.6_main.js' %}"></script>
+    <script src="{% static 'js/canapea_script.js' %}"></script>
+    <script src="{% static 'js/canapea_swiper.js' %}"></script>
+    <script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+   </body>
+   
+</html>

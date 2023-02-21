@@ -1,0 +1,111 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset='utf-8'/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport'
+          content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>{% trans 'Բլոգ' %} | {{ domain }}</title>
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+</head>
+
+<body>
+
+<div id="root">
+    {% include 'includes/header.html' %}
+    <!-- Main content -->
+    <main class="content">
+        <section class="section page-content">
+<!-- Page Banner -->
+            <div class="page-banner" style="background-image: url({% if st_content.breadcrumbs_image %}{{ st_content.breadcrumbs_image.url }}{% else %}{% static 'img/shop-banner.jpg' %}{% endif %});">
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col">
+                            <div class="page-banner-text">
+                                <h1>{{ st_content.page_title }}</h1>
+                                {% if st_content.breadcrumbs_text %}
+                                    <p>{{ st_content.breadcrumbs_text|safe }}</p>    
+                               {% endif %}
+                            </div>
+                        </div>
+                        <!-- Breadcrumbs -->
+                        <div class="col">
+                            <div class="breadcrumbs">
+                                <ul class="breadcrumbs-list align-items-center">
+                                <li class="breadcrumbs-item">
+                                    <a href="{% url 'home_page' %}" class="breadcrumbs-link">
+                                        <span>{% trans 'Գլխավոր' %}</span>
+                                    </a>
+                                </li>
+                                <li class="breadcrumbs-item">
+                                    <span>{% trans 'Բլոգ' %}</span>
+                                </li>
+                            </ul>
+                            </div>
+                        </div>
+                        <!-- Breadcrumbs end-->
+                    </div>
+                </div>
+            </div>
+            <!-- Page Banner end -->
+
+            <!-- Blog -->
+            <div class="blog-main">
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col">
+                            <div class="swiper-container anot-menu-cats section">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        <a href="{% url 'blog_list' %}"
+                                           class="cat button normal dark">{% trans 'Բոլորը' %}</a>
+                                    </div>
+                                    {% for cat in categories %}
+                                        <div class="swiper-slide">
+                                            <a href="{{ cat.get_absolute_url }}"
+                                               class="cat button normal ">{{ cat.name }}</a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% if page_obj.object_list|length < 1 %}
+                            <div class="no-result">
+                                <div class="alert alert-danger">
+                                    <div class="align-items-center">
+                                        <span>{% trans 'Որոնման արդյունքում ոչինչ չգտնվեց:' %}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            {% for post in page_obj %}
+                                <div class="col col-3">
+                                    {% include 'includes/blog_item.html' %}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        {% if page_obj.paginator.num_pages > 1 %}
+                            {% include 'includes/pagination.html' %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <!-- Blog end -->
+        </section>
+    </main>
+    {% include 'includes/footer.html' %}
+</div>
+
+<script src="{% static 'js/canapea3.6_main.js' %}"></script>
+<script src="{% static 'js/canapea_script.js' %}"></script>
+<script src="{% static 'js/canapea_swiper.js' %}"></script>
+<script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,256 @@
+{% load currency %}
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>Cart</title>
+    <meta name="Description" content="">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+</head>
+   
+   <body>
+   
+   <div id="root">
+
+   <!-- Header -->
+    {% include 'includes/header.html' %}
+    <!-- Header end -->
+       
+        <!-- Main content -->
+        <main class="content">
+            <section class="section page-content">
+                <div class="no-page-banner" style="background-image: url({% static 'img/shop-banner.jpg' %})"></div>
+                <!-- Breadcrumbs -->
+                <div class="breadcrumbs">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col">
+                                <ul class="breadcrumbs-list align-items-center">
+                                    <li class="breadcrumbs-item">
+                                        <a href="{% url 'home_page' %}" class="breadcrumbs-link">
+                                            <span>{% trans 'Գլխավոր' %}</span>
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumbs-item">
+                                        <span>{% trans 'Իմ զամբյուղը' %}</span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Breadcrumbs end-->
+                
+                <!-- cart list -->
+                <div class="section all-shop-cnt">
+                <div class="cnt">
+                 <!-- Page title -->
+                 <div class="row">
+                    <div class="col">
+                     <div class="two-version-title">
+                         <h1>{% trans 'Իմ զամբյուղը' %}</h1>
+                     </div>
+                   </div>
+                  </div>
+                 <!-- Page tTitle end -->
+                {% if not cart.item.count %}
+                 <!-- Cart is empty -->
+                 <div class="empty-content">
+                     <div class="row">
+                         <div class="col">
+                             <h3 class="text-center">{% trans 'Ձեր զամբյուղը դատարկ է' %}</h3>
+                             <div class="cont-check">
+                                 <a href="{% url 'menu' %}" class="button dark normal">← {% trans 'Շարունակել գնումները' %}</a>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                 <!-- Cart is empty end -->
+                 {% else %}
+                 <!-- if Cart is full -->
+                 <div class="full-cart-items" >
+                  <div class="row">
+                     <div class="col">
+                        <div id="order-table">
+                           <table id="cartTableALL">
+                              <thead>
+                                 <tr class="order-head">
+                                    <th class="order-item-nom" width="1%">№</th>
+                                    <th class="order-head-img" width="2%">{% trans 'Նկար' %}</th>
+                                    <th class="order-head-name">{% trans 'Անվանում' %}</th>
+                                    <th class="order-head-price" width="3%">{% trans 'Գին' %}</th>
+                                    <th class="order-head-cnt nowrap">{% trans 'Քանակ' %}</th>
+                                    <th class="order-head-sum">{% trans 'Գումար' %}</th>
+                                    <th class="order-head-del" width="1%">{% trans 'Հեռացնել' %}</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 {% for item in cart_items %}
+                                 <tr id="it-{{ item.pk }}" class="order-item">
+                                    <td class="order-item-nom"><b class="forloop">{{ forloop.counter }}</b></td>
+                                    <td class="order-item-img" align="center"> 
+                                       <img src="{{ item.product.main_image.url }}">
+                                    </td>
+                                    <td class="order-item-name"> 
+                                       <a href="{{ item.product.get_absolute_url }}">{{ item.product.name}}</a>
+                                    </td>
+                                    <td class="order-item-price nowrap" width="2%">
+                                       <span class="wh-point">{{ item.item_price|currency:request.session.currency }}</span>
+                                       <span class="valyuta">{{request.session.currency_icon}}</span>
+                                    </td>
+                                    <td class="order-item-cnt" width="4%">
+                                       <div class="order-qty-mn">
+                                           <div class="prod-item-desc-qty flex-content-center">
+                                               <div id="qtyBlock-{{ item.id }}" class="only_qty align-items-center">
+                                                   <img src="{% static 'img/icons/minus.svg' %}" class="minus" alt="{% trans 'Նվազեցնել' %}">
+                                                   <input type="number" class="qty-input" value="{{ item.quantity }}" onchange="changeQty(this.value, {{ item.pk }})"
+                                                          min="{% if item.product.min_qty %}{{ item.product.min_qty }}{% else %}1{% endif %}" id="item-{{ item.pk }}">
+                                                   <img src="{% static 'img/icons/plus.svg' %}" class="plus" alt="{% trans 'Ավելացնել' %}">
+
+                                               </div>
+                                           </div>
+                                       </div>
+                                    </td>
+                                    <td class="order-item-sum nowrap" width="2%">
+                                       <span id="item-total_{{ item.pk }}" class="wh-point">{{ item.item_total_price|currency:request.session.currency }}</span>
+                                       <span class="valyuta">{{request.session.currency_icon}}</span>
+                                    </td>
+                                    <td class="order-item-del" align="center">
+                                       <button type="button" id="RemoveIsTable" class="delete-product-item remove_from_cart" onclick="removeFromBasket({{ item.pk }})">
+                                       <img src="{% static 'img/icons/bin.svg' %}" alt="{% trans 'Հեռացնել զամբյուղից' %}">
+                                       </button>
+                                    </td>
+                                 </tr>
+                                {% endfor %}
+                              </tbody>
+                           </table>
+                        </div>
+                        
+                        <div class="buttons-carts-two">
+                           <div class="totlacart-amount text-center">
+                               <p>{% trans 'Գումար' %}: <span id="cart-total-price" class="wh-point">{{ cart.cart_total|currency:request.session.currency }}</span>
+                                   <span class="valyuta">{{request.session.currency_icon}}</span></p>
+                           </div>
+                           <div class="flex-content-center res-no-flex">
+                           <div class="backcart-butt ord_mobile">
+                               <a href="{% url 'menu' %}" class="button big nocolor">
+                                   <img src="{% static 'img/icons/big-arrow-prev.svg' %}" alt="{% trans 'Վերադառնալ խանութ' %}" />
+                                   {% trans 'Վերադառնալ խանութ' %}</a>
+                           </div>
+                           <div class="ordercart-butt">
+                               <a href="#" class="button big dark">{% trans 'Ձևակերպել պատվերը' %}
+                                   <img src="{% static 'img/icons/big-arrow.svg' %}" alt="{% trans 'Ձևակերպել պատվերը' %} "></a>
+                           </div>
+                          </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+                 <!-- if Cart is full end -->
+                {% endif %}
+               </div>
+           </div>
+                <!-- Cart list end -->
+        </section>
+      </main>
+        <!-- Main content end -->
+
+     <!-- Footer -->
+    {% include 'includes/footer.html' %}
+    <!-- Footer end -->
+    </div>
+
+    <script src="{% static 'js/canapea3.6_main.js' %}"></script>
+    <script src="{% static 'js/canapea_script.js' %}"></script>
+    <script src="{% static 'js/canapea_swiper.js' %}"></script>
+    <script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+   <script>
+
+         async function  changeQty(val,item_id){
+            const inputMin = document.getElementById(`item-${item_id}`)
+
+             const qtyBlock = document.getElementById(`qtyBlock-${item_id}`)
+            if(+inputMin.value < +inputMin.getAttribute('min')){
+                inputMin.setAttribute('disabled', true)
+                inputMin.value = +inputMin.getAttribute('min')
+                if (!document.getElementById(`warningQuantitys-${item_id}`)) {
+                    qtyBlock.insertAdjacentHTML('afterend', `<div class="alert-min alert-danger" id="warningQuantitys-${item_id}">
+                                                <div class="align-items-center">
+                                                    <img src="/static/img/icons/alert-warning.svg" class="alert-img" alt="{% trans 'Ծանուցում' %}">
+                                                    <span>{% trans 'Պատվերի նվազագույն քանակը' %} <strong>${+inputMin.getAttribute('min')}</strong> {% trans 'հատ է։' %}
+                                                    </span>
+                                                </div>
+                                            </div>`
+                    )
+                }
+                return
+            } else {
+            inputMin.removeAttribute('disabled')
+                if(document.getElementById(`warningQuantitys-${item_id}`)) {
+                    document.getElementById(`warningQuantitys-${item_id}`).remove()
+                }
+        }
+
+           if(+val < +inputMin.min){
+               document.getElementById(`item-${item_id}`).value = 1
+               val = 1
+           }
+
+           const data = JSON.stringify({'id':item_id,"quantity":val})
+
+           const response = await fetch(`${window.location.origin}/change-qty/`,{
+            method:'POST',
+            headers:{
+               'X-Requested-With':'XMLHttpRequest',
+            },
+            body:data
+           })
+           const {cart_total,item_total} = await response.json()
+           document.getElementById(`item-total_${item_id}`).innerText = item_total;
+           document.getElementById('cart-total-price').innerText = cart_total;
+         }
+
+         async function removeFromBasket(item_id){
+            const data = JSON.stringify({'id':item_id})
+
+            try{
+               const resp = await fetch(`${window.location.origin}/remove-basket/`,{
+                  method:'POST',
+                  headers:{
+                     'X-Requested-With':'XMLHttpRequest',
+                  },
+                  body:data
+               })
+               const dt = await resp.json()
+
+                dt.items_count === 0 ? window.location.reload() : ''
+                document.getElementById('cart-total-price').innerText = dt.cart_total;
+                document.getElementById(`it-${item_id}`).remove()
+                const forloopNumbers = document.getElementsByClassName('forloop')
+                for (let i = 1; i <= forloopNumbers.length; i++) {
+                    forloopNumbers[i - 1].innerHTML = i
+                }
+
+         }
+        catch(e){
+           throw e
+        }
+
+     }
+
+
+
+      </script>
+   </body>
+   
+</html>

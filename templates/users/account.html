@@ -1,0 +1,2020 @@
+{% load my_url %}
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset='utf-8'/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport'
+          content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>{% if user.account_type == 'personal' %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.company_name }}{% endif %}</title>
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/v/dt/dt-1.11.4/datatables.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.css">
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+    <style>
+        .options {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            outline: 0;
+            width: 380px;
+            margin: 0 auto
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            font-size: 16px;
+            height: 55px
+        }
+
+        .select2-container {
+            display: block
+        }
+
+        .select2-container--default .select2-selection--single {
+            min-height: 55px;
+            padding: 0 10px;
+            height: 55px;
+            font-size: 19px;
+            line-height: 22px;
+            background: #F2F9F9;
+            border: 2px solid #E3EAEA;
+            border-radius: 12px;
+            letter-spacing: 1px
+        }
+
+        .select2-container--default .select2-selection--single:focus-visible {
+            background: #fff
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            font-size: 16px;
+            height: 52px
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 29px;
+            top: 13px;
+            right: 10px;
+            width: 25px
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            border-width: 7px 6px 0
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #0a474d;
+            color: #fff
+        }
+
+        #account-orders_paginate {
+            text-align: right;
+            margin-top: 20px
+        }
+
+        #account-orders_length, #account-orders_info, #account-orders_previous, #account-orders_next {
+            display: none
+        }
+
+        #account-orders td {
+            padding: 10px
+        }
+
+        #account-orders thead th {
+            padding: 15px 18px
+        }
+
+        #account-orders td a {
+            margin: 0 auto
+        }
+
+        loader {
+    border: 3px solid #cccccc;
+    border-top: 3px solid #223d40;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    animation: spin 2s linear infinite;
+    margin: 0 auto;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+        @keyframes spin {
+            0% {transform: rotate(0deg);}
+            100% {transform: rotate(360deg);} }
+
+    </style>
+</head>
+
+<body>
+
+<div id="root">
+    {% include 'includes/header.html' %}
+    <!-- Main content -->
+    <main class="content">
+        <section class="section page-content">
+            <div class="no-page-banner" style="background-image: url({% static 'img/shop-banner.jpg' %})"></div>
+            <!-- Breadcrumbs -->
+            <div class="breadcrumbs">
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col">
+
+                            <ul class="breadcrumbs-list align-items-center">
+                                <li class="breadcrumbs-item">
+                                    <a href="{% url 'home_page' %}" class="breadcrumbs-link">
+                                        <span>{% trans 'Գլխավոր' %}</span>
+                                    </a>
+                                </li>
+                                <li class="breadcrumbs-item">
+                                    <span>{% trans 'Իմ հաշիվը' %}</span>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Breadcrumbs end-->
+
+            <!-- Account -->
+            <div id="my-profile">
+                <div class="cnt">
+                    <div class="row">
+
+                        <div class="col col-30">
+                            <div class="user-info-left">
+                                <div class="crop_img_avatar">
+                                    <form class="profile-image"
+                                          enctype="multipart/form-data"
+                                          method="post"
+                                          action="{% url 'users:add_photo' %}"
+                                    >
+                                        <div class="user_img-all">
+                                            <div class="img_only_div">
+                                                {% if user.avatar %}
+                                                <a class="delete-avatar" href="{% url 'users:delete_user_photo' %}">
+                                                    <img src="{% static 'img/icons/delete-avatar.svg' %}" alt="delete-avatar">
+                                                </a>
+                                                {% endif %}
+                                            <div class="loader-avatar" id="loaderImg" style="display: none;"></div>
+                                                <img src="{% if user.avatar %}{{ user.avatar.url }}{% else %}{% static 'img/default.jpg' %}{% endif %}"
+                                                     class="default-user-img"
+                                                     alt="Username">
+                                                <div class="choose_on">
+                                                    <input type="file" id="file-input" name="avatar"
+                                                           accept="image/png,image/jpeg,image/jpg,">
+                                                    <img src="{% static 'img/icons/type-fille.svg' %}"
+                                                         class="choose_img"
+                                                         alt="Username">
+                                                </div>
+                                                <div class="box-2 img-result hide">
+                                                    <img class="cropped final-user-img" src="" alt="">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="options hide">
+                                            <div class="modal-backdrop hide"></div>
+                                            <div class="modal-canapea_avatar">
+                                                <div class="cnt">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="modal-avatar-crop">
+                                                                <div class="box-2">
+                                                                    <div class="result"></div>
+                                                                </div>
+                                                            </div>
+                                                            <button type="button" class="button small dark save hide">
+                                                                <img
+                                                                        src="{% static 'img/icons/check-suc-wh.png' %}"
+                                                                        alt="Username">{% trans 'Պահպանել' %}
+                                                            </button>
+                                                            <div class="img-w"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                                <div class="user_name_date_of_birth text-center">
+                                    <div class="for_full_username">
+                                        <span class="user_full_name">{{ user.full_name }}</span>
+                                    </div>
+                                    {% if user.birthday %}
+                                        <div class="for_date_of_birth">
+                                            <span>{{ user.birthday|date:"d / F / Y" }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+
+                                <div class="tabs-head">
+                                    <ul class="tabs personal-page">
+
+                                        <!-- if user is Person show this -->
+                                        <li class="align-items-center active" rel="tab0">
+                                            <span class="per_ic flex-content-center">
+                                                <img src="{% static 'img/icons/user-user.svg' %}"
+                                                     alt="{% trans 'Անձնական տվյալներ' %}"></span>
+                                            <span>{% if user.account_type == 'company' %}
+                                                {% trans 'Ընկերության տվյալներ' %}{% else %}
+                                                {% trans 'Անձնական տվյալներ' %}{% endif %}</span>
+                                        </li>
+
+                                        <li class="align-items-center" rel="tab1">
+                                            <span class="per_ic flex-content-center">
+                                                <img src="{% static 'img/icons/user-orders.svg' %}"
+                                                     alt="{% trans 'Պատվերներ' %}"></span>
+                                            <span>{% trans 'Պատվերներ' %}</span>
+                                        </li>
+                                        <li class="align-items-center" rel="tab2">
+                                            <span class="per_ic flex-content-center">
+                                                <img src="{% static 'img/icons/user-requests.svg' %}"
+                                                     alt="{% trans 'Հարցումներ' %}"></span>
+                                            <span>{% trans 'Հարցումներ' %}</span>
+                                        </li>
+                                        <li class="align-items-center" rel="tab3">
+                                            <span class="per_ic flex-content-center">
+                                                <img src="{% static 'img/icons/user-bonus.svg' %}"
+                                                     alt="{% trans 'Բոնուսներ' %}"></span>
+                                            <span>{% trans 'Բոնուսներ' %}</span>
+                                        </li>
+                                        <li class="align-items-center" rel="tab4">
+                                            <span class="per_ic flex-content-center">
+                                                <img src="{% static 'img/icons/user-pass.svg' %}"
+                                                     alt="{% trans 'Փոխել գաղտնաբառը' %}"></span>
+                                            <span>{% trans 'Փոխել գաղտնաբառը' %}</span>
+                                        </li>
+
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col col-70">
+                            <div class="tab_container p-g">
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %}">
+                                            {{ message|safe }}
+                                            <img src="{% static 'img/icons/catalog-close.svg' %}"
+                                                 class="errorClose"
+                                                 alt="{% trans 'Փակել' %}">
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                {% if user.account_type == 'company' %}
+                                    <!-- #tab0 Company -->
+                                    <div id="tab0" class="tab_content">
+                                        <div class="all-head-info">
+
+                                            <div class="user-head-tit">
+                                                {% if user.groups.count %}
+                                                    <div class="user_group-name alert alert-info">Հավատարիմ
+                                                        <img src="{% static 'img/icons/catalog-close.svg' %}"
+                                                             class="errorClose" alt="{% trans 'Փակել' %}">
+                                                    </div>
+                                                {% endif %}
+                                                <h2>{% trans 'Ընկերության տվյալներ' %} (id {{ user.id }})</h2>
+                                            </div>
+
+
+                                            <div class="profile-info accountInfo">
+
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">{% trans 'Ընկերության ամբողջական անուն' %}</p>
+                                                        <p class="info-dis-in"> {% if user.company_name %}{{ user.company_name }}{% else %}{% trans 'Նշված չէ' %}{% endif %}</p>
+                                                    </div>
+
+
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">{% trans 'Ընկերության գրանցման հասցե' %}</p>
+                                                        <p class="info-dis-in">{% if user.register_address %}{{ user.register_state }}, {{ user.register_city }}, {{ user.register_address }}{% else %}{% trans 'Նշված չէ' %}{% endif %}</p>
+                                                    </div>
+
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">{% trans 'Ընկերության փաստացի հասցե' %}</p>
+                                                        <p class="info-dis-in">{% if user.fact_address %}{{ user.fact_state }}, {{ user.fact_city }}, {{ user.fact_address }}{% else %}{% trans 'Նշված չէ' %}{% endif %}</p>
+                                                    </div>
+
+                                                    <div class="two-dis-fields flex-center-between">
+
+                                                            <div class="dis-fields">
+                                                                <p class="label-dis-in">{% trans 'Պատասխանու անձի անուն ազգանուն' %}</p>
+                                                                <p class="info-dis-in">{% if user.reslast_name %}{{ user.resfirst_name }} {{ user.reslast_name }}{% else %}{% trans 'Նշված չէ' %}{% endif %}</p>
+                                                            </div>
+
+
+                                                            <div class="dis-fields">
+                                                                <p class="label-dis-in">{% trans 'Պատասխանատու անձի պաշտոն' %} </p>
+                                                                <p class="info-dis-in">{% if user.res_position %}{{ user.res_position }}{% else %}{% trans 'Նշված չէ' %}{% endif %}</p>
+                                                            </div>
+
+                                                    </div>
+
+
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">{% trans 'Ընկերության ՀՎՀՀ' %}</p>
+                                                        <p class="info-dis-in">{% if user.tin %}{{ user.tin }}{% else %}{% trans 'Նշված չէ' %}{% endif %}</p>
+                                                    </div>
+
+                                                <div class="two-dis-fields flex-center-between">
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">Email</p>
+                                                        <p class="info-dis-in">{{ user.email }}</p>
+                                                    </div>
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">{% trans 'Հեռախոսահամար' %}</p>
+                                                        <p class="info-dis-in">{{ user.phone_number }}</p>
+                                                    </div>
+                                                </div>
+
+                                                    <div class="two-dis-fields flex-center-between">
+                                                            <div class="dis-fields">
+                                                                <p class="label-dis-in">{% trans 'Ընկերության կայք' %}</p>
+                                                                <p class="info-dis-in">
+                                                                    {% if user.company_name %}
+                                                                        <a href="{{ user.company_website }}">{{ user.company_website|websitefilter }}</a>
+                                                                    {% else %}{% trans 'Նշված չէ' %}{% endif %}
+                                                                </p>
+                                                            </div>
+
+
+                                                            <div class="dis-fields">
+                                                                <p class="label-dis-in">{% trans 'Ընկերության ոլորտ' %}</p>
+                                                                <p class="info-dis-in">{% if user.company_spher %}{{ user.company_spher }}{% else %}{% trans 'Նշված չէ' %}{% endif %}</p>
+                                                            </div>
+
+                                                    </div>
+
+                                                <div class="two-dis-fields flex-center-between">
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">{% trans 'Վերջին մուտք' %}</p>
+                                                        <p class="info-dis-in">{{ user.last_login|date:"d-m-Y" }}
+                                                            | {{ user.last_login|date:"H:i" }}</p>
+                                                    </div>
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">{% trans 'Գրանցման ամսաթիվ' %}</p>
+                                                        <p class="info-dis-in">{{ user.date_joined|date:"d-m-Y" }}
+                                                            | {{ user.date_joined|date:"H:i" }}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="change-infos">
+                                                    <button type="button" id="changeInfo"
+                                                            class="button big dark cahnge_but"><img
+                                                            src="{% static 'img/icons/change-info.svg' %}"
+                                                            alt="Փոփոխել տվյալները"> {% trans 'Փոփոխել  տվյալները' %}
+                                                    </button>
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="changeAccount">
+                                                <div class="head-changes flex-center-between">
+                                                    <h4><b>{% trans 'Փոփոխել տվյալները' %}</b></h4>
+                                                    <h4 class="closeChanges"><b>{% trans 'Փակել' %}</b>
+                                                        <img src="{% static 'img/icons/catalog-close.svg' %}"
+                                                             alt="{% trans 'Փակել' %}">
+                                                    </h4>
+                                                </div>
+                                                <form action="" id="change-info-company" method="post">
+                                                    <div>
+
+                                                        <div class="input-fields all-auth">
+                                                            <label for="company_name">{% trans 'Ընկերության ամբողջական անուն' %}
+                                                                *</label>
+                                                            <input type="text" id="company_name" name="company_name"
+                                                                   value="{% if user.company_name %}{{ user.company_name }}{% endif %}"
+                                                                   maxlength=""
+                                                                   required="">
+                                                        </div>
+
+                                                        <div class="companyaddress_bg">
+                                                            <h3 class="text-center">{% trans 'Ընկերության գրանցման հասցե' %}</h3>
+                                                            <div class="two-inputs flex-center-between variant-2">
+                                                                <div class="input-fields all-auth s2">
+                                                                    <label for="register_state">{% trans 'Մարզ' %}</label>
+                                                                    <select id="register_state"
+                                                                            class="js-select2 another-field"
+                                                                            name="register_state">
+                                                                        {% if not user.register_state_id %}
+                                                                            <option value="">{% trans 'Ընտրել' %}</option>
+                                                                        {% endif %}
+                                                                        {% for state in states %}
+                                                                            <option data-id="{{ state.id }}"
+                                                                                    value="{{ state.id }}"
+                                                                                    {% if state.id == user.register_state_id %}selected{% endif %}>{{ state.name }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                                <div class="input-fields all-auth s2">
+                                                                    <label for="register_city">{% trans 'Բնակավայր' %}</label>
+                                                                    <select id="register_city"
+                                                                            class="js-select2 another-field"
+                                                                            name="register_city">
+                                                                        {% if user.state %}
+                                                                            {% for city in user.register_state.country_set.all %}
+                                                                                <option value="{{ city.id }}"
+                                                                                        {% if city.id == user.register_city_id %}selected{% endif %}
+                                                                                >{{ city.name }}</option>
+                                                                            {% endfor %}
+                                                                        {% else %}
+                                                                            {% for city in cities %}
+                                                                                <option value="{{ city.id }}"
+                                                                                        {% if city.id == user.register_city_id %}selected{% endif %}
+                                                                                >{{ city.name }}</option>
+                                                                            {% endfor %}
+                                                                        {% endif %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-fields all-auth">
+                                                                <label for="register_address">{% trans 'Հասցե' %}
+                                                                    *</label>
+                                                                <textarea id="register_address" name="register_address"
+                                                                          class="fw"
+                                                                          rows="3">{% if user.register_address %}{{ user.register_address }}{% endif %}</textarea>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="companyaddress_bg">
+                                                            <h3 class="text-center">{% trans 'Ընկերության փաստացի հասցե' %}</h3>
+                                                            <div class="two-inputs flex-center-between variant-2">
+                                                                <div class="input-fields all-auth s2">
+                                                                    <label for="fact_state">{% trans 'Մարզ' %}</label>
+                                                                    <select id="fact_state"
+                                                                            class="js-select2 another-field"
+                                                                            name="fact_state">
+                                                                        {% for state in states %}
+                                                                            <option data-id="{{ state.id }}"
+                                                                                    value="{{ state.id }}"
+                                                                                    {% if state.id == user.fact_state_id %}selected{% endif %}>{{ state.name }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                                <div class="input-fields all-auth s2">
+                                                                    <label for="fact_city">{% trans 'Բնակավայր' %}</label>
+                                                                    <select id="fact_city"
+                                                                            class="js-select2 another-field"
+                                                                            name="fact_city">
+
+                                                                        {% if user.state %}
+                                                                            {% for city in user.fact_state.country_set.all %}
+                                                                                <option value="{{ city.id }}"
+                                                                                        {% if city.id == user.fact_city_id %}selected{% endif %}
+                                                                                >{{ city.name }}</option>
+                                                                            {% endfor %}
+                                                                        {% else %}
+                                                                            <option value="">-- {% trans 'Ընտրել' %} --</option>
+                                                                            {% for city in cities %}
+                                                                                <option value="{{ city.id }}"
+                                                                                        {% if city.id == user.fact_city_id %}selected{% endif %}
+                                                                                >{{ city.name }}</option>
+                                                                            {% endfor %}
+                                                                        {% endif %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-fields all-auth">
+                                                                <label for="fact_address">{% trans 'Հասցե' %} *</label>
+                                                                <textarea id="fact_address" name="fact_address"
+                                                                          class="fw"
+                                                                          rows="3">{% if user.fact_address %}{{ user.fact_address }}{% endif %}</textarea>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="two-inputs flex-center-between">
+                                                            <div class="input-fields all-auth">
+                                                                <label for="resfirst_name">{% trans 'Պատասխանու անձի անուն' %}
+                                                                    *</label>
+                                                                <input type="text" id="resfirst_name"
+                                                                       name="resfirst_name"
+                                                                       value="{% if user.resfirst_name %}{{ user.resfirst_name }}{% endif %}"
+                                                                       maxlength=""
+                                                                       required="">
+                                                            </div>
+                                                            <div class="input-fields all-auth">
+                                                                <label for="reslast_name">{% trans 'Պատասխանատու անձի ազգանուն' %}
+                                                                    *</label>
+                                                                <input type="text" id="reslast_name" name="reslast_name"
+                                                                       value="{% if user.reslast_name %}{{ user.reslast_name }}{% endif %}" maxlength=""
+                                                                       required="">
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="input-fields all-auth">
+                                                            <label for="res_position">{% trans 'Պատասխանատու անձի պաշտոն' %}
+                                                                *</label>
+                                                            <input type="text" id="res_position" name="res_position"
+                                                                   value="{% if user.res_position %}{{ user.res_position }}{% endif %}" maxlength=""
+                                                                   required="">
+                                                        </div>
+
+                                                        <div class="two-inputs flex-center-between">
+                                                            <div class="input-fields all-auth">
+                                                                <label for="tin">{% trans 'Ընկերության ՀՎՀՀ' %}
+                                                                    *</label>
+                                                                <input type="number" id="tin" name="tin"
+                                                                       value="{% if user.tin %}{{ user.tin }}{% endif %}"
+                                                                       maxlength="" required="">
+                                                            </div>
+                                                            <div class="input-fields all-auth">
+                                                                <label for="phone_number">{% trans 'Ընկերության հեռախոսահամար' %}
+                                                                    *</label>
+                                                                <input type="number" id="phone_number"
+                                                                       name="phone_number"
+                                                                       value="{% if user.phone_number %}{{ user.phone_number }}{% endif %}" maxlength=""
+                                                                       required="">
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="two-inputs flex-center-between">
+                                                            <div class="input-fields all-auth">
+                                                                <label for="company_website">{% trans 'Ընկերության կայք' %}</label>
+                                                                <input type="text" id="company_website"
+                                                                       name="company_website"
+                                                                       value="{% if user.company_website %}{{ user.company_website }}{% endif %}">
+                                                            </div>
+                                                            <div class="input-fields all-auth">
+                                                                <label for="company_spher">{% trans 'Ընկերության ոլորտ' %}</label>
+                                                                <input type="text" id="company_spher"
+                                                                       name="company_spher"
+                                                                       value="{% if user.company_spher %}{{ user.company_spher }}{% endif %}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="three-inputs flex-center-between">
+                                                            <div class="input-fields all-auth s2 ">
+                                                                <label for="day">{% trans 'Հիմնադրման օր' %}</label>
+                                                                <select id="day" class="js-select2 another-field"
+                                                                        name="dd">
+                                                                </select>
+                                                            </div>
+                                                            <div class="input-fields all-auth s2 mrl20">
+                                                                <label for="month">{% trans 'Հիմնադրման ամիս' %}</label>
+                                                                <select id="month" class="js-select2 another-field"
+                                                                        name="mm" onchange="change_month(this)">
+                                                                </select>
+                                                            </div>
+                                                            <div class="input-fields all-auth s2">
+                                                                <label for="year">{% trans 'Հիմնադրման տարի' %}</label>
+                                                                <select id="year" class="js-select2 another-field"
+                                                                        name="yyyy" onchange="change_year(this)">
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="line-inputs-group">
+                                                            <div class="butt-sign">
+                                                                <input type="submit"
+                                                                       class="button big dark flex-content-center"
+                                                                       name="submit" value="{% trans 'Հաստատել' %}">
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </form>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                    <!-- #tab0 Company end -->
+                                {% else %}
+
+                                    <!-- #tab0 User -->
+                                    <div id="tab0" class="tab_content">
+                                        <div class="all-head-info">
+                                            <div class="user-head-tit">
+                                                <h2>{% trans 'Անձնական տվյալներ' %} (id {{ user.id }})</h2>
+                                            </div>
+
+                                            <div class="profile-info accountInfo">
+
+                                                <div class="two-dis-fields flex-center-between">
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">{% trans 'Անուն' %}</p>
+                                                        <p class="info-dis-in">{% if user.first_name %}{{ user.first_name }}{% else %}{% trans 'Նշված չէ' %}{% endif %}</p>
+                                                    </div>
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">{% trans 'Ազգանուն' %}</p>
+                                                        <p class="info-dis-in">{% if user.last_name %}{{ user.last_name }}{% else %}{% trans 'Նշված չէ' %}{% endif %}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="two-dis-fields flex-center-between">
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">{% trans 'Հեռախոսահամար' %}</p>
+                                                        <p class="info-dis-in">{% if user.phone_number %}{{ user.phone_number }}{% else %}{% trans 'Նշված չէ' %}{% endif %}</p>
+                                                    </div>
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">Email</p>
+                                                        <p class="info-dis-in">{{ user.email }}</p>
+                                                    </div>
+                                                </div>
+
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">{% trans 'Ամբողջական հասցե' %}</p>
+                                                        <p class="info-dis-in">{% if user.state %}{{ user.state.name }}, {{ user.city }}, {{ user.address }}{% else %}{% trans 'Նշված չէ' %}{% endif %}</p>
+                                                    </div>
+
+                                                <div class="two-dis-fields flex-center-between">
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">{% trans 'Վերջին մուտք' %}</p>
+                                                        <p class="info-dis-in">{{ user.last_login|date:"d-m-Y" }}
+                                                            | {{ user.last_login|date:"H:i" }}</p>
+                                                    </div>
+                                                    <div class="dis-fields">
+                                                        <p class="label-dis-in">{% trans 'Գրանցման ամսաթիվ' %}</p>
+                                                        <p class="info-dis-in">{{ user.date_joined|date:"d-m-Y" }}
+                                                            | {{ user.date_joined|date:"H:i" }}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="change-infos">
+                                                    <button type="button" id="changeInfo"
+                                                            class="button big dark cahnge_but">
+                                                        <img src="{% static 'img/icons/change-info.svg' %}"
+                                                             alt="{% trans 'Փոփոխել տվյալները' %}">{% trans 'Փոփոխել տվյալները' %}
+                                                    </button>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="changeAccount">
+                                                <div class="head-changes flex-center-between">
+                                                    <h4><b>{% trans 'Փոփոխել տվյալները' %}</b></h4>
+                                                    <h4 class="closeChanges"><b>{% trans 'Փակել' %}</b><img
+                                                            src="{% static 'img/icons/catalog-close.svg' %}"
+                                                            alt="{% trans 'Փակել' %}"></h4>
+                                                </div>
+                                                <form method="post" id="change-info-user">
+                                                    <div>
+                                                        <div class="two-inputs flex-center-between">
+                                                            <div class="input-fields all-auth">
+                                                                <label for="first_name">{% trans 'Անուն' %} *</label>
+                                                                <input type="text" id="first_name" name="first_name"
+                                                                       value="{{ user.first_name }}" maxlength=""
+                                                                       required="">
+                                                            </div>
+                                                            <div class="input-fields all-auth">
+                                                                <label for="last_name">{% trans 'Ազգանուն' %} *</label>
+                                                                <input type="text"
+                                                                       id="last_name"
+                                                                       name="last_name"
+                                                                       value="{{ user.last_name }}"
+                                                                       maxlength="" required="">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="three-inputs flex-center-between variant-2">
+                                                            <div class="input-fields all-auth s2">
+                                                                <label for="dd">{% trans 'Ծննդյան օր' %}</label>
+                                                                <select id="day" class="js-select2 another-field" name="dd">
+                                                                </select>
+                                                            </div>
+                                                            <div class="input-fields all-auth s2 mrl20">
+                                                                <label for="mm">{% trans 'Ծննդյան ամիս' %}</label>
+                                                                <select id="month" class="js-select2 another-field" name="mm" onchange="change_month(this)">
+                                                                </select>
+                                                            </div>
+                                                            <div class="input-fields all-auth s2">
+                                                                <label for="yyyy">{% trans 'Ծննդյան տարի' %}</label>
+                                                                <select id="year" class="js-select2 another-field" name="yyyy" onchange="change_year(this)">
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="input-fields all-auth">
+                                                            <label for="email">Email</label>
+                                                            <input type="email" id="email" name="email"
+                                                                   value="{{ user.email }}" placeholder="">
+                                                        </div>
+
+                                                        <div class="two-inputs flex-center-between variant-2">
+                                                            <div class="input-fields all-auth s2">
+                                                                <label for="state">{% trans 'Մարզ' %}</label>
+                                                                <select id="state" class="js-select2 another-field"
+                                                                        name="state">
+                                                                    {% for state in states %}
+                                                                        <option data-id="{{ state.id }}"
+                                                                                value="{{ state.id }}"
+                                                                                {% if state.id == user.state_id %}selected{% endif %}>{{ state.name }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="input-fields all-auth s2">
+                                                                <label for="city">{% trans 'Բնակավայր' %}</label>
+                                                                <select id="city" class="js-select2 another-field"
+                                                                        name="city">
+                                                                    {% if user.state %}
+                                                                        {% for city in user.state.country_set.all %}
+                                                                            <option value="{{ city.id }}"
+                                                                                    {% if city.id == user.city_id %}selected{% endif %}
+                                                                            >{{ city.name }}</option>
+                                                                        {% endfor %}
+                                                                    {% else %}
+                                                                        <option value="">-- {% trans 'Ընտրել' %} --</option>
+                                                                        {% for city in cities %}
+                                                                            <option value="{{ city.id }}"
+                                                                                    {% if city.id == user.city_id %}selected{% endif %}
+                                                                            >{{ city.name }}</option>
+                                                                        {% endfor %}
+                                                                    {% endif %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-fields all-auth">
+                                                            <label for="address">{% trans 'Հասցե' %} *</label>
+                                                            <textarea id="address" name="address" class="fw"
+                                                                      rows="3">{% if user.address %}{{ user.address }}{% endif %}</textarea>
+                                                        </div>
+
+                                                        <div class="line-inputs-group">
+                                                            <div class="butt-sign">
+                                                                <input type="submit"
+                                                                       class="button big dark flex-content-center"
+                                                                       name="submit" value="{% trans 'Հաստատել' %}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- #tab0 User end -->
+                                {% endif %}
+                                <!-- #tab1 -->
+                                {#                                <div id="tab1" class="tab_content">#}
+                                {#                                    <div class="all-head-info">#}
+                                {#                                        <div class="user-head-tit">#}
+                                {#                                            <h2>Իմ պատվերները</h2>#}
+                                {#                                        </div>#}
+                                {#                                        <div id="order-table">#}
+                                {#                                            <table id="account-orders" class="orders-table">#}
+                                {#                                                <thead>#}
+                                {#                                                <tr class="order-head">#}
+                                {#                                                    <th class="order-item-nom" width="1%">№</th>#}
+                                {#                                                    <th class="order-head-code">Պատվերի կոդ</th>#}
+                                {#                                                    <th class="order-head-cnt nowrap">Քանակ</th>#}
+                                {#                                                    <th class="order-head-sum">Ընդհանուր</th>#}
+                                {#                                                    <th class="order-head-day">Ամսաթիվ</th>#}
+                                {#                                                    <th class="order-head-more">Մանրամասն</th>#}
+                                {#                                                </tr>#}
+                                {#                                                </thead>#}
+                                {#                                                <tbody>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>1</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>1</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>2</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>2</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>3</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>3</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>2</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>1</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>5</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>2</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>6</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>62</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>7</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>62</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>8</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>62</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>9</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>62</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {##}
+                                {#                                                </tbody>#}
+                                {##}
+                                {#                                            </table>#}
+                                {#                                        </div>#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
+                                <!-- #tab1 end -->
+
+                                <!-- #tab2 -->
+                                {#                                <div id="tab2" class="tab_content">#}
+                                {#                                    <div class="all-head-info">#}
+                                {#                                        <div class="user-head-tit">#}
+                                {#                                            <h2>Իմ հարցումները</h2>#}
+                                {#                                        </div>#}
+                                {#                                        <div id="order-table">#}
+                                {#                                            <table id="account-orders" class="orders-table">#}
+                                {#                                                <thead>#}
+                                {#                                                <tr class="order-head">#}
+                                {#                                                    <th class="order-item-nom" width="1%">№</th>#}
+                                {#                                                    <th class="order-head-code">Պատվերի կոդ</th>#}
+                                {#                                                    <th class="order-head-cnt nowrap">Քանակ</th>#}
+                                {#                                                    <th class="order-head-sum">Ընդհանուր</th>#}
+                                {#                                                    <th class="order-head-day">Ամսաթիվ</th>#}
+                                {#                                                    <th class="order-head-more">Մանրամասն</th>#}
+                                {#                                                </tr>#}
+                                {#                                                </thead>#}
+                                {#                                                <tbody>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>1</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>1</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>2</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>2</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>3</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>3</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>2</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>1</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>5</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>2</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>6</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>62</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>7</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>62</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>8</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>62</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                                <tr class="order-item">#}
+                                {#                                                    <td class="order-item-nom clr">#}
+                                {#                                                        <span class="order-name-mobile">№</span>#}
+                                {#                                                        <span class="right-orders"><b>9</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-code clr">#}
+                                {#                                                        <span class="order-name-mobile">Պատվերի կոդ</span>#}
+                                {#                                                        <span class="right-orders"><b>62</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-cnt clr">#}
+                                {#                                                        <span class="order-name-mobile">Քանակ</span>#}
+                                {#                                                        <span class="right-orders"> <b>4</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-sum nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ընդհանուր</span>#}
+                                {#                                                        <span class="right-orders">#}
+                                {#                                                                    <b><span class="wh-point">25.000</span>#}
+                                {#                                                                        &nbsp; <span class="valyuta">AMD</span></b>#}
+                                {#                                                                </span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-day nowrap clr">#}
+                                {#                                                        <span class="order-name-mobile">Ամսաթիվ</span>#}
+                                {#                                                        <span class="right-orders"><b>2021-12-10 | 15:23</b></span>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td class="order-item-more nowrap clr">#}
+                                {#                                                        <a href="order_details.html"#}
+                                {#                                                           class="button small dark">Մանրամասն</a>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {##}
+                                {#                                                </tbody>#}
+                                {##}
+                                {#                                            </table>#}
+                                {#                                        </div>#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
+                                <!-- #tab2 end -->
+
+                                <!-- #tab3 -->
+                                {#                                <div id="tab3" class="tab_content">#}
+                                {#                                    <div class="all-head-info">#}
+                                {#                                        <div class="user-head-tit bonus">#}
+                                {#                                            <h2>Բոնուսային Համակարգ</h2>#}
+                                {#                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta ullam#}
+                                {#                                                porro nihil nemo, repellendus ab. Consectetur optio perspiciatis quod#}
+                                {#                                                nostrum minus officiis quibusdam? Ipsam corporis, sit dolores, quam eius#}
+                                {#                                                qui!</p>#}
+                                {#                                        </div>#}
+                                {#                                        <!-- bonus message user page-->#}
+                                {#                                        <h4 class="success-show" style="display:none;">Ваш запрос успешно отправлен.<br>Наш#}
+                                {#                                            менеджер свяжется с Вами в ближайшее время.</h4>#}
+                                {#                                        <!-- bonus message user page end -->#}
+                                {#                                        <div class="only_form_bonus">#}
+                                {#                                            <div class="form-heads-bonus">#}
+                                {#                                                <h3>Ձեր բոնուսները</h3>#}
+                                {#                                                <p>1 բոնուսային բալը = 10 դրամ</p>#}
+                                {#                                            </div>#}
+                                {#                                            <div class="bonus-qty-view">#}
+                                {#                                                <div class="fileld-bonus-qty align-items-center">#}
+                                {#                                                    <div class="bonus-icon">#}
+                                {#                                                        <img src="img/icons/bonus-icon.svg" alt="Ваши бонусы">#}
+                                {#                                                    </div>#}
+                                {#                                                    <div class="qty-bonus">#}
+                                {#                                                        <span>Քանակ:</span>#}
+                                {#                                                        <span><b>100 Բալ</b></span>#}
+                                {#                                                    </div>#}
+                                {#                                                </div>#}
+                                {#                                            </div>#}
+                                {#                                        </div>#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
+                                <!-- #tab3 end -->
+
+                                <!-- #tab4 -->
+                                <div id="tab4" class="tab_content">
+                                    <div class="all-head-info">
+                                        <div class="user-head-tit">
+                                            <h2>{% trans 'Փոխել գաղտնաբառը' %}</h2>
+                                        </div>
+
+                                        <div class="only_form_sr">
+                                            <form action="{% url 'users:change_password' %}" id="changePass"
+                                                  method="POST" novalidate="novalidate">
+                                                <input type="hidden" name="" value="">
+                                                <div class="input-fields">
+                                                    <p class="forgot-info d-flex">
+                                                        <img src="{% static 'img/icons/info.svg' %}"
+                                                             alt="{% trans 'Փոխել գաղտնաբառը' %}">
+                                                        {% blocktrans %}Խնդրում ենք մուտքագրել Ձեր նոր գաղտնաբառը
+                                                            կրկնակի, որպեսզի
+                                                            համոզվենք տպագրման ճշգրտության մեջ:{% endblocktrans %}
+                                                    </p>
+                                                </div>
+                                                <!--  input fields -->
+                                                <div class="input-fields all-auth">
+                                                    <label for="old-password">{% trans 'Հին գաղտնաբառ' %} *</label>
+                                                    <img src="{% static 'img/icons/eye-sign.svg' %}"
+                                                         toggle="#password-field"
+                                                         class="toggle-password">
+                                                    <input type="password" id="old-password" name="oldpassword"
+                                                           placeholder="">
+                                                </div>
+                                                <div class="input-fields all-auth">
+                                                    <label for="new-password">{% trans 'Նոր գաղտնաբառ' %} *</label>
+                                                    <img src="{% static 'img/icons/eye-sign.svg' %}"
+                                                         toggle="#password-field"
+                                                         class="toggle-password">
+                                                    <input type="password" id="new-password" name="newpassword"
+                                                           placeholder="">
+                                                </div>
+                                                <div class="input-fields all-auth">
+                                                    <label for="confirm-password">{% trans 'Կրկնել գաղտնաբառը' %}
+                                                        *</label>
+                                                    <img src="{% static 'img/icons/eye-sign.svg' %}"
+                                                         toggle="#password-field"
+                                                         class="toggle-password">
+                                                    <input type="password" id="confirm-password" name="confirmpassword"
+                                                           placeholder="">
+                                                </div>
+                                                <div class="line-inputs-group all-auth">
+                                                    <div class="butt-sign">
+                                                        <input type="submit" class="button big dark flex-content-center"
+                                                               name="submit" value="Հաստատել">
+                                                    </div>
+                                                </div>
+                                                <!--  inputfields end -->
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- #tab4 end -->
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Account end -->
+
+        </section>
+    </main>
+    {% include 'includes/footer.html' %}
+</div>
+
+<script src="{% static 'js/canapea3.6_main.js' %}"></script>
+<script src="{% static 'js/canapea_script.js' %}"></script>
+<script src="{% static 'js/canapea_swiper.js' %}"></script>
+<script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js"></script>
+<script charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+<script>
+
+    $(".tab_content").hide();
+    $(".tab_content:first").show();
+
+    // select2
+    $(".js-select2").select2();
+
+
+    // Data table
+    $('#account-orders,#account-orders').DataTable({
+        "pageLength": 9,
+        "bInfo": false,
+        "bLengthChange": false,
+        "searching": false,
+        drawCallback: function (settings) {
+            var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
+            pagination.toggle(this.api().page.info().pages > 1);
+        }
+    });
+
+    // crop
+    let result = document.querySelector('.result'),
+        backdrop = document.querySelector('.modal-backdrop'),
+        img_result = document.querySelector('.img-result'),
+        img_w = document.querySelector('.img-w'),
+        img_h = document.querySelector('.img-h'),
+        options = document.querySelector('.options'),
+        save = document.querySelector('.save'),
+        chooseicon = document.querySelector('.choose_on'),
+        cropped = document.querySelector('.cropped'),
+        upload = document.querySelector('#file-input'),
+        cropper = '';
+
+    // on change show image with crop options
+    upload.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            // start file reader
+            result.classList.remove('hide');
+            save.classList.remove('hide');
+            chooseicon.classList.add('hide');
+            backdrop.classList.remove('hide');
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if (e.target.result) {
+                    console.log(e.target)
+                    // create new image
+                    let img = document.createElement('img');
+                    img.id = 'image';
+                    img.src = e.target.result
+
+                    // clean result before
+                    result.innerHTML = '';
+                    // append new images
+                    result.appendChild(img);
+                    // show save btn and options
+                    save.classList.remove('hide');
+                    options.classList.remove('hide');
+                    // init cropper
+                    cropper = new Cropper(img);
+                }
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+    // save on click
+    save.addEventListener('click', (e) => {
+        {#e.preventDefault();#}
+        result.classList.add('hide');
+        save.classList.add('hide');
+        backdrop.classList.add('hide');
+        chooseicon.classList.remove('hide');
+        // get result to data uri
+        let imgSrc = cropper.getCroppedCanvas({
+            width: img_w.value // input value
+        }).toDataURL();
+        cropper.getCroppedCanvas().toBlob((blob) => {
+            const formData = new FormData();
+            formData.append('avatar', blob);
+            document.getElementById('loaderImg').style.display = "block"
+            $.ajax('{% url 'users:add_photo' %}', {
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success() {
+                    document.getElementById('loaderImg').style.display = 'none'
+                    window.location.reload()
+                },
+                error() {
+                    window.location.reload()
+                },
+            });
+        }/*, 'image/png' */);
+
+
+        // remove hide class of img
+        cropped.classList.remove('hide');
+        img_result.classList.remove('hide');
+        // show image cropped
+        cropped.src = imgSrc;
+
+    });
+
+
+    // date of birth
+    var Days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    var option = '<option value="">-- Ընտրել --</option>';
+    var selectedDay = "";
+    for (var i = 1; i <= Days[0]; i++) { //add option days
+        option += '<option value="' + i + '">' + i + '</option>';
+    }
+
+    $('#day').append(option);
+
+    if(parseInt(`{{ user.birthday.day }}`)){
+        console.log('OK')
+        let day = '{{ user.birthday.day }}'
+        $('#day').val(`${day}`).trigger('change');
+    }else{
+        $('#day').val(selectedDay);
+    }
+
+    var option = '<option value="">-- Ընտրել --</option>';
+    var selectedMon = "";
+    for (var i = 1; i <= 12; i++) {
+        if (i < 10) {
+            option += '<option value="0' + i + '">0' + i + '</option>';
+        } else {
+            option += '<option value="' + i + '">' + i + '</option>';
+        }
+    }
+    $('#month').append(option);
+
+    if(parseInt(`{{ user.birthday.month }}`)){
+        let month = '{{ user.birthday.month }}'
+        if (parseInt(`{{ user.birthday.month }}`) < 10){
+            month = "0{{ user.birthday.month }}"
+        }
+
+        $('#month').val(month).trigger('change');
+    }else{
+        $('#month').val(selectedMon);
+    }
+
+
+    var option = '<option value="">-- {% trans 'Ընտրել' %} --</option>';
+    var selectedMon = "";
+    for (var i = 1; i <= 12; i++) {
+        if (i < 10) {
+            option += '<option value="0' + i + '">0' + i + '</option>';
+        } else {
+            option += '<option value="0' + i + '">' + i + '</option>';
+        }
+    }
+    $('#month2').append(option);
+    if(parseInt(`{{ user.birthday.month }}`)){
+        let month2 = '{{ user.birthday.month }}'
+        if (parseInt(`{{ user.birthday.month }}`) < 10){
+            month2 = "0{{ user.birthday.month }}"
+        }
+
+        $('#month2').val(month2).trigger('change');
+    }else{
+        $('#month').val(selectedMon);
+    }
+
+
+    var d = new Date();
+    var option = '<option value="">-- {% trans 'Ընտրել' %} --</option>';
+    for (var i = 1930; i <= d.getFullYear(); i++) {
+        option += '<option value="' + i + '">' + i + '</option>';
+    }
+    $('#year').append(option);
+    let selectedYear = ""
+
+    if(parseInt(`{{ user.birthday.year }}`)){
+        let year = '{{ user.birthday.year }}'
+        if (parseInt(`{{ user.birthday.year }}`) < 10){
+            year = "0{{ user.birthday.year }}"
+        }
+        $('#year').val(year).trigger('change');
+    }else{
+        $('#year').val(selectedMon);
+    }
+
+    function isLeapYear(year) {
+        year = parseInt(year);
+        if (year % 4 != 0) {
+            return false;
+        } else if (year % 400 == 0) {
+            return true;
+        } else if (year % 100 == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function change_year(select) {
+        if (isLeapYear($(select).val())) {
+            Days[1] = 29;
+
+        } else {
+            Days[1] = 28;
+        }
+        if ($("#month").val() == 2) {
+            var day = $('#day');
+            var val = $(day).val();
+            $(day).empty();
+            var option = '<option>-- {% trans 'Ընտրել' %} --</option>';
+            for (var i = 1; i <= Days[1]; i++) {
+                option += '<option value="' + i + '">' + i + '</option>';
+            }
+            $(day).append(option);
+            if (val > Days[month]) {
+                val = 1;
+            }
+            $(day).val(val);
+        }
+    }
+
+    function change_month(select) {
+        var day = $('#day');
+        var val = $(day).val();
+        $(day).empty();
+        var option = '<option value="">-- {% trans 'Ընտրել' %} --</option>';
+        var month = parseInt($(select).val()) - 1;
+        for (var i = 1; i <= Days[month]; i++) {
+            option += '<option value="' + i + '">' + i + '</option>';
+        }
+        $(day).append(option);
+        if (val > Days[month]) {
+            val = 1;
+        }
+        $(day).val(val);
+    }
+
+    // change info User validate
+    $("#change-info-user").validate({
+        rules: {
+            first_name: {
+                required: true,
+                minlength: 2
+            },
+            last_name: {
+                required: true,
+                minlength: 2
+            },
+
+            dd: {
+                required: true
+            },
+            mm: {
+                required: true
+            },
+            yyyy: {
+                required: true
+            },
+
+            city: {
+                required: true
+            },
+            state: {
+                required: true
+            },
+            email: {
+                required: false
+            },
+
+            address: {
+                required: true
+            },
+
+        },
+
+        messages: {
+            first_name: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                minlength: "{% trans 'Անունը պետք է լինի 2 նիշ կամ ավելի երկար' %}"
+            },
+            last_name: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                minlength: "{% trans 'Անունը պետք է լինի 2 նիշ կամ ավելի երկար' %}"
+            },
+
+            dd: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+            },
+            mm: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+            },
+            yyyy: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+            },
+
+            email: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                email: "{% trans 'Մուտքագրեք ճիշտ Էլ. Փոստի հասցե' %}"
+            },
+            city: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+
+            },
+            state: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+
+            },
+            address: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+
+            },
+
+        },
+
+        submitHandler: function (form) {
+            form.submit();
+        },
+
+    });
+
+    // change info Company validate
+    $("#change-info-company").validate({
+        rules: {
+            company_name: {
+                required: true,
+                minlength: 4
+            },
+            register_city: {
+                required: true
+            },
+            register_state: {
+                required: true
+            },
+            register_address: {
+                required: true
+            },
+
+            fact_city: {
+                required: true
+            },
+            fact_state: {
+                required: true
+            },
+            fact_address: {
+                required: true
+            },
+
+            resfirst_name: {
+                required: true,
+                minlength: 2
+            },
+            reslast_name: {
+                required: true,
+                minlength: 4
+            },
+
+            res_position: {
+                required: true,
+            },
+
+            tin: {
+                required: true,
+            },
+
+            phone_number: {
+                required: true,
+            },
+
+            dd: {
+                required: true
+            },
+            mm: {
+                required: true
+            },
+            yyyy: {
+                required: true
+            },
+
+        },
+
+        messages: {
+            company_name: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                minlength: "{% trans 'Անունը պետք է լինի 4 նիշ կամ ավելի երկար' %}"
+            },
+
+            register_city: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+
+            },
+            register_state: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+
+            },
+            register_address: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+
+            },
+
+            fact_city: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+
+            },
+            fact_state: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+
+            },
+            fact_address: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+
+            },
+
+            resfirst_name: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                minlength: "{% trans 'Անունը պետք է լինի 2 նիշ կամ ավելի երկար' %}"
+            },
+            reslast_name: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                minlength: "{% trans 'Ազգանունը պետք է լինի 4 նիշ կամ ավելի երկար' %}"
+            },
+
+            res_position: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+            },
+
+            tin: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+            },
+
+            phone_number: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+
+            },
+
+            dd: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+            },
+            mm: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+            },
+            yyyy: {
+                required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+            },
+
+        },
+
+        submitHandler: function (form) {
+            form.submit();
+        },
+
+    });
+
+    //Validate change paswword
+    $(function () {
+        $('#changePass').validate({
+            rules: {
+                oldpassword: {
+                    required: true,
+                },
+                newpassword: {
+                    required: true,
+                    minlength: 8
+                },
+                confirmpassword: {
+                    required: true,
+                    equalTo: '#new-password'
+
+                }
+            },
+
+            messages: {
+                oldpassword: {
+                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                },
+                newpassword: {
+                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                    minlength: "{% trans 'Գաղտնաբառը պետք է լինի 8 նիշ կամ ավելի երկար' %}"
+                },
+                confirmpassword: {
+                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                    equalTo: "{% trans 'Գաղտնաբառը չի համընկնում' %}"
+                }
+            },
+
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+
+
+    $('#state').on('change', function () {
+        $.ajax({
+            method: 'GET',
+            data: {id: $(this).find(":selected")[0].attributes['data-id'].value},
+            url: `{{request.get_raw_uri}}`,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function (data) {
+                console.log(data);
+                if (data) {
+
+                    $('#city').html('')
+                    for (let i = 0; i < data.length; i++) {
+                        $('#city').append(`<option  value="${data[i].id}">${data[i].name}</option>`)
+                    }
+                }
+            },
+        })
+    })
+    $('#fact_state').on('change', function () {
+        $.ajax({
+            method: 'GET',
+            data: {id: $(this).find(":selected")[0].attributes['data-id'].value},
+            url: `{{request.get_raw_uri}}`,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function (data) {
+                console.log(data);
+                if (data) {
+
+                    $('#fact_city').html('')
+                    for (let i = 0; i < data.length; i++) {
+                        $('#fact_city').append(`<option  value="${data[i].id}">${data[i].name}</option>`)
+                    }
+                }
+            },
+        })
+    })
+
+    $('#register_state').on('change', function () {
+        $.ajax({
+            method: 'GET',
+            data: {id: $(this).find(":selected")[0].attributes['data-id'].value},
+            url: `{{request.get_raw_uri}}`,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function (data) {
+                console.log(data);
+                if (data) {
+
+                    $('#register_city').html('')
+                    for (let i = 0; i < data.length; i++) {
+                        $('#register_city').append(`<option  value="${data[i].id}">${data[i].name}</option>`)
+                    }
+                }
+            },
+        })
+    })
+
+</script>
+
+</body>
+
+</html>

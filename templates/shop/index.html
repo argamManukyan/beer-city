@@ -1,0 +1,311 @@
+{% load my_url %}{% load static %}{% load i18n %}{% load currency %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset='utf-8'/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>{% trans 'Գլխավոր' %}</title>
+    <meta name="Description" content="">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+</head>
+<body>
+
+<div id="root">
+    {% include 'includes/header.html' %}
+    <!-- Main content -->
+    <main class="content">
+
+        <!-- Slider -->
+        <section class="section home-slider" style="background-image: url(../static/img/slider-bg.jpg)">
+            <div class="swiper-container main-slider">
+                <div class="swiper-wrapper">
+                    {% for slide in slider %}
+                        {% if forloop.first %}
+                            {% include 'includes/main_slider.html' %}
+                        {% else %}
+                            {% include 'includes/main_slider.html' %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next">
+                     <img src="{% static 'img/icons/main-slide-next.svg' %}" alt="next">
+                </div>
+                <div class="swiper-button-prev">
+                    <img src="{% static 'img/icons/main-slide-prev.svg' %}" alt="prev">
+                </div>
+            </div>
+        </section>
+        <!-- Slider end-->
+        
+        <!-- Home page category -->
+        <section class="section home-page-categories">
+            <div class="cnt">
+                <div class="row">
+                    <div class="col">
+                        <div class="section-title">
+                            <div class="tith3 flex-content-center">
+                                <span class="tith3-name">{% trans 'Պահանջված Բաժիններ' %}</span>
+                                <a href="{% url 'catalog' %}" class="tith3-link flex-content-center">{% trans 'Տեսնել Ավելին' %}</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% for header_cat in header_categories %}
+                    <div class="col col-3">
+                        <a href="{{ header_cat.get_absolute_url }}">
+                            <div class="hmc-block" style=" background-color: {{ header_cat.color }};">
+                                <div class="hmc-block-img">
+                                    <figure>
+                                        <img src="{% if header_cat.logo %}{{ header_cat.logo.url }}{% else %}{% static 'img/cat-default-img/1.svg' %}{% endif %}" alt="{% if header_cat.homepage_name %}{{ header_cat.homepage_name }}{% else %}{{ header_cat.name }}{% endif %}">
+                                    </figure>
+                                </div>
+                                <div class="hmc-block-title">
+                                    <h2><span>{{ header_cat.name }}</span></h2>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        <!-- Home page category end -->
+
+        <!-- New Products -->
+            <section class="section new-products_index">
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col">
+                            <div class="swiper-container slider-4">
+
+                                <div class="section-title">
+                                    <div class="tith3 flex-content-center">
+                                        <span class="tith3-name">{% trans 'Նորույթներ' %}</span>
+                                        <a href="{% url 'offers' %}?type=new" class="tith3-link flex-content-center">{% trans 'Տեսնել Ավելին' %}></a>
+                                    </div>
+                                    <div class="swiper-button-next swiper-next"></div>
+                                    <div class="swiper-button-prev swiper-prev"></div>
+                                </div>
+
+                                <div class="swiper-wrapper">
+                                    {% for product in products %}
+                                        <div class="swiper-slide">
+                                            {% include 'includes/product.html' %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="swiper-pagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        <!-- New Products end -->
+        
+        <!-- About Us -->
+        {% if video_and_text %}
+        <section class="section seo-txt">
+            <div class="cnt">
+                <div class="row align-items-center">
+                    <div class="col col-2 ord1">
+                     {% if video_and_text.text %}
+                        <div class="txt-place">
+                            {{ video_and_text.text|safe }}
+                        </div>
+                        <div class="txt-place-btn">
+                            <a href="#" class="button big dark">{% trans 'Իմանալ Ավելին' %}
+                                <img src="{% static 'img/icons/big-arrow.svg' %}" alt="{% trans 'Անցնել Գնումների' %}">
+                            </a>
+                        </div>
+                     {% endif %}
+                    </div>
+                    {% if video_and_text.video_file or video_and_text.video_url %}
+                    <div class="col col-2">
+                        <div class="video-place">
+                            {% if video_and_text.video_url %}
+                               <video controls class="lozad"  data-poster="{% static 'img/video-poster.jpg' %}">
+                                   <source data-src="{{ video_and_text.video_url }}" type="video/mp4">
+                               </video>
+                            {% else %}
+                                <iframe data-src="{{ video_and_text.video_file.url }}" class="lozad"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen=""></iframe>
+                            {% endif %}
+                        </div>
+                    </div>
+                        {% endif %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+        <!-- About Us end -->
+        
+        <!-- Best Sellers -->
+        {% if best_seller %}
+            <section class="section bestsellers-products_index">
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col">
+                            <div class="swiper-container slider-4">
+
+                                <div class="section-title">
+                                    <div class="tith3 flex-content-center">
+                                        <span class="tith3-name">{% trans 'TOP վաճառքներ' %}</span>
+                                        <a href="{% url 'offers' %}?type=best_seller" class="tith3-link flex-content-center">{% trans 'Տեսնել Ավելին' %}></a>
+                                    </div>
+                                    <div class="swiper-button-next swiper-next"></div>
+                                    <div class="swiper-button-prev swiper-prev"></div>
+                                </div>
+
+                                <div class="swiper-wrapper">
+                                    {% for product in best_seller %}
+                                        <div class="swiper-slide">
+                                            {% include 'includes/product.html' %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="swiper-pagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+        <!-- Best Sellers end -->
+        
+        <!-- Special offer banners -->
+        <section class="section special-offer-banners_index">
+            <div class="cnt">
+                <div class="row rec-banner">
+                    {% if banners %}
+                    {% for banner in banners %}
+                    <div class="col col-2">
+                        <div class="org-block">
+                            <div class="org-block-img">
+                                <img data-src="{{ banner.image.url }}" class="lozad cover" alt="{{ banner.name }}">
+                            </div>
+                            <div class="org-block-desc flex-center-between">
+                                <h2>{{ banner.name }}</h2>
+                                <a href="{{ banner.url }}" class="button big red">{% trans 'Մանրամասն' %}
+                                    <img src="{% static 'img/icons/big-arrow.svg' %}" alt="{% trans 'Անցնել Գնումների' %}"></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </section>
+        <!-- Special offer banners -->
+        
+        <!-- Sale Products -->
+        {% if sale %}
+            <section class="section sale-products_index">
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col">
+                            <div class="swiper-container slider-4">
+
+                                <div class="section-title">
+                                    <div class="tith3 flex-content-center">
+                                        <span class="tith3-name">{% trans 'Զեղչված Տեսականի' %}</span>
+                                        <a href="{% url 'offers' %}?type=sale" class="tith3-link flex-content-center">{% trans 'Տեսնել Ավելին' %}></a>
+                                    </div>
+                                    <div class="swiper-button-next swiper-next"></div>
+                                    <div class="swiper-button-prev swiper-prev"></div>
+                                </div>
+
+                                <div class="swiper-wrapper">
+                                    {% for product in sale %}
+                                        <div class="swiper-slide">
+                                            {% include 'includes/product.html' %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="swiper-pagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+        <!-- Sale Products end -->
+        
+        <!-- Bullets -->
+        {% if bullets %}
+            <section class="section bullets-canapea">
+                <div class="cnt">
+                    <div class="row no-margs">
+                        {% for bullet in bullets %}
+                            <div class="col-4">
+                                <div class="bullet-block text-center">
+                                    <div class="bullet-img">
+                                        <figure>
+                                            <img data-src="{{ bullet.icon.url }}" class="lozad"
+                                                 alt="{{ bullet.title }}">
+                                        </figure>
+                                    </div>
+                                    <div class="bullet-txt">
+                                        <h3>{{ bullet.title }}</h3>
+                                        <p>{{ bullet.text|safe }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+        <!-- Bullets end -->
+        
+        <!-- subscribe -->
+            <!--
+        <section class="section subscribe-table">
+            <div class="cnt">
+                <div class="row">
+                    <div class="col">
+                        <div class="subscribe-us d-flex">
+                            <div class="subscribe-act">
+                                <p class="left-txt-one">{% trans 'Միացե՛ք մեզ' %}</p>
+                                <p class="left-txt-two">{% trans 'Բաժանորդագրվեք մեր նորություններին' %}</p>
+                            </div>
+                            <div class="subscribe-go">
+                                <form action="{% url 'subscribe' %}" id="subscribe-form" method="post">
+                                    {% csrf_token %}
+                                    <div class="sub_form align-items-center">
+                                        <input type="email" name="email" placeholder="E-mail" class="field-in" required>
+                                        <input type="submit" class="filed-submit"
+                                               value="{% trans 'Բաժանորդագրվել' %} →">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+            -->
+        <!-- subscribe end -->
+
+    </main>
+    <!-- Main content end -->
+    
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+    <!-- Footer end -->
+    
+</div>
+
+<script src="{% static 'js/canapea3.6_main.js' %}"></script>
+<script src="{% static 'js/canapea_script.js' %}"></script>
+<script src="{% static 'js/canapea_swiper.js' %}"></script>
+<script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+<script src="{% static 'js/wish.js' %}"></script>
+<script src="{% static 'js/cart.js' %}"></script>
+</body>
+
+</html>

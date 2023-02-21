@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>Beer City</title>
+    <meta name="Description" content="">
+    <link rel="shortcut icon" href="https://i-and-my-world.xyz/static/img/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,300&display=swap" rel="stylesheet">
+
+
+    <style>
+        body {
+            position: relative;
+            background: url(https://i-and-my-world.xyz/static/img/coming-soon.jpg) center center;
+            background-size: contain;
+        }
+
+        * {
+            outline: none;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        html {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        *,
+        body {
+            font-family: 'Lato', sans-serif;
+            color: #f1f1f1;
+        }
+
+        .cnt {
+            padding-right: 10px;
+            padding-left: 10px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .row {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            margin-right: -10px;
+            margin-left: -10px;
+        }
+
+        .col {
+            position: relative;
+            width: 100%;
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+
+        .flex-content-center {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+        }
+
+        #root {
+            position: fixed;
+            width: 100%;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -40%);
+        }
+
+        .comimg-soon-img {
+            margin-bottom: 70px;
+        }
+        .comimg-soon-beercity {
+            margin-bottom: 30px;
+    }
+        .comimg-soon-beercity h1 {
+            font-size: 50px;
+            letter-spacing: 8px;
+            font-weight: 500;
+            line-height: 50px;
+        }
+
+        .coming-soon-social li {
+            list-style: none;
+            padding: 0;
+        }
+
+        .coming-soon-social li:first-child {
+            margin-right: 25px;
+        }
+
+        .coming-soon-social ul {
+            padding: 0;
+        }
+
+        @media (max-width: 767.5px) {
+            .comimg-soon-beercity h1 {
+                font-size: 25px;
+                letter-spacing: 7px;
+                line-height: 20px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="root">
+        <div class="cnt">
+            <div class="row">
+                <div class="col">
+                    <div class="comimg-soon-img flex-content-center">
+                        <img src="https://i-and-my-world.xyz/static/img/logo.svg" alt="beercity" style="height: 200px;width: 200px;">
+                    </div>
+
+                    <div class="comimg-soon-beercity flex-content-center">
+                        <h1>COMING SOON</h1>
+                    </div>
+
+                    <div class="coming-soon-social flex-content-center">
+                        <ul class="flex-content-center">
+                            <li>
+                                <a href="https://www.facebook.com/beercity.am/" target="_blank">
+                                    <img src="https://i-and-my-world.xyz/static/img/icons/foot-facebook.svg" alt="Facebook" style="width:35px">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.instagram.com/beercity.am/" target="_blank">
+                                    <img src="https://i-and-my-world.xyz/static/img/icons/foot-instagram.svg" alt="instagram" style="width:35px">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <h2 class="flex-content-center"><a href="tel:+37433299299" style="text-decoration:none;letter-spacing:2px;" class="flex-content-center">+374 (33) 299 299</a></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+{% load i18n %}
+
+<div id="codeVeridication" class="click-hide">
+
+    <div class="input-fields all-auth">
+
+        <!-- SMS Code input -->
+        <form id="otp" onsubmit="">
+            <div class="flex-content-center fieldset">
+                <label class="box align-items-center">
+                    <input type="number" class="field otpCode" name="otp_code" placeholder="•"/>
+                </label>
+                <label class="box align-items-center">
+                    <input type="number" class="field otpCode" name="otp_code" placeholder="•"/>
+                </label>
+                <label class="box align-items-center">
+                    <input type="number" class="field otpCode" name="otp_code" placeholder="•"/>
+                </label>
+                <label class="box align-items-center">
+                    <input type="number" class="field otpCode" name="otp_code" placeholder="•"/>
+                </label>
+                <label class="box align-items-center">
+                    <input type="number" class="field otpCode" name="otp_code" placeholder="•"/>
+                </label>
+            </div>
+
+            <div class="butt-sign">
+                <!-- if sms code is failure -->
+                <!-- if sms code is failure end -->
+
+                <!-- if sms code is success -->
+                <input
+                    type="button"
+                    id="ContinueRegistration"
+                    class="button big dark"
+                    name="submit"
+                    value="Շարունակել">
+                <!-- if sms code is success end -->
+            </div>
+        </form>
+        <!-- End SMS Code input -->
+
+    </div>
+    <div class="login-or-create">
+        <a href="javascript:void (0)" id="resendCode" class="ls_butt">{% trans 'Չե՞ք ստացել:' %} <span>{% trans 'Ստանալ կոդը կրկին' %}</span></a>
+    </div>
+</div>
+

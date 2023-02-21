@@ -1,0 +1,121 @@
+{% load i18n %}{% load static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+
+<head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>Search</title>
+    <meta name="Description" content="">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+</head>
+
+<body>
+
+    <div id="root">
+        {% include 'includes/header.html' %}
+        <!-- Main content -->
+        <main class="content">
+            <section id="shop-page-content" class="section page-content">
+
+                <!-- Page Banner -->
+                <div class="page-banner" style="background-image: url({% if st_content.breadcrumbs_image %}{{ st_content.breadcrumbs_image.url }}{% else %}{% static 'img/shop-banner.jpg' %}{% endif %});">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col">
+                                <div class="page-banner-text">
+                                    <h1>{% if q %}{{ q }}{% else %}{{ st_content.page_title }}{% endif %}</h1>
+                                    {% if st_content.breadcrumbs_text %}
+                                    <p>{{ st_content.breadcrumbs_text|safe }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <!-- Breadcrumbs -->
+                            <div class="col">
+                                <div class="breadcrumbs">
+                                    <ul class="breadcrumbs-list align-items-center">
+                                        <li class="breadcrumbs-item">
+                                            <a href="{% url 'home_page' %}" class="breadcrumbs-link">
+                                                <span>{% trans 'Գլխավոր' %}</span>
+                                            </a>
+                                        </li>
+                                        <li class="breadcrumbs-item">
+                                            <a href="{% url 'catalog' %}" class="{% if q %}breadcrumbs-link{% else %}breadcrumbs-item{% endif %}">
+                                                <span>{% trans 'Որոնում' %}</span>
+                                            </a>
+                                        </li>
+                                        {% if q %}
+                                        <li class="breadcrumbs-item">
+                                            <span>{{ q }}</span>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Breadcrumbs end-->
+                        </div>
+                    </div>
+                </div>
+                <!-- Page Banner end -->
+
+
+                <!-- Search -->
+                <div class="section all-shop-cnt">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col col-4 sh-pg">
+                                <div class="br-shpage">
+                                    <div class="nav-offcanvas-content">
+                                        <div id="op-time" class="params-on-tit">
+                                            <h3 class="align-items-center">
+                                                <img src="{% static 'img/icons/catalog-white.svg' %}" class="cat-name-mr" alt="{% trans 'Բաժիններ' %}">
+                                                <span>{% trans 'Բաժիններ' %}</span>
+                                                <img src="{% static 'img/icons/cat-down.svg' %}" class="d-none ml-auto" alt="{% trans 'Բաժիններ' %}">
+                                            </h3>
+                                        </div>
+                                        {% include 'includes/category_dropdown.html' %}
+                                    </div>
+                                    {% include 'includes/filter.html' %}
+                                </div>
+                            </div>
+                            <div class="col col-9">
+                                {% include 'includes/mob_filter.html' %}
+                                {% if page_obj.object_list|length < 1 %}
+                                <div class="no-result">
+                                    <div class="alert alert-danger">
+                                        <div class="align-items-center">
+                                            <span>{% trans 'Որոնման արդյունքում ոչինչ չգտնվեց:' %}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div id="products-cont">
+                                    {% include 'includes/filter_product.html' %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Search end -->
+            </section>
+        </main>
+        <!-- Main content end -->
+        {% include 'includes/footer.html' %}
+    </div>
+
+    <script src="{% static 'js/canapea3.6_main.js' %}"></script>
+    <script src="{% static 'js/canapea_script.js' %}"></script>
+    <script src="{% static 'js/canapea_swiper.js' %}"></script>
+    <script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+    <script src="{% static 'js/filter.js' %}"></script>
+    <script src="{% static 'js/wish.js' %}"></script>
+    <script src="{% static 'js/cart.js' %}"></script>
+</body>
+
+</html>

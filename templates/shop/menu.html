@@ -1,0 +1,104 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>{% if menu.meta_title %}{{ menu.meta_title }}{% else %}{% trans 'Մենյու' %}{% endif %} | {{ domain }}</title>
+    <meta name="Description" content="{% if menu.meta_description %}{{ menu.meta_description }}{% endif %}">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+</head>
+
+<body>
+
+    <div id="root">
+        {% include 'includes/header.html' %}
+        <!-- Main content -->
+        <main class="content">
+            <section class="section page-content">
+
+                <!-- Breadcrumbs -->
+                <div class="breadcrumbs">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col">
+
+                                <ul class="breadcrumbs-list align-items-center">
+                                    <li class="breadcrumbs-item">
+                                        <a href="{% url 'home_page' %}" class="breadcrumbs-link">
+                                            <span>{% trans 'Գլխավոր' %}</span>
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumbs-item">
+                                        <span>{% trans 'Մենյու' %}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Breadcrumbs end-->
+
+                <!-- Page Banner -->
+                <div class="page-banner">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col">
+                               
+                                <div class="page-banner-img"
+                                     style="background-image: url({% if menu.breadcrumb_image %}{{ menu.breadcrumb_image.url }}{% else %}{% static 'img/pb.jpg' %}{% endif %});">
+                                    <div class="page-banner-text">
+                                        <h1>{{ menu.name }}</h1>
+                                        <p>{% if menu.short_description %}{{ menu.short_description|safe }}{% endif %}</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Page Banner end -->
+                
+                <!-- only menu sub cat -->
+                <div class="catalog-menu">
+                    <div class="cnt">
+                        <div class="row">
+                           {% for child in childs %}
+                           <div class="col col-catalog">
+                                <div class="catalog-block">
+                                    <a href="{{child.get_absolute_url}}">
+                                        <figure class="cat-bl-img">
+                                            <img src="{% if child.icon %}{{ child.icon.url}}{% else %}{% static 'img/icons/catalog-default.jpg' %}{% endif %}" alt="{{ child.name}}">
+                                        </figure>
+                                        <span class="cat-bl-name flex-center-between">{{ child.name}}
+                                            <img src="{% static 'img/icons/right-cat.svg' %}" alt="{{ child.name}}">
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <!-- only menu sub cat end -->
+
+            </section>
+        </main>
+
+        {% include 'includes/footer.html' %}
+    </div>
+
+    <script src="{% static 'js/canapea3.6_main.js' %}"></script>
+    <script src="{% static 'js/canapea_script.js' %}"></script>
+    <script src="{% static 'js/canapea_swiper.js' %}"></script>
+    <script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+</body>
+
+</html>

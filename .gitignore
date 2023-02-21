@@ -5,13 +5,18 @@ __pycache__/
 
 # C extensions
 *.so
-
+.vscode/*
 # Distribution / packaging
 .Python
 build/
 develop-eggs/
 dist/
 downloads/
+static/
+static_dev/
+media/
+local_settings.py
+.DS_Store
 eggs/
 .eggs/
 lib/

@@ -1,0 +1,242 @@
+{% load static %}{% load i18n %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>{% trans 'Կապ' %} | {{ domain }}</title>
+    <meta name="Description" content="">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" />
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+    <style>
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+            font-size: 16px;
+            height: 55px
+        }
+    .select2-container {
+    display: block;
+    width: auto !important;
+}
+    .select2-container--default .select2-selection--single {
+            min-height: 55px;
+            padding: 0 10px;
+            height: 55px;
+            font-size: 19px;
+            line-height: 22px;
+            background: rgba(34, 60, 5, 0.06);
+            border: 2px solid rgba(34, 60, 5, 0.08);
+            border-radius: 12px;
+            letter-spacing: 1px
+        }
+    .select2-container--default .select2-selection--single:focus-visible {
+            background: #fff
+        }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            font-size: 16px;
+            height: 52px
+        }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 29px;
+            top: 13px;
+            right: 10px;
+            width: 25px
+        }
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            border-width: 7px 6px 0
+        }
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #223C05;
+            color: #fff
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="root">
+        {% include 'includes/header.html' %}
+        <main class="content">
+            <section class="section page-content">
+           <!-- Page Banner -->
+            <div class="page-banner" style="background-image: url({% if st_content.breadcrumbs_image %}{{ st_content.breadcrumbs_image.url }}{% else %}{% static 'img/shop-banner.jpg' %}{% endif %});">
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col">
+                            <div class="page-banner-text">
+                                <h1>{{ st_content.page_title }}</h1>
+                                {% if st_content.breadcrumbs_text %}
+                                  <p>{{ st_content.breadcrumbs_text|safe }}</p>      
+                                {% endif %}
+                            </div>
+                        </div>
+                        <!-- Breadcrumbs -->
+                        <div class="col">
+                            <div class="breadcrumbs">
+                                <ul class="breadcrumbs-list align-items-center">
+                                    <li class="breadcrumbs-item">
+                                        <a href="{% url 'home_page' %}" class="breadcrumbs-link">
+                                            <span>{% trans 'Գլխավոր' %}</span>
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumbs-item">
+                                        <span>{% trans 'Կապ' %}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Breadcrumbs end-->
+                    </div>
+                </div>
+            </div>
+            <!-- Page Banner end -->
+                
+                <!-- contacts -->
+                <div class="contacts-page">
+                    <div class="cnt section">
+                        <div class="row ">
+                            <div class="col col-2 c-order">
+                                <div class="form-contact left">
+                                    <h2>{% trans 'Հարցեր և Առաջարկներ' %}</h2>
+                                    <div class="only-form_cont">
+
+                                        <!-- Form Message-->
+                                        {% include 'includes/message.html' %}
+                                        <!-- Form Message end-->
+
+                                        <form id="contact-form" method="post">
+                                           <div class="input-fields all-auth">
+                                                    <label for="name">{% trans 'Անուն Ազգանուն' %} *</label>
+                                                    <input type="text" id="name" name="name" placeholder="">
+                                            </div>
+
+                                            <div class="input-fields all-auth">
+                                                <label for="email">Email *</label>
+                                                <input type="email" id="email" name="email" placeholder="">
+                                            </div>
+
+                                            <div class="input-fields all-auth s2">
+                                                <label for="question">{% trans 'Թեմա' %} *</label>
+                                                <select id="question" class="js-select2 another-field" name="question">
+                                                    <option value=""> -- {% trans 'Ընտրել' %} -- </option>
+                                                    {% for theme in themes %}
+                                                    <option value="{{ theme.id }}">{{ theme.name }}</option>
+                                                    {% endfor %}
+                                                    <option value="other">{% trans 'Այլ' %}</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="input-fields all-auth">
+                                                <label for="message">{% trans 'Հաղորդագրություն' %} *</label>
+                                                <textarea id="message" name="message" class="fw" rows="4"></textarea>
+                                            </div>
+
+                                            <div class="line-inputs-group">
+                                                <button type="submit" id="SendMess" class="button big dark"
+                                                        name="submit">{% trans 'Ուղարկել' %}
+                                                    <img src="{% static 'img/icons/big-arrow.svg' %}"
+                                                         alt="{% trans 'Անցնել Գնումների' %}">
+                                                </button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-2">
+                                <div class="form-contact">
+                                    <h2>{% trans 'Կապ Մեզ Հետ' %}</h2>
+                                    <ul class="cont-r">
+                                        {% for icon in contact_icons %}
+                                        <li class="align-items-center">
+                                            <a href="{% if icon.url %}{{ icon.url }}{% else %}javascript: void(0){% endif %}">
+                                                <img src="{% if icon.icon %}{{ icon.icon.url }}{% endif %}"
+                                                     alt="{% trans 'Կապ Մեզ Հետ' %}">{{ icon.text }}</a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <div class="follow-cont">
+                                        <h2>{% trans 'Հետևեք Մեզ' %}</h2>
+                                        <ul class="cont-soc-icons align-items-center">
+                                            {% for soc_item in social_buttons %}
+                                            <li class="align-items-center">
+                                                <a href="{{soc_item.url}}">
+                                                    <img src="{% if soc_item.icon %}{{ soc_item.icon.url }}{% endif %}"
+                                                         class="lozad loaded" alt="{{ soc_item.title }}">
+                                                </a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cont-map">
+                        <iframe data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d291.6518490450727!2d44.474241106123905!3d40.19279530787512!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x406abdd2f1c8d25f%3A0x40db3978e27fc49f!2sCanapea!5e0!3m2!1sen!2s!4v1648581548476!5m2!1sen!2s" class="lozad" width="100%" height="500" style="border:0;" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                    
+                </div>
+                <!-- contacts end -->
+
+            </section>
+        </main>
+        {% include 'includes/footer.html' %}
+    </div>
+
+    <script src="{% static 'js/canapea3.6_main.js' %}"></script>
+    <script src="{% static 'js/canapea_script.js' %}"></script>
+    <script src="{% static 'js/canapea_swiper.js' %}"></script>
+    <script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
+    <script>
+    // select2
+        $(".js-select2").select2();
+        
+     //Validate
+     $(function () {
+        $('#contact-form').validate({
+            rules: {
+                name: "required",
+                email: {
+                    required: true,
+                    email: true
+                },
+                question: {
+                    required: true
+                },
+                message: {
+                    required: true
+                },
+                
+            },
+            messages: {
+                name: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                email: {
+                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                    email: "{% trans 'Մուտքագրեք Ձեր Էլ. Փոստի հասցեն' %}"
+                },
+               question: {
+                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+
+                },
+                message: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+    </script>
+</body>
+
+</html>

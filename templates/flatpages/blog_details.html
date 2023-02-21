@@ -1,0 +1,136 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>{% if post.meta_title %}{{ post.meta_title }}{% else %}{{ post.name }} | {{ domain }}{% endif %}</title>
+    <meta name="Description" content="{% if post.meta_description %}{{ post.meta_description }}{% endif %}">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+</head>
+
+<body>
+
+    <div id="root">
+        {% include 'includes/header.html' %}
+        <!-- Main content -->
+        <main class="content">
+            <section class="section page-content">
+        <div class="no-page-banner" style="background-image: url({% static 'img/shop-banner.jpg' %})"></div>
+                <!-- Breadcrumbs -->
+                <div class="breadcrumbs">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col">
+
+                                <ul class="breadcrumbs-list align-items-center">
+                                    <li class="breadcrumbs-item">
+                                        <a href="{% url 'home_page' %}" class="breadcrumbs-link">
+                                            <span>{% trans 'Գլխավոր' %}</span>
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumbs-item">
+                                        <a href="{% url 'blog_list' %}" class="breadcrumbs-link">
+                                            <span>{% trans 'Բլոգ' %}</span>
+                                        </a>
+                                    </li>
+                                    {% if post.category %}
+                                    <li class="breadcrumbs-item">
+                                        <a href="{{ post.category.get_absolute_url }}" class="breadcrumbs-link">
+                                            <span>{{ post.category.name }}</span>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                    <li class="breadcrumbs-item">
+                                        <span>{{ post.name }}</span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Breadcrumbs end-->
+                
+                <!-- Blog full -->
+                <div class="section blog-full">
+                    <div class="cnt">
+                       <div class="row">
+                         
+                          <div class="col">
+                              <div class="full-blog-content">
+                                <div class="blog-tit text-center">
+                                 <h1>{{ post.name }}</h1>
+                               </div>
+                                <div class="blog-settings flex-center-between">
+                                   <div class="set-left align-items-center">
+                                       <div class="bl_set-atr bl1 align-items-center">
+                                           <img src="{% static 'img/icons/bl-calendar.svg' %}" class="view-icon" alt="{% trans 'Ավելացման ամսաթիվ' %}">
+                                           <span>{{ post.created_at|date:"Y-m-d" }}</span>
+                                       </div>
+                                       <div class="bl_set-atr bl2 align-items-center">
+                                           <img src="{% static 'img/icons/bl-author.svg' %}" class="view-icon" alt="Canapea">
+                                           <span>Canapea</span>
+                                       </div>
+                                       <div class="bl_set-atr bl3 align-items-center">
+                                           <img src="{% static 'img/icons/bl-views.svg' %}" class="view-icon" alt="{% trans 'Դիտումների քանակ' %}">
+                                           <span>{{ post.views_count }}</span>
+                                       </div>
+                                   </div>
+                                </div>
+                                <div class="all-paragraphs-styles">
+                                    {{ post.large_text|safe }}
+                                </div>
+                              </div>
+                          </div>
+                          
+                       </div>
+                    </div>
+                </div>
+                <!-- Blog full end -->
+                {% if related_posts %}
+                <!-- Blog related -->
+                <div class="blog-main">
+                    <div class="cnt">
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="section-title">
+                                    <div class="tith3 align-items-center">
+                                        <span class="tith3-name">{% trans 'Բլոգ' %}</span>
+                                        <a href="{% url 'blog_list' %}" class="tith3-link flex-content-center">{% trans 'Տեսնել Ավելին' %}
+                                            <img src="{% static 'img/icons/see-arrow.svg' %}" alt="{% trans 'Տեսնել բոլորը' %}"></a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% for blog in related_posts %}
+                            <div class="col col-3">
+                                {% include 'includes/blog_item.html' with post=blog %}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Blog related end -->
+                {% endif %}
+            </section>
+        </main>
+        {% include 'includes/footer.html' %}
+
+    </div>
+
+    <script src="{% static 'js/canapea3.6_main.js' %}"></script>
+    <script src="{% static 'js/canapea_script.js' %}"></script>
+    <script src="{% static 'js/canapea_swiper.js' %}"></script>
+    <script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+</body>
+
+</html>

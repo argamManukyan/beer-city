@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>404</title>
+    <meta name="Description" content="">
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="css/canapea_swiper.css">
+    <link rel="stylesheet" href="css/canapea_color.css">
+    <link rel="stylesheet" href="css/canapea_style.css">
+</head>
+
+<body>
+
+    <div id="root">
+        <!-- header-->
+        <header>
+            <div class="top-header m-none">
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col-no-100 top-left align-items-center">
+                          <ul class="align-items-center">
+                                <li class="list-inline ">
+                                    <a href="#" class="align-items-center">
+                                        <img src="img/icons/top-bonus.svg" class="top-icon" alt="Բոնուսային համակարգ"><span>Բոնուսային համակարգ</span>
+                                    </a>
+                                </li>
+                                <li class="list-inline">
+                                    <a href="faqs.html" class="align-items-center">
+                                        <img src="img/icons/top-faq.svg" class="top-icon" alt="ՀՏՀ">
+                                        <span>ՀՏՀ</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-no-100 top-right">
+                            <ul class="align-items-center">
+                                <li class="list-inline">
+                                    <a href="contacts">
+                                        <img src="img/icons/top-location.svg" class="top-icon" alt="Shinararner 4/73 Yerevan, Armenia">Shinararner 4/73 Yerevan, RA
+                                    </a>
+                                </li>
+                                <li class="list-inline">
+                                    <a href="tel:+37460651565">
+                                        <img src="img/icons/top-phone.svg" class="top-icon" alt="+374 (60) 65 15 65">+374 (60) 65 15 65
+                                    </a>
+                                </li>
+                                <li class="web_langs">
+                                    <a href="javascript:void(0);" class="choose"> <span class="menus align-items-center">
+                                            ՀԱՅ<img src="img/icons/arrow-down.svg" class="down-icon" alt="">
+                                        </span> </a>
+                                    <ul class="choose_lang">
+                                        <li> <a href="#">ENG</a> </li>
+                                        <li> <a href="#">РУС</a> </li>
+                                    </ul>
+                                </li>
+                                <li class="web_valyut">
+                                    <form id="currency_switcher" method="POST" action="">
+                                        <input type="hidden" name="" value="">
+                                        <select name="currency" id="curr_sel">
+                                            <option value="AMD" selected="selected"> AMD ֏ </option>
+                                            <option value="EUR"> EUR € </option>
+                                            <option value="RUB"> RUB ₽ </option>
+                                            <option value="USD"> USD $ </option>
+                                        </select>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="middle-header">
+                <div class="cnt">
+
+                    <div class="row flex-center-between">
+
+                        <div class="col col-auto lg-none">
+                            <ul class="middle-cart-wish middle-cat-search align-items-center">
+                                <li class="catalog-fully">
+                                    <a href="#">
+                                      <span class="only_icon_des flex-content-center">
+                                         <img src="img/icons/mobile-menu.svg" alt="Մենյու">
+                                      </span>
+                                      <span class="cqs trs">Մենյու</span>
+                                    </a>
+                                </li>
+                                
+                                <li id="search-show">
+                                    <a href="#">
+                                      <span class="only_icon_des flex-content-center">
+                                         <img src="img/icons/serachmm.svg" alt="Որոնել">
+                                      </span>
+                                      <span class="cqs trs">Որոնում</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="col col-auto">
+                            <div class="logo-main">
+                                <a href="index.html" class="m-none">
+                                    <img src="img/logo.svg" alt="Canapea Catering">
+                                </a>
+                                <a href="index.html" class="lg-none">
+                                    <img src="img/logo-md.svg" alt="Canapea Catering">
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="col col-auto m-none fixed-seach-bl">
+                            <form class="search-bar" id="searching" action="" data-url="">
+                               
+                              
+                                  <div class="d-none res_modal_header flex-center-between">
+                                      <span>Ապրանքի Որոնում</span>
+                                      <img src="img/icons/close-alter.svg" id="search-close" alt="Փակել">
+                                  </div> 
+                            
+
+                                <div class="serach-header">
+                                    <div class="fast-search align-items-center">
+                                        <input type="text" id="searchproduct" class="fast-search-input" name="q" autocomplete="off" placeholder="Որոնել ...">
+                                        <button type="submit" id="" class="search-butt-fl">
+                                            <img src="img/icons/search-middle.svg" alt="Որոնել ...">
+                                        </button>
+                                        <!--  Search result-->
+                                        <div class="all-lists" id="search-list-items">
+                                            <ul id="search_list">
+                                                <li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li>
+                                                <li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li><li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li>
+                                                <li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li>
+                                                <li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li><li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li>
+                                                <li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li>
+                                                <li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li><li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li>
+                                                <li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li>
+                                                <li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li><li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li>
+                                                <li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li>
+                                                <li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li><li class="fast-search-item">
+                                                    <a href="#" class="line-clamp1 align-items-center">
+                                                        <img src="https://flowershome.am/media/product_images/32.jpg" class="cover" alt="Ապրանքի անվանում">Ապրանքի անվանում
+                                                    </a>
+                                                </li>
+                                                
+
+                                            </ul>
+                                        </div>
+                                        <!--  Search result end -->
+                                    </div>
+                                </div>
+                               
+                            </form>
+                        </div>
+
+                        <div class="col col-auto">
+                            <ul class="middle-cart-wish align-items-center">
+                                <li>
+                                    <a href="wishlist.html">
+                                      <span class="only_icon_des flex-content-center">
+                                         <img src="img/icons/wish-middle.svg" alt="Ցանկությունների ցուցակ">
+                                         <span class="in-cart-qty flex-content-center">1</span>
+                                      </span>
+                                      <span class="cqs trs">Ցանկալի</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="cart.html" class="">
+                                       <span class="only_icon_des flex-content-center">
+                                         <img src="img/icons/cart-middle.svg" alt="Զամբյուղ">
+                                         <span class="in-cart-qty flex-content-center">1</span>
+                                       </span>
+                                       <span class="cqs trs lg-none">Զամբյուղ</span>
+                                       <span class="cqs m-none">
+                                          <span class="wh-point">130.000</span>
+                                          <span class="valyuta">֏</span>
+                                       </span>
+                                    </a>
+                                </li>
+                                
+                                <li class="middle-login m-none">
+                                  <a href="#" class="button button-outline-dark flex-content-center">Մուտք<img src="img/icons/login-middle.svg" alt="Մուտք"></a>
+                                  <a href="#" class="cqs trs"><span>Գրանցում</span></a>
+                                </li>
+                                
+                                <!--if user logged in -->
+<!--
+                                <li class="middle-login m-none">
+                                  <a href="#" class="button button-outline-dark flex-content-center">Իմ էջը<img src="img/icons/login.svg" alt="Մուտք"></a>
+                                  <a href="#" class="cqs trs"><span>Դուրս գալ</span></a>
+                                </li>
+-->
+                                <!--if user logged in ենդ -->
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="shop-main-menu m-none">
+                <div class="cnt">
+                    <div class="row align-items-center">
+                        <div class="col-no-100 top-left">
+                            <ul class="fix-links align-items-center">
+                                <li class="menu-butt">
+                                  <a href="#" class="button button-outline-dark flex-content-center">
+                                      <img src="img/icons/menu-icon.svg" alt="Մենյու">Մենյու
+                                  </a>
+                                </li>
+                                <li class="new_spec">
+                                   <a href="#">Նորույթ</a>
+                                </li>
+                                <li class="new_spec">
+                                   <a href="#">Հատուկ առաջարկ</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-no-100 top-right">
+                            <ul class="main-memu-links align-items-center">
+                                <li><a href="#">Գլխավոր</a></li>
+                                <li><a href="#">Մեր մասին</a></li>
+                                <li><a href="#">Բլոգ</a></li>
+                                <li><a href="#">Տեսադարան</a></li>
+                                <li><a href="#">Կապ</a></li>
+                                <li><a href="#">Միացիր թիմին</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cats-links">
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col">
+
+                            <div class="swiper-container slider-menu-cats">
+                                <div class="swiper-wrapper flex-center-between">
+
+                                    <div class="swiper-slide">
+                                        <a href="#" class="on-cat-link flex-content-center" style="background-color: #FF5757;">
+                                            <img src="img/cat-img/1.svg" alt="Ֆուրշետ">
+                                            <span>Ֆուրշետ</span>
+                                        </a>
+                                    </div>
+                                    
+                                    <div class="swiper-slide">
+                                        <a href="#" class="on-cat-link flex-content-center" style="background-color: #8A4929;">
+                                            <img src="img/cat-img/2.svg" alt="Խմորեղեն">
+                                            <span>Խմորեղեն</span>
+                                        </a>
+                                    </div>
+                                    
+                                    <div class="swiper-slide">
+                                        <a href="#" class="on-cat-link flex-content-center" style="background-color: #0A474D">
+                                            <img src="img/cat-img/3.svg" alt="Պիցցա">
+                                            <span>Պիցցա</span>
+                                        </a>
+                                    </div>
+                                    
+                                    <div class="swiper-slide">
+                                        <a href="#" class="on-cat-link flex-content-center" style="background-color: #434D7E">
+                                            <img src="img/cat-img/4.svg" alt="Լանչ բոքս">
+                                            <span>Լանչ բոքս</span>
+                                        </a>
+                                    </div>
+                                    
+                                    <div class="swiper-slide">
+                                        <a href="#" class="on-cat-link flex-content-center" style="background-color: #FFA70B;">
+                                            <img src="img/cat-img/5.svg" alt="Սուշի">
+                                            <span>Սուշի</span>
+                                        </a>
+                                    </div>
+                                    
+                                    <div class="swiper-slide">
+                                        <a href="#" class="on-cat-link flex-content-center" style="background-color: #94C016;">
+                                            <img src="img/cat-img/6.svg" alt="Նվեր տուփ">
+                                            <span>Նվեր տուփ</span>
+                                        </a>
+                                    </div>
+                                    
+                                    <div class="swiper-slide">
+                                        <a href="#" class="on-cat-link flex-content-center" style="background-color: #8403C2;">
+                                            <img src="img/cat-img/7.svg" alt="Ծաղիկներ">
+                                            <span>Ծաղիկներ</span>
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!--Full Catalog-->
+        <div class="nav-offcanvas d-none">
+        <div class="mob-menu-head">
+            <ul class="mob-top-header cutter flex-center-between">
+              <li class="catalog-first-name align-items-center">
+              <img src="img/logo.svg" alt="Canapea Catering"></li>
+              <li id="offCanvasClose">
+               <img src="img/icons/catalog-close.svg" class="catalog-fully-close" alt="Close">
+              </li>
+            </ul>
+            <ul class="mob-langs align-items-center">
+                <li><a href="javascript:void(0);" class="active">Հայ</a></li>
+                <li><a href="#">Рус</a></li>
+                <li><a href="#">Eng</a></li>
+                <li class="web_valyut">
+                    <form id="currency_switcher" method="POST" action="">
+                        <input type="hidden" name="" value="">
+                        <select name="currency" id="curr_sel">
+                            <option value="AMD" selected="selected"> AMD ֏ </option>
+                            <option value="EUR"> EUR € </option>
+                            <option value="RUB"> RUB ₽ </option>
+                            <option value="USD"> USD $ </option>
+                        </select>
+                    </form>
+                </li>
+            </ul>
+            <ul class="cutter text-center sign-in-head-mob flex-center-evenly">
+                 
+			   		<li>
+			   			<a href="#" class="flex-content-center">
+			   			   <img src="img/icons/login.svg" class="top-icon" alt="">Մուտք / Գրանցում
+			   			</a>
+			   		</li>
+
+                    <!--if user logged in-->
+                    
+                    <!--
+			   		<li>
+			   		    <a href="user-page.html" class="flex-content-center">
+			   		        <img src="img/icons/login.svg" class="top-icon" alt="Իմ Էջը">Իմ Էջը
+			   		    </a>
+			   		</li>
+			   		<li>
+			   		    <a href="sign-in.html" class="flex-content-center">
+			   		        <img src="img/icons/login-middle.svg" class="top-icon" alt="Դուրս գալ">Դուրս գալ
+			   		    </a>
+			   		</li>
+-->
+
+                    <!--if user logged in end -->
+             </ul>
+             
+          </div> 
+        <div class="nav-offcanvas-menu">
+                <ul class="another-links">
+                    <li class="menu-butt-mobile">
+                      <a href="#">
+                        <span class="mbm-name align-items-center"><img src="img/icons/menu-icon.svg" alt="Մենյու">Մենյու</span>
+                        <span class="mbm-icon"><img src="img/icons/m-menu.svg" alt="Մենյու"></span>
+                      </a>
+                    </li>
+                    <li><a href="#">Գլխավոր</a></li>
+			   		<li><a href="#">Մեր մասին</a></li>
+			   		<li><a href="#">Բլոգ</a></li>
+			   		<li><a href="#">Տեսադարան</a></li>
+			   		<li><a href="#">Կապ</a></li>
+			   		<li><a href="#">Միացիր թիմին</a></li>
+			   		<li class="sale-link"><a href="#" class="align-items-center"><img src="img/icons/mob-sale.png" alt="Ակցիա">Ակցիա</a></li>
+			   		<li class="new-link decoration-link"><a href="#" class="align-items-center"><img src="img/icons/mob-new.svg" alt="Ակցիա">Նորույթ</a></li>
+			   		<li class="offer-link decoration-link"><a href="#" class="align-items-center"><img src="img/icons/mob-offer.png" alt="Ակցիա">Հատուկ առաջարկ</a></li>
+			   	</ul>
+
+        </div>
+    </div>
+        <div class="offcanvas-overlay"></div>
+        <!--Full Catalog end -->
+
+        <!-- Main content -->
+        <main class="content">
+            <section class="section page-content">
+
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col">
+                            <div class="not-found text-center">
+                                <div class="error-inner">
+                                    <div class="error-container">
+                                        <div class="error-page">
+                                            <h2 class="error-title flex-content-center">404</h2>
+                                            <h5>Էջը չի գտնվել</h5>
+                                            <p>Ստուգեք URL-ի ճշգրտությունը:<br>Եթե վստահ եք ձեր գործողություններում, կապվեք մեզ հետ. <b> info@canapea.am</b></p>
+                                            <div class=""> <a href="/" class="button normal dark">Դեպի Գլխավոր էջ</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </section>
+        </main>
+        <!-- Main content end -->
+
+        <!-- footer -->
+        <footer>
+        <div class="footer-top">
+           <div class="cnt">
+               <div class="row">
+                   <div class="col">
+                       <div class="swiper-container slider-partner">
+                <div class="swiper-wrapper">
+
+                    <div class="swiper-slide">
+                        <div class="partner-logo">
+                            <img data-src="img/partner.svg" class="lozad" alt="Գործընկեր">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="partner-logo">
+                            <img data-src="img/icons/foot-logo.svg" class="lozad" alt="Գործընկեր">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="partner-logo">
+                            <img data-src="img/partner.svg" class="lozad" alt="Գործընկեր">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="partner-logo">
+                            <img data-src="img/icons/foot-logo.svg" class="lozad" alt="Գործընկեր">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="partner-logo">
+                            <img data-src="img/partner.svg" class="lozad" alt="Գործընկեր">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="partner-logo">
+                            <img data-src="img/icons/foot-logo.svg" class="lozad" alt="Գործընկեր">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="partner-logo">
+                            <img data-src="img/partner.svg" class="lozad" alt="Գործընկեր">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="partner-logo">
+                            <img data-src="img/icons/foot-logo.svg" class="lozad" alt="Գործընկեր">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="partner-logo">
+                            <img data-src="img/partner.svg" class="lozad" alt="Գործընկեր">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="partner-logo">
+                            <img data-src="img/icons/foot-logo.svg" class="lozad" alt="Գործընկեր">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+                   </div>
+               </div>
+           </div>
+            
+        </div>
+        <div class="only-footer">
+           <div class="cnt">
+               <div class="row foot-flex">
+                  
+                   <div class="col col-5">
+                      <div class="footer-item">
+                       
+                        <h4>Կապ Մեզ Հետ</h4>
+                        <div class="items-all">
+                            <ul class="c-one">
+                             
+                               <li class="align-items-center">
+                                 <a href="viber://add?number=+37460651565"><img src="img/icons/foot-viber.svg" alt="Կապ Մեզ Հետ">+374(60) 65 15 65</a>
+                               </li>
+                               
+                               <li class="align-items-center">
+                                 <a href="https://api.whatsapp.com/send?phone=37460651565"><img src="img/icons/foot-whatssup.svg" alt="Կապ Մեզ Հետ">+374(60) 65 15 65</a>
+                               </li>
+                               
+                               <li class="align-items-center">
+                                 <a href="tel:+37460651565"><img src="img/icons/foot-telegram.svg" alt="Կապ Մեզ Հետ">+374(60) 65 15 65</a>
+                               </li>
+                               
+                               <li class="align-items-center">
+                                 <a href="tel:+37460651565"><img src="img/icons/foot-phone.svg" alt="Կապ Մեզ Հետ">+374(60) 65 15 65</a>
+                               </li>
+                               
+                               <li class="align-items-center"><img src="img/icons/foot-location.svg" alt="Կապ Մեզ Հետ">
+                                 <span>Հայաստան, 0038, Երևան Շինարարների փող., 4 շենք</span>
+                               </li>
+                            </ul>
+                        </div>
+                    </div>
+                    </div>
+                    
+                   <div class="col col-5">
+                      <div class="footer-item">
+                        <h4>Ընկերություն</h4>
+                        <div class="items-all">
+                            <ul>
+                               <li><a href="#">Մեր մասին</a></li>
+                               <li><a href="#">Կապ</a></li>
+                               <li><a href="#">Միացիր թիմին</a></li>
+                               <li><a href="#">Տեսադարան</a></li>
+                               <li><a href="#">Բլոգ</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    </div>
+                   <div class="col col-5">
+                      <div class="footer-item">
+                        <h4>Ինֆորմացիոն</h4>
+                        <div class="items-all">
+                            <ul>
+                               <li><a href="#">Բաժիններ</a></li>
+                               <li><a href="#">Հաճախակի Տրվող Հարցեր</a></li>
+                               <li><a href="#">Բոնուսային Համակարգ</a></li>
+                               <li><a href="#">Զեղչային Համակարգ</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                   </div>
+                   <div class="col col-5">
+                      <div class="footer-item">
+                        <h4>Օգտակար Հղումներ</h4>
+                        <div class="items-all">
+                            <ul>
+                               <li><a href="#">Ինչպես Պատվիրել</a></li>
+                               <li><a href="#">Վճարում և Առաքում</a></li>
+                               <li><a href="#">Վերադարձ և Փոխանակում</a></li>
+                               <li><a href="#">Պայմաններ և Դրույթներ</a></li>
+                               <li><a href="#">Գաղտնիության Քաղաքականություն</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                   </div>
+                   <div class="col col-5">
+                      <div class="footer-item">
+                        <h4>Անձնական էջ</h4>
+                        <div class="items-all">
+                            <ul>
+                               <li><a href="#">մուտք</a></li>
+                               <li><a href="#">գրանցում</a></li>
+                               <li><a href="#">Զամբյուղ</a></li>
+                               <li><a href="#">Ցանկությունների Ցուցակ</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                   </div>
+               </div>
+               
+               <div class="row flex-center-between b-no-flex">
+                  
+                 <div class="col col-auto ord-foot">
+                 <div class="rigth-foot align-items-center">
+                   <ul class="soc-icons align-items-center">
+                       <li class="align-items-center">
+                         <a href="#"><img data-src="img/icons/foot-facebook.svg" class="lozad" alt="Facebook"></a>
+                     </li>
+                     <li class="align-items-center">
+                         <a href="#"><img data-src="img/icons/foot-instagram.svg" class="lozad" alt="instagram"></a>
+                     </li>
+                     <li class="align-items-center">
+                         <a href="#"><img data-src="img/icons/foot-linkedin.svg" class="lozad" alt="linkedin"></a>
+                     </li>
+                     <li class="align-items-center">
+                         <a href="#"><img data-src="img/icons/foot-youtube.svg" class="lozad" alt="youtube"></a>
+                     </li>
+                     <li class="align-items-center">
+                         <a href="#"><img data-src="img/icons/foot-email.svg" class="lozad" alt="email"></a>
+                     </li>
+                   </ul>
+                  </div>
+                 </div>
+                  
+                  <div class="col col-auto">
+                     <div class="left-foot align-items-center">
+                        <img src="img/icons/foot-logo.svg" alt="Canapea CAtering">
+                     </div>
+                  </div>
+               </div>
+           </div>
+           
+            <div class="footer-both">
+                <div class="cnt">
+                    <div class="row flex-center-between">
+                        <div class="col col-auto ord-foot">
+                            <p>© 2022 ԿԱՆԱՊԵԱ ՔԵՅԹԵՐԻՆԳ || Բոլոր իրավունքները պաշտպանված են<br>
+                               Design and Development by <a href="javascript:void(0)">"GIOS" LLC</a>
+                           </p>
+                        </div>
+                        <div class="col col-auto align-items-center pay-r-w">
+                           <span class="pay-meth-tit">Վճարման եղանակներ</span>
+                            <ul class="align-items-center pay-method">
+                                <li>
+                                  <img data-src="img/icons/foot-arca.svg" class="lozad" alt="">
+                                </li>
+                                <li>
+                                  <img data-src="img/icons/foot-visa.svg" class="lozad" alt="">
+                                </li>
+                                <li>
+                                  <img data-src="img/icons/foot-mastercard.svg" class="lozad" alt="">
+                                </li>
+                                <li>
+                                  <img data-src="img/icons/foot-idram.svg" class="lozad" alt="">
+                                </li>
+                                <li>
+                                  <img data-src="img/icons/foot-tellcell.svg" class="lozad" alt="">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </footer>
+        <!-- footer end -->
+
+    </div>
+
+    <script src="js/canapea3.6_main.js"></script>
+    <script src="js/canapea_script.js"></script>
+    <script src="js/canapea_swiper.js"></script>
+    <script src="js/canapea_swiperexpress.js"></script>
+</body>
+
+</html>

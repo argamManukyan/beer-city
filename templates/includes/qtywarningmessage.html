@@ -1,0 +1,11 @@
+{% load i18n %}
+{% load static %}
+<div class="alert-min alert-danger" id="warningQuantity">
+    <div class="align-items-center">
+        <img src="{% static 'img/icons/alert-warning.svg' %}"
+             class="alert-img"
+             alt="{% trans 'Ծանուցում' %}">
+        <span>{% trans 'Պատվերի նվազագույն քանակը' %} <strong>{{ obj.min_qty }}</strong> {% trans 'հատ է' %}։
+        </span>
+    </div>
+</div>

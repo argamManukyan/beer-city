@@ -1,0 +1,134 @@
+{% load i18n %}{% load static %}{% load my_url %}{% load currency %}
+<div class="product-item">
+    <div class="prod-item-img">
+        <a href="{{ product.get_absolute_url }}">
+            <img class="lozad" data-src="{% if product.main_image %}{{ product.main_image.url }}{% endif %}" loading="lazy" alt="{{ product.name }}">
+        </a>
+        <!-- Product image end -->
+
+        {% if product.is_new and product.sale < 1 %}
+            <span class="ns-prod prod-new">{% trans 'Նորույթ' %}</span>
+        {% elif not product.is_new and product.sale > 0 %}
+            <span class="ns-prod prod-sale">{% trans 'Խնայել' %} {{ product.get_sale_percent }}%</span>
+        {% elif product.sale > 1 and product.is_new %}
+            <span class="ns-prod prod-new">{% trans 'Նորույթ' %}</span>
+            <span class="ns-prod prod-sale">{% trans 'Խնայել' %} {{ product.get_sale_percent }}%</span>
+        {% endif %}
+        <!-- New Sale icon end -->
+
+        <!-- Wish list -->
+        {% if request.resolver_match.url_name != 'wishlist' %}
+            <button class="wish-list-icon flex-content-center addTOWISH-{{ product.id }} {% if product.id in wish_ids %}active{% endif %}" data-url="{% url 'add_to_wish' %}" data-product="{{ product.id }}" onclick="addToWish(this)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.40482 9.82952C-0.826136 6.00569 0.811517 1.99738 4.48311 0.815291C6.2404 0.250031 8.14194 0.45344 9.73299 1.35623L9.99639 1.51429L10.2645 1.35535C11.773 0.501301 13.5624 0.273087 15.2463 0.736231L15.512 0.81535C19.1847 1.9978 20.8291 6.00801 19.5937 9.84515C18.9743 11.6301 17.9584 13.2485 16.6174 14.5824C14.7927 16.3545 12.7812 17.9194 10.6218 19.2473L10.3926 19.3897C10.1598 19.5344 9.86561 19.5369 9.63044 19.3961L9.38488 19.2491C7.22254 17.9194 5.21101 16.3545 3.38004 14.5762C2.04534 13.2485 1.02947 11.6301 0.40482 9.82952ZM9.57075 2.99539L9.37402 2.85428C8.06994 1.9629 6.43269 1.7234 4.93091 2.20647C2.08684 3.12213 0.797453 6.27802 1.79145 9.36636C2.33814 10.9418 3.23443 12.3696 4.40519 13.5344C6.15312 15.2319 8.07986 16.7309 10.1434 17.9999L10.0006 17.9099L10.4685 17.6156C12.1019 16.561 13.6404 15.3642 15.063 14.0421L15.591 13.5405C16.768 12.3696 17.6643 10.9418 18.2058 9.382C19.2041 6.28097 17.9091 3.12285 15.0635 2.2067C13.4866 1.70083 11.7654 1.99058 10.4354 2.98627C10.18 3.17743 9.83009 3.18113 9.57075 2.99539Z" fill="#223C05" />
+                </svg>
+            </button>
+        {% else %}
+            <button data-url="{% url 'add_to_wish' %}" data-product="{{ product.id }}" onclick="addToWish(this)"
+                    class="wish-list-icon wish-page flex-content-center">
+                <span class="delete_prod_wish align-items-center">×</span>
+            </button>
+            <!-- Wish list end -->
+        {% endif %}
+    </div>
+
+    <div class="prod-item-desc">
+
+        <div class="prod-item-desc-header">
+
+            <!-- Product name -->
+            <div class="prod-item-name align-items-center">
+                <a href="{{ product.get_absolute_url }}" class="line-clamp2">{{ product.name }}</a>
+            </div>
+            <!-- Product name end -->
+        </div>
+
+        <div class="prod-item-desc-footer ">
+            <div class="price-qty flex-content-center">
+
+                <!-- new old price -->
+                <div class="prod-item-price">
+                    {% if product.sale > 0 %}
+                        <span class="new-price">
+                            {% if request.session.currency_icon != '$' %}
+                                <span class="wh-point">{{ product.sale|currency:request.session.currency }}</span>
+                                <span class="valyuta">{{ request.session.currency_icon }}</span>
+                            {% else %}
+                                <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                <span class="wh-point">{{ product.sale|currency:request.session.currency }}</span>
+                            {% endif %}
+                        </span>
+
+                        <span class="old-price">
+                             <s>
+                                {% if request.session.currency_icon != '$' %}
+                                    <span class="wh-point">{{ product.price|currency:request.session.currency }}</span>
+                                    <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                {% else %}
+                                    <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                    <span class="wh-point">{{ product.price|currency:request.session.currency }}</span>
+                                {% endif %}
+                             </s>
+                        </span>
+
+                    {% else %}
+                        <span class="new-price">
+                        {% if request.session.currency_icon != '$' %}
+                            <span class="wh-point">{{ product.price|currency:request.session.currency }}</span>
+                            <span class="valyuta">{{ request.session.currency_icon }}</span>
+                        {% else %}
+                            <span class="valyuta">{{ request.session.currency_icon }}</span>
+                            <span class="wh-point">{{ product.price|currency:request.session.currency }}</span>
+                        {% endif %}
+                        </span>
+                    {% endif %}
+
+                </div>
+                <!-- qty -->
+                {% if product.show_minus_and_plus %}
+                    <div class="prod-item-desc-qty">
+                        <div class="only_qty align-items-center">
+                            <img src="{% static 'img/icons/minus.svg' %}" class="minus"
+                                 alt="{% trans 'Նվազեցնել' %}">
+                            <input type="number"
+                                   class="qty-input"
+                                   onchange="minQtyFix(this)"
+                                   value="{% if product.min_qty %}{{ product.min_qty }}{% else %}1{% endif %}"
+                                   min="{% if product.min_qty %}{{ product.min_qty }}{% else %}1{% endif %}"
+                                   id="qty-{{ product.id }}">
+                            <img src="{% static 'img/icons/plus.svg' %}" class="plus"
+                                 alt="{% trans 'Ավելացնել' %}">
+                        </div>
+                    </div>
+                {% endif %}
+                <!-- qty end -->
+            </div>
+
+            <!-- Add to cart button -->
+            <div id="warningMinQty-{{ product.id }}" style="display: none;">
+                {% include 'includes/qtywarningmessage.html' with obj=product %}
+            </div>
+            <div class="prod-add-cart">
+                {% if product.is_active %}
+                    <button type="button"
+                            class="button dark normal addtocart-but flex-content-center"
+                            onclick="addToCart({{ product.id }}, `
+                                    {% if product.min_qty %}{{ product.min_qty }}{% endif %}`)">
+                        <img src="{% static 'img/icons/cart-prod.svg' %}"
+                             alt="{% trans 'Ավելացնել' %}">{% trans 'Ավելացնել' %}
+                    </button>
+                    <!-- if product out of stock -->
+                {% else %}
+                    <a href="{% url 'product_detail' slug=product.slug %}" type="button"
+                       class="button dark normal flex-content-center addtocart-but diss-prod">
+                        <img src="{% static 'img/icons/diss-prod.svg' %}"
+                             alt="{% trans 'Առկա չէ' %}">{% trans 'Առկա չէ' %}
+                    </a>
+                {% endif %}
+                <!-- if product out of stock end -->
+            </div>
+            <!-- Add to cart button end -->
+        </div>
+
+    </div>
+</div>

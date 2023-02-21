@@ -1,0 +1,13 @@
+<div class="row full-ban">
+    {% for product in page_obj %}
+        <div class="col col-3">
+            <!-- Product item-->
+            {% include 'includes/product.html' %}
+            <!-- Product item end -->
+        </div>
+    {% endfor %}
+
+</div>
+{% if page_obj.paginator.num_pages > 1 %}
+    {% include 'includes/pagination.html' %}
+{% endif %}

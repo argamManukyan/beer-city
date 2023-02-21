@@ -1,0 +1,121 @@
+{% load my_url %}
+{% load static %}
+{% load i18n %}
+<form class="shop-top-filter d-none" id="topFilter" onchange="topFilter(this)">
+{% include 'includes/top_filter.html' %}
+</form>
+<div class="nav-offcanvas-filter">
+    <div class="filter_menu_container">
+        <div class="filter_menu_content">
+            <div class="filter-header d-none">
+                <div class="widget-heading flex-center-between">
+                    <span class="widget-title">{% trans 'Ֆիլտրեր' %}</span>
+                    <img src="{% static 'img/icons/catalog-close.svg' %}" id="offFilterClose"
+                         class="close" alt="{% trans 'Փակել' %}">
+                </div>
+            </div>
+            <div class="filter-widget-content">
+                <div class="params-on-tit m-none">
+                    <h3 class="align-items-center">
+                        <img src="{% static 'img/icons/filter-icon.svg' %}"
+                             alt="{% trans 'Ֆիլտրեր' %}"><span>{% trans 'Ֆիլտրեր' %}</span>
+                    </h3>
+                </div>
+                <form method="get" class="filters-canapea" id="allFilter" onchange="filter()">
+                    <div class="filter-params active">
+                        <div class="filter-params-title">
+                            <h4 class="filter-params-hint flex-center-between">{% trans 'Գին' %}
+                                <img src="{% static 'img/icons/cat-filter.svg' %}"
+                                     class="cat-left border-icons" alt="{% trans 'Ֆիլտրեր' %}">
+                            </h4>
+                        </div>
+                        <div class="filter-params-content">
+                            <div class="range_slid flex-center-evenly">
+                               <span class="text-center">
+                                   <span class="field-labels">{% trans 'Մին' %}.</span><br>
+                                   <input type="number" value="{{ category_min_price }}" min="{{ category_min_price }}"
+                                          max="{{ category_max_price }}" id="min_price" name="min_price"
+                                          data-previous-value="{{ category_max_price }}"
+                                          data-start-value="{{ category_max_price }}">
+                               </span>
+                                <span class="text-center">
+                                    <span class="field-labels">{% trans 'Մաքս' %}.</span><br>
+                                    <input type="number" value="{{ category_max_price }}" min="{{ category_min_price }}"
+                                           max="{{ category_max_price }}" id="max_price" name="max_price"
+                                           data-previous-value="{{ category_max_price }}"
+                                           data-start-value="{{ category_max_price }}">
+                               </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if colors %}
+                        <div class="filter-params active">
+                            <div class="filter-params-title">
+                                <h4 class="filter-params-hint flex-center-between active">{% trans 'Գույն' %}
+                                    <img src="{% static 'img/icons/cat-filter.svg' %}"
+                                         class="cat-left border-icons up-cat"
+                                         alt="{% trans 'Ֆիլտրեր' %}">
+                                </h4>
+                            </div>
+                            <div class="filter-params-content">
+                                {% for color in colors %}
+                                    <div class="box-list">
+                                        <label class="checkbox-design align-items-center">
+                                            <input
+                                                    type="checkbox"
+                                                    class="color check"
+                                                    value="{{ color.title }}"
+                                                    id="id_colors_{{ forloop.counter }}"
+                                                    name="color"
+                                                    {% for k,v in request.GET.lists %}
+                                                        {% if color.title in v %}
+                                                    checked
+                                                        {% endif %}
+                                                    {% endfor %}
+                                            >
+                                            <span class="checkbox-square"></span>
+                                            <span class="color-type" style="background-color:{{ color.color_code }}">
+                                        </span>{{ color.title }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% for field in filter_fields %}
+                        <div class="filter-params">
+                            <div class="filter-params-title">
+                                <h4 class="filter-params-hint flex-center-between">{{ field.title }}
+                                    <img src="{% static 'img/icons/cat-filter.svg' %}" class="cat-left border-icons">
+                                </h4>
+                            </div>
+                            <div class="filter-params-content">
+                                {% for feat_val, unit_meas in field.productfeature_set.all|unique %}
+
+                                    <div class="box-list">
+                                        <label class="checkbox-design align-items-center">
+                                            <input
+                                                type="checkbox"
+                                                class="color check"
+                                                value="{{ feat_val.title }}"
+                                                {% for k,v in request.GET.lists %}
+                                                    {% if feat_val.title in v %}
+                                                checked{% endif %}
+                                                {% endfor %}
+                                                id="{{ forloop.counter }}__{{ field.filter_key }}"
+                                                name="{{ field.filter_key }}">
+                                            <span class="checkbox-square"></span>{{ feat_val }} {{ unit_meas }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="filter_menu_overlay"></div>

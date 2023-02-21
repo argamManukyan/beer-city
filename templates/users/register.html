@@ -1,0 +1,726 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+
+<head>
+    <meta charset='utf-8'/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport'
+          content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>{% trans 'Գրանցում' %} | {{ domain }}</title>
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/css/intlTelInput.css">
+    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sms.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+    <style>
+        .input-fields.all-auth .iti {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="root">
+
+    {% include 'includes/header.html' %}
+    <!-- Main content -->
+    <main class="content">
+        <section class="section page-content">
+        <div class="no-page-banner" style="background-image: url({% static 'img/shop-banner.jpg' %})"></div>
+            <!-- Breadcrumbs -->
+            <div class="breadcrumbs">
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col">
+
+                            <ul class="breadcrumbs-list align-items-center">
+                                <li class="breadcrumbs-item">
+                                    <a href="{% url 'home_page' %}" class="breadcrumbs-link">
+                                        <span>{% trans 'Գլխավոր' %}</span>
+                                    </a>
+                                </li>
+                                <li class="breadcrumbs-item">
+                                    <span>{% trans 'Գրանցում' %}</span>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Breadcrumbs end-->
+
+            <div id="register">
+                <div class="cnt">
+                    <div class="row">
+                        <div class="col col-2 md-none">
+                            <div class="sign-in-img">
+                                <img src="{% static 'img/auth.svg' %}" alt="Մուտք">
+                            </div>
+                        </div>
+                        <div class="col col-2">
+                            <div class="all-auth-wrap">
+                                <div class="all-forms-items">
+                                    <div class="auth-title">
+                                        <h1 class="auth_title-h1">
+                                            {% block h1 %}{% trans 'Գրանցում' %}{% endblock h1 %}</h1>
+                                    </div>
+                                    {% block content %}
+                                        <ul class="tabs flex-content-center after_click-hide">
+                                            <li class="col-auto {% if not request.GET.company %}active{% endif %}"
+                                                rel="tab0">
+                                                <span class="flex-content-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="15"
+                                                         viewBox="0 0 12 15" fill="none">
+                                                        <circle cx="6.20995" cy="4.51073" r="3.04686" stroke="#201e1e"
+                                                                stroke-width="1.5" stroke-linecap="round"
+                                                                stroke-linejoin="round"/>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                              d="M1.37696 11.7951C1.37614 11.5809 1.42405 11.3693 1.51705 11.1764C1.80889 10.5927 2.6319 10.2833 3.31481 10.1432C3.80733 10.0381 4.30666 9.96791 4.80906 9.93311C5.73923 9.8514 6.67477 9.8514 7.60494 9.93311C8.1073 9.96831 8.60659 10.0385 9.09918 10.1432C9.7821 10.2833 10.6051 10.5635 10.8969 11.1764C11.084 11.5697 11.084 12.0263 10.8969 12.4196C10.6051 13.0325 9.7821 13.3127 9.09918 13.4469C8.60724 13.5564 8.10774 13.6286 7.60494 13.6629C6.84786 13.7271 6.08724 13.7388 5.32854 13.6979C5.15344 13.6979 4.98417 13.6979 4.80906 13.6629C4.30814 13.629 3.81055 13.5568 3.32065 13.4469C2.6319 13.3127 1.81473 13.0325 1.51705 12.4196C1.42452 12.2244 1.37667 12.0111 1.37696 11.7951Z"
+                                                              stroke="#201e1e" stroke-width="1.5" stroke-linecap="round"
+                                                              stroke-linejoin="round"/>
+                                                    </svg>
+                                                    <span>{% trans 'Ֆիզիկական' %}</span>
+                                                </span>
+                                            </li>
+                                            <li class="col-auto flex-content-center {% if request.GET.company %}active{% endif %}"
+                                                rel="tab1">
+                                                <span class="flex-content-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13"
+                                                         viewBox="0 0 13 13" fill="none">
+                                                        <path d="M1.04492 8.59985C1.04492 8.59985 1.12823 9.61948 1.14759 9.94097C1.1734 10.3722 1.34002 10.8538 1.6181 11.1882C2.01058 11.6623 2.47287 11.8295 3.09004 11.8306C3.81575 11.8318 9.09281 11.8318 9.81852 11.8306C10.4357 11.8295 10.898 11.6623 11.2905 11.1882C11.5685 10.8538 11.7352 10.3722 11.7616 9.94097C11.7803 9.61948 11.8636 8.59985 11.8636 8.59985"
+                                                              stroke="#201E1E" stroke-width="1.5" stroke-linecap="round"
+                                                              stroke-linejoin="round"/>
+                                                        <path d="M4.38428 2.64656V2.4289C4.38428 1.71317 4.9639 1.13354 5.67964 1.13354H7.19441C7.90956 1.13354 8.48977 1.71317 8.48977 2.4289L8.49036 2.64656"
+                                                              stroke="#201E1E" stroke-width="1.5" stroke-linecap="round"
+                                                              stroke-linejoin="round"/>
+                                                        <path d="M6.43689 9.30456V8.54541" stroke="#201E1E"
+                                                              stroke-width="1.5" stroke-linecap="round"
+                                                              stroke-linejoin="round"/>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                              d="M1.01318 4.44149V6.47546C2.13841 7.2176 3.48657 7.73738 4.96614 7.9433C5.14332 7.29738 5.72588 6.82394 6.43398 6.82394C7.13094 6.82394 7.72524 7.29738 7.89068 7.94917C9.37612 7.74325 10.7296 7.22346 11.8607 6.47546V4.44149C11.8607 3.44767 11.061 2.64746 10.0672 2.64746H2.81249C1.81868 2.64746 1.01318 3.44767 1.01318 4.44149Z"
+                                                              stroke="#201E1E" stroke-width="1.5" stroke-linecap="round"
+                                                              stroke-linejoin="round"/>
+                                                    </svg>
+                                                    <span>{% trans 'Իրավաբանական' %}</span>
+                                                </span>
+                                            </li>
+                                        </ul>
+
+                                        <div class="tab_container">
+                                            {% include 'includes/message.html' %}
+                                            <div id="tab0" class="tab_content after_click-hide"
+                                                 {% if request.GET.company %}style="display: none;"
+                                                 {% else %}style="display: block"{% endif %}>
+                                                <div class="only_form">
+                                                    <!-- Form errors-->
+
+                                                    <!-- Form errors end-->
+
+                                                    <form id="PersonRegisterForm" method="post">
+                                                        <input type="hidden" name="account_type" value="personal">
+                                                        <!--  Register Person fields -->
+                                                        <div class="two-inputs flex-center-between">
+                                                            <div class="input-fields all-auth">
+                                                                <label for="first_name">{% trans 'Անուն' %} *</label>
+                                                                <input type="text" id="first_name" name="first_name"
+                                                                       placeholder="">
+                                                            </div>
+
+                                                            <div class="input-fields all-auth">
+                                                                <label for="last_name">{% trans 'Ազգանուն' %} *</label>
+                                                                <input type="text" id="last_name" name="last_name"
+                                                                       placeholder="">
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="input-fields all-auth">
+                                                            <label for="email">Email *</label>
+                                                            <input type="email" id="email" name="email" placeholder="">
+                                                        </div>
+
+                                                        <div class="input-fields all-auth">
+                                                            <label for="phone_number">{% trans 'Հեռախոսահամար' %}
+                                                                *</label>
+                                                            <input type="hidden" name="phone_number" id="phone_number"
+                                                                   value="">
+                                                            <input type="tel" name="phone" inputmode="tel"
+                                                                   class="tel fw text" id="phone" required>
+                                                        </div>
+
+                                                        <div class="line-inputs-group">
+                                                            <div class="butt-sign">
+                                                                <input type="submit" id="ContinueRegistration"
+                                                                       class="button big dark" name="submit"
+                                                                       value="{% trans 'Շարունակել' %}"
+                                                                       onclick="CallVerificationCode()">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="login-or-create">
+
+                                                            <a href="{% url 'users:signin' %}"
+                                                               class="ls_butt">{% trans 'Արդեն ունե՞ք հաշիվ' %}
+                                                                <span>{% trans 'Մուտք գործել' %}</span></a>
+                                                        </div>
+                                                        <!--  Register Person fields end -->
+                                                    </form>
+
+                                                </div>
+                                            </div>
+                                            <div id="tab1" class="tab_content after_click-hide"
+                                                 {% if request.GET.company %}style="display: block;"
+                                                 {% else %}style="display: none;"{% endif %}>
+                                                <div class="only_form">
+                                                    <!-- Form errors-->
+                                                    <!-- Form errors end-->
+                                                    <form action="" id="CompanyRegisterForm" method="post">
+                                                        <!--  Register Company fields -->
+                                                        <div class="input-fields all-auth">
+                                                            <label for="companyName">{% trans 'Ընկերության ամբողջական անուն' %}
+                                                                *</label>
+                                                            <input type="text" id="companyName" name="companyName"
+                                                                   placeholder="">
+                                                        </div>
+                                                        <div class="two-inputs flex-center-between">
+                                                            <div class="input-fields all-auth">
+                                                                <label for="email">{% trans 'Ընկերության' %} Email
+                                                                    *</label>
+                                                                <input type="email" id="email" name="email"
+                                                                       placeholder="">
+                                                            </div>
+
+
+                                                            <div class="input-fields all-auth">
+                                                                <label for="companyPhone">{% trans 'Ընկերության հեռախոսահամար' %}
+                                                                    *</label>
+                                                                <input type="number" name="companyPhone" value=""
+                                                                       id="companyPhone">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="two-inputs flex-center-between">
+                                                            <div class="input-fields all-auth">
+                                                                <label for="companyPassword">{% trans 'Գաղտնաբառ' %}
+                                                                    *</label>
+                                                                <img src="{% static 'img/icons/eye-sign.svg' %}"
+                                                                     toggle="#password-field" class="toggle-password">
+                                                                <input type="password" id="companyPassword"
+                                                                       name="companyPassword" placeholder="">
+                                                            </div>
+
+                                                            <div class="input-fields all-auth">
+                                                                <label for="confirmPassword">{% trans 'Կրկնել գաղտնաբառը' %}
+                                                                    *</label>
+                                                                <img src="{% static 'img/icons/eye-sign.svg' %}"
+                                                                     toggle="#password-field" class="toggle-password">
+                                                                <input type="password" id="companyPasswordConfirm"
+                                                                       name="companyPasswordConfirm" placeholder="">
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="line-inputs-group">
+                                                            <div class="butt-sign">
+                                                                <input type="submit" id="CompanyRegister"
+                                                                       class="button big dark" name="submit"
+                                                                       value="{% trans 'Գրանցվել' %}">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="login-or-create">
+                                                            <a href="{% url 'users:signin' %}"
+                                                               class="ls_butt">{% trans 'Արդեն ունե՞ք հաշիվ' %}
+                                                                <span>{% trans 'Մուտք գործել' %}</span></a>
+                                                        </div>
+                                                        <!--  Register Company fields end -->
+
+                                                    </form>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    {% endblock %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+    <!-- Main content end -->
+    {% include 'includes/footer.html' %}
+</div>
+
+<script src="{% static 'js/canapea3.6_main.js' %}"></script>
+<script src="{% static 'js/canapea_script.js' %}"></script>
+<script src="{% static 'js/canapea_swiper.js' %}"></script>
+<script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+<script src="{% static 'js/otp.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/intlTelInput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        const textVerify =
+            `<h1>{% trans 'Հաստատման կոդ' %}</h1>
+            <a href="javascript: void (0)" id="backToHomePage" class="backToHomePage">{% trans 'Հետ գրանցման էջ' %}</a>
+        <p class="click-hide">
+                {% blocktrans %}Մուտքագրեք SMS-ի միջոցով ստացված հաստատման կոդը{% endblocktrans %}
+        </p>`
+
+        $(document).on('click', '#backToHomePage', async () => {
+            const response = await fetch(`{% url 'users:delete_user' %}`, {
+                method: 'POST',
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: JSON.stringify({"phone_number": localStorage.getItem('phone_number') || ''})
+            })
+            localStorage.removeItem('sent_code')
+            localStorage.removeItem('phone_number')
+            const data = await response.json()
+            window.location.replace(data.url)
+        })
+
+        $(function () {
+
+            function animateFailure() {
+                function getCustomPropertyValue(name) {
+                    const styles = getComputedStyle(root);
+                    return styles.getPropertyValue(name);
+                }
+
+                function getDelay() {
+                    const firstStepDuration = getCustomPropertyValue(
+                        "--transition-duration-step-1"
+                    );
+                    const secondStepDuration = getCustomPropertyValue(
+                        "--transition-duration-step-2"
+                    );
+
+                    return parseInt(firstStepDuration) + parseInt(secondStepDuration);
+                }
+
+                const fieldset = document.querySelector(".fieldset");
+                const boxes = document.querySelectorAll(".box");
+
+                fieldset.classList.add("animate-failure");
+                const delay = getDelay();
+
+                setTimeout(() => {
+                    fieldset.classList.remove("animate-failure");
+                }, delay);
+            }
+
+            function otpInputFields() {
+                const root = document.documentElement;
+                const fields = document.querySelectorAll(".field");
+
+                function handleInputField({target}) {
+                    const value = target.value.slice(0, 1);
+                    target.value = value;
+
+                    const step = value ? 1 : -1;
+                    const fieldIndex = [...fields].findIndex((field) => field === target);
+                    const focusToIndex = fieldIndex + step;
+
+                    if (focusToIndex < 0 || focusToIndex >= fields.length) return;
+                    fields[focusToIndex].focus();
+                }
+
+                fields.forEach((field) => {
+                    field.addEventListener("input", handleInputField);
+                });
+                /* End SMS Code input logic */
+
+// Controls
+                const failureBtn = document.querySelector(".failure-btn");
+                if (failureBtn)
+                    failureBtn.addEventListener("click", (event) => {
+                        animateFailure();
+                    });
+            }
+
+            //Call Smm Code
+            async function CallVerificationCode() {
+
+                if (!localStorage.getItem('sent_code')) {
+                    const form = Object.fromEntries(new FormData(document.querySelector('#PersonRegisterForm')))
+                    const replacePhone = `+${form.phone_number}${form.phone}`.replace(/\s/g, '')
+                    try {
+                        const resp = await fetch(`{% url 'users:signup' %}`, {
+                            method: "POST",
+                            headers: {
+                                "X-Requested-With": "XMLHttpRequest",
+                                "Content-type": "application/json"
+                            },
+                            body: JSON.stringify(form)
+                        })
+                        if (resp.status === 400) {
+                            return false;
+                        } else {
+                            localStorage.setItem('phone_number', replacePhone)
+                            localStorage.setItem('sent_code', true)
+                            return true;
+                        }
+                    } catch (e) {
+                        return false;
+                    }
+                }
+
+
+                const verificateText = document.querySelector(".auth-title");
+                verificateText.innerHTML = textVerify;
+
+                const hideElems = document.querySelectorAll('.after_click-hide')
+
+                for (let i = 0; i < hideElems.length; i++) {
+                    hideElems[i].remove()
+                }
+
+                const mainTab = document.querySelector('.tab_container')
+                mainTab.innerHTML = `{% include 'includes/otp-code.html' %}`
+            }
+
+            if (localStorage.getItem('sent_code')) {
+                CallVerificationCode()
+                otpInputFields()
+                document.getElementById('ContinueRegistration').addEventListener('click', function (e) {
+                    e.preventDefault()
+
+                    async function checkOtpCode() {
+                        const phoneNumber = localStorage.getItem('phone_number').replace(' ', '')
+
+                        const otpCodeElements = document.getElementsByClassName('otpCode')
+
+                        let givenDigits = ''
+                        for (let i in otpCodeElements) {
+                            if (otpCodeElements[i].value) {
+                                givenDigits += otpCodeElements[i].value
+                            }
+                        }
+
+                        if (givenDigits.length < 5) {
+                            return false
+                        }
+
+                        const data = JSON.stringify({"phone_number": phoneNumber, 'verify_code': givenDigits})
+                        const response = await fetch(`{% url 'users:check_otp' %}`, {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': "XMLHttpRequest"
+                            },
+                            body: data
+                        })
+                        const responseData = await response.json()
+
+                        if (responseData.otp_link) {
+                            localStorage.removeItem('sent_code')
+                            localStorage.removeItem('phone_number')
+                            window.location.replace(responseData.otp_link)
+                        }
+
+                        const respData = response.status
+
+                        return respData === 200
+
+                    }
+
+                    async function CallCreatePass() {
+                        if (await checkOtpCode()) {
+                            localStorage.removeItem('sent_code')
+                            localStorage.removeItem('phone_number')
+                            window.location.replace(`{% url 'users:set_password' %}`)
+                        } else {
+                            document.getElementById('ContinueRegistration').classList.add('failure-btn')
+                            animateFailure()
+                        }
+                    }
+
+                    CallCreatePass()
+
+
+                });
+            }
+
+
+            $(document).on('click', '#resendCode', async function (e) {
+
+                const response = await fetch(`{% url 'users:resend_otp_code' %}`, {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: JSON.stringify({"phone_number": localStorage.getItem('phone_number') || ''})
+                })
+
+                const result = await response.json()
+
+                if (result.url) {
+                    localStorage.removeItem('sent_code')
+                    localStorage.removeItem('phone_number')
+                    window.location.replace(result.url)
+                }
+
+            })
+            //Call SMS Section
+            $("#PersonRegisterForm").validate({
+                rules: {
+                    first_name: {
+                        required: true,
+                        minlength: 2
+                    },
+                    last_name: {
+                        required: true,
+                        minlength: 2
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    phone: {
+                        required: true,
+                    },
+
+                },
+
+                messages: {
+                    first_name: {
+                        required: "Դաշտը պարտադիր է լրացման համար",
+                        minlength: "Անունը պետք է լինի 2 նիշ կամ ավելի երկար"
+                    },
+                    last_name: {
+                        required: "Դաշտը պարտադիր է լրացման համար",
+                        minlength: "Անունը պետք է լինի 2 նիշ կամ ավելի երկար"
+                    },
+                    email: {
+                        required: "Դաշտը պարտադիր է լրացման համար",
+                        email: "Մուտքագրեք ճիշտ Էլ. Փոստի հասցե"
+                    },
+                    phone: {
+                        required: "Դաշտը պարտադիր է լրացման համար"
+
+                    },
+
+                },
+
+                submitHandler: async function (form) {
+                    if (!await CallVerificationCode()) {
+                        window.location.reload()
+                    } else {
+                        await CallVerificationCode()
+                        otpInputFields()
+                        document.getElementById('ContinueRegistration').addEventListener('click', function (e) {
+                            e.preventDefault()
+
+                            async function checkOtpCode() {
+                                const phoneNumber = localStorage.getItem('phone_number').replace(' ', '')
+
+                                const otpCodeElements = document.getElementsByClassName('otpCode')
+
+                                let givenDigits = ''
+                                for (let i in otpCodeElements) {
+                                    if (otpCodeElements[i].value) {
+                                        givenDigits += otpCodeElements[i].value
+                                    }
+                                }
+
+                                if (givenDigits.length < 5) {
+                                    return false
+                                }
+
+                                const data = JSON.stringify({"phone_number": phoneNumber, 'verify_code': givenDigits})
+                                const response = await fetch(`{% url 'users:check_otp' %}`, {
+                                    method: "POST",
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-Requested-With': "XMLHttpRequest"
+                                    },
+                                    body: data
+                                })
+                                const responseData = await response.json()
+
+                                if (responseData.otp_link) {
+                                    localStorage.removeItem('sent_code')
+                                    localStorage.removeItem('phone_number')
+                                    window.location.replace(responseData.otp_link)
+                                }
+
+                                const respData = response.status
+
+                                return respData === 200
+
+                            }
+
+                            async function CallCreatePass() {
+                                if (await checkOtpCode()) {
+                                    localStorage.removeItem('sent_code')
+                                    localStorage.removeItem('phone_number')
+                                    window.location.replace(`{% url 'users:set_password' %}`)
+                                } else {
+                                    document.getElementById('ContinueRegistration').classList.add('failure-btn')
+                                    animateFailure()
+                                }
+                            }
+
+                            CallCreatePass()
+
+
+                        });
+                    }
+                },
+            });
+
+            // -Validate Person end
+        })
+
+
+        //Validate Company
+        $(function () {
+            $("#CreatePassword").validate({
+                rules: {
+                    companyPassword: {
+                        required: true,
+                        minlength: 8,
+                    },
+                    companyPasswordConfirm: {
+                        required: true,
+                        equalTo: "#companyPassword",
+                    },
+                },
+
+                messages: {
+                    companyPassword: {
+                        required: "Դաշտը պարտադիր է լրացման համար",
+                        minlength: "Գաղտնաբառը պետք է լինի 8 նիշ կամ ավելի երկար",
+                    },
+
+                    companyPasswordConfirm: {
+                        required: "Դաշտը պարտադիր է լրացման համար",
+                        equalTo: "Գաղտնաբառը չի համընկնում",
+                    },
+                },
+
+                submitHandler: function (form) {
+                    form.submit();
+                },
+            });
+
+            $("#CompanyRegisterForm").validate({
+                rules: {
+                    companyName: {
+                        required: true,
+                        minlength: 2
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    companyPhone: {
+                        required: true,
+                    },
+                    companyPassword: {
+                        required: true,
+                        minlength: 8,
+                    },
+                    companyPasswordConfirm: {
+                        required: true,
+                        equalTo: "#companyPassword",
+                    },
+                },
+
+                messages: {
+                    companyName: {
+                        required: "Դաշտը պարտադիր է լրացման համար",
+                        minlength: "Անունը պետք է լինի 2 նիշ կամ ավելի երկար"
+                    },
+
+                    email: {
+                        required: "Դաշտը պարտադիր է լրացման համար",
+                        email: "Մուտքագրեք ճիշտ Էլ. Փոստի հասցե"
+                    },
+
+                    companyPhone: {
+                        required: "Դաշտը պարտադիր է լրացման համար"
+                    },
+
+                    companyPassword: {
+                        required: "Դաշտը պարտադիր է լրացման համար",
+                        minlength: "Գաղտնաբառը պետք է լինի 8 նիշ կամ ավելի երկար",
+                    },
+
+                    companyPasswordConfirm: {
+                        required: "Դաշտը պարտադիր է լրացման համար",
+                        equalTo: "Գաղտնաբառը չի համընկնում",
+                    },
+                },
+
+                submitHandler: function (form) {
+                    form.submit();
+                },
+            });
+        });
+        //Validate Company
+    })
+</script>
+
+
+<script>
+    $(function () {
+        var input = document.querySelector("input[name=phone]"),
+            iti = window.intlTelInput(input, {
+                autoPlaceholder: "aggressive",
+                geoIpLookup: function (callback) {
+                    $.get("https://ipinfo.io", function () {
+                    }, "jsonp").always(function (resp) {
+                        var countryCode = (resp && resp.country) ? resp.country : "";
+                        callback(countryCode);
+
+                    });
+                },
+                initialCountry: "auto",
+                nationalMode: true,
+                placeholderNumberType: "MOBILE",
+                preferredCountries: ['cn', 'jp'],
+                separateDialCode: true,
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/utils.js",
+            });
+        var setMask = function (placeholder) {
+
+            if (!placeholder) placeholder = "";
+            mask = placeholder.replace(/\d/gi, '9');
+
+            $('input[name=phone]').mask(mask);
+        }
+        iti.promise.then(function () {
+
+            setMask(input.getAttribute('placeholder'));
+        });
+        iti.promise.then(function () {
+            document.querySelector('#phone_number').value =
+                window.intlTelInputGlobals.getInstance(input).s.dialCode
+        })
+
+    });
+</script>
+{% block js %}
+{% endblock js %}
+
+</body>
+
+</html>

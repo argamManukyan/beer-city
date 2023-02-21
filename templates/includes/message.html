@@ -1,0 +1,15 @@
+{% load i18n %}
+{% load static %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %}">
+            <div class="align-items-center">
+                {% if 'users' not in request.resolver_match.kwargs.app_names %}
+                <img src="{% static 'img/icons/alert-warning.svg' %}" class="alert-img" alt="{% trans 'Ծանուցում' %}">
+                {% endif %}
+                <span>{{ message|safe }}</span>
+            </div>
+            <img src="{% static 'img/icons/catalog-close.svg' %}" class="errorClose" alt="{% trans 'Փակել' %}">
+        </div>
+    {% endfor %}
+{% endif %}

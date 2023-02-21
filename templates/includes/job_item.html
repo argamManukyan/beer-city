@@ -1,0 +1,58 @@
+{% load static %}
+{% load i18n %}
+<div class="job-block">
+
+    <div class="job-block-header flex-center-between">
+        <div class="job-block-title align-items-center">
+            <a href="{{ job.get_absolute_url }}" class="align-items-center">
+                <img src="{% if job.icon %}{{ job.icon.url }}{% else %}{% static 'img/icons/job-icon.svg' %}{% endif %}"
+                     alt="job title">
+                <span>{{ job.name }}</span>
+            </a>
+        </div>
+    {% if job.dateline %}
+        <div class="job-deadline align-items-center">
+            <img src="{% static 'img/icons/bl-calendar.svg' %}">
+            <span>{{ job.dateline|date:"d-F-Y" }}</span>
+        </div>
+    {% endif %}
+    </div>
+
+    <div class="job-block-body">
+        <div class="short-desc">
+            {% if job.short_description %}{{ job.short_description|safe }}{% endif %}
+        </div>
+        <ul class="job-min-info">
+            {% if job.employment_term %}
+                <li class="align-items-center">
+                    <img src="{% static 'img/icons/job-mark.svg' %}" alt="job">
+                    <span class="align-items-center">
+                       <b>{% trans 'Աշխատանքի պայմաններ՝' %}</b><span>{{ job.employment_term.title }}</span>
+                   </span>
+                </li>
+            {% endif %}
+            {% if job.job_type %}
+                <li class="align-items-center">
+                    <img src="{% static 'img/icons/job-mark.svg' %}" alt="job">
+                    <span class="align-items-center">
+                                                                   <b>{% trans 'Աշխատանքի տեսակը՝' %}</b><span>{{ job.job_type.title }}</span>
+                                                               </span>
+                </li>
+            {% endif %}
+            {% if job.location %}
+                <li class="align-items-center">
+                    <img src="{% static 'img/icons/job-mark.svg' %}" alt="job">
+                    <span class="align-items-center">
+                                                                   <b>{% trans 'Գտնվելու վայրը՝' %}</b><span>{{ job.location.title }}</span>
+                                                               </span>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="job-block-footer">
+        <a href="{{ job.get_absolute_url }}" class="button big dark">{% trans 'Մանրաասն' %}
+            <img src="{% static 'img/icons/big-arrow.svg' %}" alt="{% trans 'Մանրաասն' %}"></a>
+    </div>
+
+</div>

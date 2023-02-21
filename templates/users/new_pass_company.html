@@ -1,0 +1,153 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+
+<head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>{%  trans 'Նոր Գաղտնաբառ' %} | {{ domain }}</title>
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+    
+</head>
+
+<body>
+
+    <div id="root">
+
+        {% include 'includes/header.html' %}
+        <!-- Main content -->
+        <main class="content">
+            <section class="section page-content">
+            <div class="no-page-banner" style="background-image: url({% static 'img/shop-banner.jpg' %})"></div>
+                <!-- Breadcrumbs -->
+                <div class="breadcrumbs">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col">
+
+                                <ul class="breadcrumbs-list align-items-center">
+                                    <li class="breadcrumbs-item">
+                                        <a href="{% url 'home_page' %}" class="breadcrumbs-link">
+                                            <span>{% trans 'Գլխավոր' %}</span>
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumbs-item">
+                                        <span>{%  trans 'Նոր Գաղտնաբառ' %}</span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Breadcrumbs end-->
+
+                <div id="register">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col col-2 md-none">
+                                <div class="sign-in-img">
+                                    <img src="{% static 'img/auth.svg' %}" alt="Մուտք">
+                                </div>
+                            </div>
+                            <div class="col col-2">
+                                <div class="all-auth-wrap">
+                                    <div class="all-forms-items">
+
+
+                                        <div class="auth-title">
+                                            <h1 class="auth_title-h1">{% trans 'Նոր գաղտնաբառ' %}</h1>
+                                        </div>
+
+                                        <div class="tab_container">
+                                             <div class="only_form">
+                                                    <!-- Form errors-->
+                                                    {% include 'includes/message.html' %}
+                                                    <!-- Form errors end-->
+
+                                                    <form id="CompanyRegisterForm" method="post">
+
+                                                        <!--  Register Company fields -->
+                                                            <div class="input-fields all-auth">
+                                                                <label for="companyPassword">{% trans 'Նոր գաղտնաբառ' %} *</label>
+                                                                <img src="{% static 'img/icons/eye-sign.svg' %}" toggle="#password-field" class="toggle-password">
+                                                                <input type="password" id="companyPassword" name="companyPassword" placeholder="">
+                                                            </div>
+                                                            
+                                                            <div class="input-fields all-auth">
+                                                                <label for="confirmPassword">{% trans 'Կրկնել գաղտնաբառը' %} *</label>
+                                                                <img src="{% static 'img/icons/eye-sign.svg' %}" toggle="#password-field" class="toggle-password">
+                                                                <input type="password" id="companyPasswordConfirm" name="companyPasswordConfirm" placeholder="">
+                                                            </div>
+                                                        <div class="line-inputs-group">
+                                                            <div class="butt-sign">
+                                                                <input type="submit" id="CompanyRegister" class="button big dark" name="submit" value="{% trans 'Հաստատել' %}">
+                                                            </div>
+                                                        </div>
+                                                        <!--  Register Company fields end -->
+                                                    </form>
+                                                </div>
+                                          </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+        <!-- Main content end -->
+
+      {% include 'includes/footer.html' %}
+    </div>
+
+    <script src="{% static 'js/canapea3.6_main.js' %}"></script>
+    <script src="{% static 'js/canapea_script.js' %}"></script>
+    <script src="{% static 'js/canapea_swiper.js' %}"></script>
+    <script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+    <script>
+        //Validate Company
+        $(function() {
+            $("#CompanyRegisterForm").validate({
+                rules: {
+                     companyPassword: {
+                        required: true,
+                        minlength: 8,
+                    },
+                    companyPasswordConfirm: {
+                         required: true,
+                        equalTo: "#companyPassword",
+                    },
+                },
+
+                messages: {
+                   companyPassword: {
+                        required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                        minlength: "{% trans 'Գաղտնաբառը պետք է լինի 8 նիշ կամ ավելի երկար' %}",
+                    },
+                    
+                   companyPasswordConfirm: {
+                         required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                         equalTo: "{% trans 'Գաղտնաբառը չի համընկնում' %}",
+                    },
+                },
+                
+                submitHandler: function(form) {
+                   form.submit();          
+                },
+            });
+        });
+    </script>
+
+</body>
+
+</html>

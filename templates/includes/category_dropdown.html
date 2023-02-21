@@ -1,0 +1,133 @@
+<nav class="block-content" style="display: none;">
+    {% if category %}
+        <ul id="cat-names">
+
+            {% if category.children.count %}
+                {% for children1 in category.children.all %}
+                    <li class="{% if children1.children.count %}has-sub-cats{% endif %}">
+                        <a href="{{ children1.get_absolute_url }}" class="sub-tit ">{{ children1.name }}</a>
+                        {% if children1.children.count %}
+                            <ul>
+                                {% for children2 in children1.children.all %}
+                                    <li class="sub-menu">
+                                        <a href="{{ children2.get_absolute_url }}">{{ children2.name }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            {% else %}
+                {% for children1 in category.get_family %}
+                    {% if children1.children.count and not children1.parent %}
+                        <li class="{% if children1.children.count %}has-sub-cats{% endif %}">
+                            <a href="{{ children1.get_absolute_url }}" class="sub-tit ">{{ children1.name }}</a>
+                            {% if children1.children.count %}
+                                <ul>
+                                    {% for children2 in children1.children.all %}
+                                        <li class="sub-menu">
+                                            <a href="{{ children2.get_absolute_url }}">{{ children2.name }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </ul>
+    {% else %}
+        <ul id="cat-names">
+            {% for category in categories %}
+                {% if category.children.count %}
+                {% for children1 in category.get_family %}
+                    {% if children1.children.count and not children1.parent %}
+                        <li class="{% if children1.children.count %}has-sub-cats{% endif %}">
+                            <a href="{{ children1.get_absolute_url }}" class="sub-tit ">{{ children1.name }}</a>
+                            {% if children1.children.count %}
+                                <ul>
+                                    {% for children2 in children1.children.all %}
+                                        <li class="sub-menu">
+                                            <a href="{{ children2.get_absolute_url }}">{{ children2.name }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                        {% else %}
+
+                    {% endif %}
+                {% endfor %}
+                {% else %}
+                     <li class="has-sub-cats">
+                            <a href="{{ category.get_absolute_url }}" class="sub-tit">{{ category.name }}</a>
+                     </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+    {% endif %}
+
+</nav>
+
+<nav class="block-content">
+<ul class="cat-tree">
+    <li id="cid-1">
+        <a id="lid-1" class="cathref" href="javascript:void(0)";>Parent</a>
+        
+        <ul class="cat-tree">
+            <li id="cid-2">
+               
+                <a id="lid-2" class="cathref" href="javascript:void(0)";>Sub</a>
+                <ul class="cat-tree">
+                   
+                    <li id="cid-3">
+                        <a id="lid-3" class="cathref" href="javascript:void(0)";>Sub-sub</a>
+                        <ul class="cat-tree">
+                           
+                            <li id="cid-4">
+                                <a id="lid-4" class="cathref" href="javascript:void(0)";>Sub-sub-sub</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    <li><a href="javascript:void(0)";>example</a></li>
+                    <li><a href="javascript:void(0)";>example</a></li>
+                    
+                </ul>
+                
+            </li>
+            <li><a href="javascript:void(0)";>example</a></li>
+            <li><a href="javascript:void(0)";>example</a></li>
+        </ul>
+        
+    </li>
+    <li><a href="javascript:void(0)";>example</a></li>
+    <li><a href="javascript:void(0)";>example</a></li>
+    <li><a href="javascript:void(0)";>example</a></li>
+    <li><a href="javascript:void(0)";>example</a></li>
+    
+</ul>
+</nav>
+<script>
+var tree = document.querySelector('.cat-tree');
+var treeLis = tree.querySelectorAll('.cat-tree li a');
+
+function treeToggle(event) {
+  if (event.target.parentNode.children[1]) {
+    event.target.parentNode.children[1].hidden = !event.target.parentNode.children[1].hidden;
+  };
+};
+
+for (var i = 0, length1 = treeLis.length; i < length1; i++) {
+  var li = treeLis[i];
+
+  var span = document.createElement('span');
+  li.insertBefore(span, li.firstChild);
+  span.appendChild(span.nextSibling);
+
+  span.addEventListener('click', treeToggle);
+};
+
+</script>
+

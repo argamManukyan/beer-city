@@ -1,0 +1,159 @@
+{% load static %}
+{% load i18n %}
+<footer>
+    <div class="footer-top">
+        <!-- Partners -->
+        <div class="cnt">
+            <div class="row">
+                <div class="col">
+                    <div class="swiper-container slider-partner">
+                        <div class="swiper-wrapper">
+                            {% for partner in partners %}
+                                {% if forloop.first %}
+                                    <div class="swiper-slide">
+                                        <div class="partner-logo">
+                                            <img data-src="{{ partner.icon.url }}" class="lozad"
+                                                 alt="{{ partner.name }}">
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="swiper-slide">
+                                        <div class="partner-logo">
+                                            <img data-src="{{ partner.icon.url }}" class="lozad"
+                                                 alt="{{ partner.name }}">
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Partners -->
+    </div>
+    <div class="only-footer">
+        <div class="cnt">
+            <div class="row foot-flex">
+
+                <div class="col col-5">
+                    <div class="footer-item">
+
+                        <h4>{% trans 'Կապ Մեզ Հետ' %}</h4>
+                        <div class="items-all">
+                            <ul class="c-one">
+                                {% if informative_links %}
+                                    {% for informative_link in informative_links %}
+                                        <li class="align-items-center">
+                                            {% if informative_link.url %}
+                                            <a href="{{ informative_link.url }}">
+                                                <img src="{% if informative_link.icon %}{{ informative_link.icon.url }}{% endif %}"
+                                                     alt="{{ informative_link.text }}">{{ informative_link.text }}</a>
+                                            {% else %}
+                                                <img src="{% if informative_link.icon %}{{ informative_link.icon.url }}{% endif %}"
+                                                     alt="{{ informative_link.text }}">{{ informative_link.text }}
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                {% for footer_cat in footer_categories %}
+                    <div class="col col-5">
+                        <div class="footer-item">
+                            <h4>{{ footer_cat.title }}</h4>
+                            <div class="items-all">
+                                <ul>
+                                    {% for item in footer_cat.items.all %}
+                                        {% if item.is_logged == 'logged' %}
+                                            {% if user.is_authenticated %}
+                                                <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                                            {% endif %}
+                                        {% elif item.is_logged == 'guests' %}
+                                            {% if not user.is_authenticated %}
+                                                <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                                            {% endif %}
+                                        {% else %}
+                                            <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+            <div class="row flex-center-between b-no-flex">
+
+                <div class="col col-auto ord-foot">
+                    <div class="rigth-foot align-items-center">
+                        <ul class="soc-icons align-items-center">
+                            {% for social_button in social_buttons %}
+                                <li class="align-items-center">
+                                    <a href="{{ social_button.url }}">
+                                        <img data-src="{% if social_button.icon %}{{ social_button.icon.url }}{% endif %}"
+                                             class="lozad" alt="{{ social_button.title }}">
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col col-auto">
+                    <div class="left-foot align-items-center">
+                        <img src="{% static 'img/icons/foot-logo.svg' %}" alt="Canapea CAtering">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-both">
+            <div class="cnt">
+                <div class="row flex-center-between">
+                    <div class="col col-auto ord-foot">
+                        <p>© {{ get_year }} {% trans 'Beer City || Բոլոր իրավունքները պաշտպանված են' %}<br>
+                            {% trans 'Դիզայնը և ծրագրավորումը՝' %} <a href="https://gios.am/">{% trans '«Գիոս» ՍՊԸ' %}</a>
+                        </p>
+                    </div> 
+                    <div class="col col-auto align-items-center pay-r-w">
+                        <span class="pay-meth-tit">{% trans 'Վճարման եղանակներ' %}</span>
+                        <ul class="align-items-center pay-method">
+                            {% for bank_icon in bank_icons %}
+                                <li>
+                                    <img data-src="{{ bank_icon.icon.url }}" class="lozad"
+                                         alt="{{ bank_icon.title }}">
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div class="message-container" style="top: -30%;" id="basketMessage">
+    <div class="message success">
+        <p>{% trans 'Ընտրված ապրանքը զամբյուղում է' %}</p>
+    </div>
+</div>
+
+
+<!-- cookie -->
+<div id="cookie_canapea" display="flex;">
+    <img class="cookie-icon" src="{% static 'img/icons/cookie.svg' %}" alt="Cookie">
+    <p class="cookie-msg">{% blocktrans %}Մենք օգտագործում ենք cookie-ֆայլեր ծառայությունների որակը բարելավելու
+        նպատակով:<br>Սեղմելով համաձայն եմ, Դուք թույլ եք տալիս մեզ պահպանել Ձեր տվյալները մեր
+        կայքում:{% endblocktrans %}</p>
+     <div class="cookie_butss cookie_butss flex-content-center">
+    <button type="button" id="agreeCookie" class="canapea-butt">{% trans 'ՀԱՄԱՁԱՅՆ ԵՄ' %}</button>
+    <button type="button" id="degree" class="canapea-butt">×</button>
+  </div>
+</div>

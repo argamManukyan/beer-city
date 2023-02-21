@@ -1,0 +1,33 @@
+{% load i18n %}
+{% load static %}
+<article class="blog-item">
+    <div class="blog-article-header">
+        <figure>
+
+            <a href="{{post.get_absolute_url}}">
+                <img src="{% if post.image.url %}{{ post.image.url }}{% else %}{% static 'img/default-post.jpg' %}{% endif %}"
+                     alt="{{ post.name }}">
+            </a>
+        </figure>
+        <div class="blog-views calendars align-items-center">
+            <div class="calendar-on align-items-center">
+                <img src="{% static 'img/icons/calendar.svg' %}" class="view-icon" alt="{% trans 'Դիտումների քանակ' %}">
+                <span>{{ post.created_at|date:"Y-m-d" }}</span>
+            </div>
+            <div class="views-on align-items-center">
+                <img src="{% static 'img/icons/eye.svg' %}" class="view-icon" alt="{% trans 'Դիտումների քանակ' %}">
+                <span>{{ post.views_count }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="blog-article-footer">
+        <h4 class="blog-art-heading align-items-center">
+            <a href="{{post.get_absolute_url}}" class="line-clamp2">{{ post.name }}</a>
+        </h4>
+        {% if post.short_text %}
+            {{ post.short_text|safe }}
+        {% endif %}
+        <a href="{{post.get_absolute_url}}" class="button big dark">{% trans 'Մանրաասն' %}
+            <img src="{% static 'img/icons/big-arrow.svg' %}" alt="{% trans 'Մանրաասն' %}"></a>
+    </div>
+</article>

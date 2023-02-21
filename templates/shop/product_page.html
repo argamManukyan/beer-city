@@ -1,0 +1,632 @@
+{% load my_url %}{% load i18n %}{% load static %}{% load currency %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>{% if obj.meta_title %}{{ obj.meta_title|safe }}{% else %}{{ obj.name }} | {{ domain }}{% endif %}</title>
+    <meta name="Description" content="{% if obj.meta_description %}{{ obj.meta_description|safe }}{% endif %}">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+</head>
+
+<body>
+
+    <div id="root">
+        <!-- header-->
+        {% include 'includes/header.html' %}
+        <!-- Main content -->
+        <main class="content">
+            <section id="all-product-canapea" class="section">
+                <div class="no-page-banner" style="background-image: url({% static 'img/shop-banner.jpg' %})"></div>
+                <!-- Breadcrumbs -->
+                <div class="breadcrumbs">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col">
+
+                                <ul class="breadcrumbs-list align-items-center">
+                                    <li class="breadcrumbs-item">
+                                        <a href="{% url 'home_page' %}" class="breadcrumbs-link">
+                                            <span>{% trans 'Գլխավոր' %}</span>
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumbs-item">
+                                        <a href="{% url 'catalog' %}" class="breadcrumbs-link">
+                                            <span>{% trans 'Բաժիններ' %}</span>
+                                        </a>
+                                    </li>
+
+                                    {% if breadcrumbs %}
+                                    {% for b_cumb in breadcrumbs %}
+                                    <li class="breadcrumbs-item">
+                                        <a href="{{ b_cumb.get_absolute_url }}" class="breadcrumbs-link">
+                                            <span>{{ b_cumb.name }}</span>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <li class="breadcrumbs-item">
+                                        <span>{{ obj.name }}</span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Breadcrumbs end-->
+
+                <!-- Product page  -->
+                <div class="all-product-cnt section">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col col-2">
+                                <div class="all-full-pictures">
+                                    <div class="swiper-container gallery-top">
+                                        {% if obj.sale %}
+                                        <span class="pr-page-sale-icon">-{{ obj.get_sale_percent }} %</span>
+                                        {% endif %}
+
+                                        <!-- if yes category sale and yes icon -->
+                                        {% for bday in obj.category.all|returnbonusday %}
+                                        <!-- if yes category sale and yes icon -->
+                                        <div class="cat-sale-icon">
+                                            <img src="{{ bday.icon.url }}" alt="{{ bday.category.name }}">
+                                        </div>
+                                        <!-- if yes category sale and yes icon end -->
+                                        {% endfor %}
+
+                                        <!-- if yes category sale and yes icon end -->
+
+                                        <div class="swiper-wrapper">
+                                            {% for img in obj.productimage_set.all %}
+                                            {% if forloop.first %}
+                                            <div class="swiper-slide">
+                                                <a data-fancybox="images" href="{{ img.image.url }}">
+                                                    <figure>
+                                                        <img src="{{ img.image.url }}" class="cover" alt="{{ obj.name }}">
+                                                    </figure>
+                                                </a>
+                                            </div>
+                                            {% else %}
+                                            <div class="swiper-slide">
+                                                <a data-fancybox="images" href="{{ img.image.url }}">
+                                                    <figure>
+                                                        <img src="{{ img.image.url }}" class="cover" alt="{{ obj.name }}">
+                                                    </figure>
+                                                </a>
+                                            </div>
+                                            {% endif %}
+                                            {% endfor %}
+
+                                        </div>
+                                        <div class="swiper-button-next swiper-button-white"></div>
+                                        <div class="swiper-button-prev swiper-button-white"></div>
+                                    </div>
+                                    <div class="swiper-container gallery-thumbs m-none">
+                                        <div class="swiper-wrapper">
+                                            {% for slide_img in obj.productimage_set.all %}
+                                            {% if forloop.first %}
+                                            <div class="swiper-slide">
+                                                <figure>
+                                                    <img src="{{ slide_img.image.url }}" class="cover" alt="{{ obj.name }}">
+                                                </figure>
+                                            </div>
+                                            {% else %}
+                                            <div class="swiper-slide">
+                                                <figure>
+                                                    <img src="{{ slide_img.image.url }}" class="cover" alt="{{ obj.name }}">
+                                                </figure>
+                                            </div>
+                                            {% endif %}
+                                            {% endfor %}
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-2">
+                                <div class="all-right-desc">
+                                    <div class="pr-page-ff">
+                                        <div class="pr-name-rating d-flex">
+                                            <h1>{{ obj.name }}</h1>
+                                            <div class="pr-rating">
+                                                <p>{% trans "Վարկանիշ" %} : <span id="MiddleScore">{{ middle }}</span></p>
+                                                <form id="ratingForm" method="post">
+                                                    <input type="hidden" name="product" value="{{ obj.id }}">
+                                                    <div class="star-rating">
+                                                        {% for r in ratings %}
+
+                                                        <input type="radio" class="addRatings" id="{{ r.id }}-stars" name="rating" value="{{ r.value }}" {% if user_block %}disabled{% endif %}>
+                                                        <label for="{{ r.id }}-stars" class="star{% if user_block %}{% if r.value <= user_rating.rating.value %} starActive{% endif %}{% elif r.value <= middle %} starActive{% endif %}" id="id-{{ r.value }}">★</label>
+                                                        {% endfor %}
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        <div class="pr-page-price-minpiece align-items-center">
+                                            <div class="pr-page-price">
+                                                {% if obj.sale %}
+                                                <span class="pr-pice">
+                                                    {% if request.session.currency_icon != '$' %}
+                                                    <span id="salePrice" class="wh-point">{{ obj.sale|currency:request.session.currency }}</span>
+                                                    <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                                    {% else %}
+                                                    <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                                    <span id="salePrice" class="wh-point">{{ obj.sale|currency:request.session.currency }}</span>
+                                                    {% endif %}
+                                                </span>
+
+                                                <span class="pr-old-pice">
+                                                    <s>
+                                                        {% if request.session.currency_icon != '$' %}
+                                                        <span id="natPrice" class="wh-point">{{ obj.price|currency:request.session.currency }}</span>
+                                                        <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                                        {% else %}
+                                                        <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                                        <span id="natPrice" class="wh-point">{{ obj.price|currency:request.session.currency }}</span>
+                                                        {% endif %}
+                                                    </s>
+                                                </span>
+                                                {% else %}
+                                                <span class="pr-pice">
+                                                    {% if request.session.currency_icon != '$' %}
+                                                    <span id="natPrice" class="wh-point">{{ obj.price|currency:request.session.currency }}</span>
+                                                    <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                                    {% else %}
+                                                    <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                                    <span id="natPrice" class="wh-point">{{ obj.price|currency:request.session.currency }}</span>
+                                                    {% endif %}
+                                                </span>
+                                                {% endif %}
+                                                {% if obj.product_code %}
+                                                <div class="pr-code">{% trans 'Ապրանքի կոդ' %}: {{ obj.product_code }}</div>
+                                                {% endif %}
+                                            </div>
+
+                                            {% if obj.productfeature_set.all|cardfilter %}
+                                            <div class="pr-min-piece">
+                                                {% for cart_val in obj.productfeature_set.all|cardfilter %}
+                                                {% if forloop.first %}
+                                                <span>{{ cart_val.value }} {{ cart_val.measure_unit.title }}</span>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="pr-page-details">
+                                        <ul class="shop-options">
+                                            <li>
+                                                <span class="opt"><b>{% trans 'Առկայություն:' %}</b></span>
+                                                <span class="val">Առկա է</span>
+                                            </li>
+
+                                            <li>
+                                                <span class="opt"><b>{% trans 'Բաժնի անվանում:' %}</b></span>
+                                                <a href="#" class="linkcolor">
+                                                    <span class="val">Շշալցված գարեջուր</span>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <span class="opt"><b>{% trans 'Ապրանքի կոդ:' %}</b></span>
+                                                <span class="val">001111</span>
+                                            </li>
+
+                                            <li>
+                                                <span class="opt"><b>{% trans 'Ապրանքի ID:' %}</b></span>
+                                                <span class="val">BC0015</span>
+                                            </li>
+
+
+                                        </ul>
+                                    </div>
+
+                                    <div class="pr-page-prod-qty d-flex">
+                                        <div class="number ">
+                                            <div class="no-mob-flex align-items-center">
+                                                <div class="pr-select-field-title">{% trans 'Քանակ' %}:</div>
+                                                <div class="prod-item-desc-qty">
+                                                    <div class="only_qty align-items-center">
+                                                        <img src="{% static 'img/icons/minus.svg' %}" class="minus" alt="{% trans 'Նվազեցնել' %}">
+                                                        <input type="number" class="qty-input" value="{% if obj.min_qty %}{{ obj.min_qty }}{% else %}1{% endif %}" min="{% if obj.min_qty %}{{ obj.min_qty }}{% else %}1{% endif %}" {#                                                    onchange="changeQty(this, `{{ obj.pk }}`, `{{ obj.price|currency:request.session.currency }}`, `{{ obj.sale|currency:request.session.currency }}`)"#} id="qty-{{ obj.id }}" onchange="fetchPrice()">
+                                                        <img src="{% static 'img/icons/plus.svg' %}" class="plus" alt="{% trans 'Ավելացնել' %}">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Notification for min pieces. -->
+                                            {#                                        {% if obj.min_qty > 1 %}#}
+                                            <div class="alert-min alert-danger" id="warningQuantity" style="display: none">
+                                                <div class="align-items-center">
+                                                    <img src="{% static 'img/icons/alert-warning.svg' %}" class="alert-img" alt="{% trans 'Ծանուցում' %}">
+                                                    <span>{% trans 'Պատվերի նվազագույն քանակը' %} <strong>{{ obj.min_qty }}</strong> {% trans 'հատ է' %}։
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            {#                                        {% endif %}#}
+                                            <!-- Notification for min pieces. end -->
+                                        </div>
+
+                                        {% if obj.min_qty > 1 %}
+                                        <div class="qty-change-price">
+                                            <div class="only-change-num">
+
+                                                <span class="min-pr-qty" id="minQtyProd">{{ obj.min_qty }}</span> x
+                                                <span class="only-price wh-point" id="ItemPrice">{{ obj.get_price|currency:request.session.currency }}</span>
+                                                =
+                                                <span class="min-final-price">
+                                                    {% if request.session.currency_icon != '$' %}
+                                                    <span class="wh-point" id="ItemTotalPrice">{% subprice obj.get_price|currency:request.session.currency obj.min_qty %}</span>
+                                                    <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                                    {% else %}
+                                                    <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                                    <span class="wh-point" id="ItemTotalPrice">{% subprice obj.get_price|currency:request.session.currency obj.min_qty %}</span>
+                                                    {% endif %}
+                                                </span>
+
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Catedory inheritance products -->
+                                    {% if inheritance_items %}
+                                    <div class="category-inheritance">
+                                        <div class="pr-filed-inheritance">
+                                            <div class="pr-field-title">{% trans 'Տարբերակներ' %}</div>
+
+                                            <ul class="inheritance-row d-flex">
+                                                {% for item in inheritance_items %}
+                                                <li class="inheritance-item {% if obj.id == item.id %}active{% endif %}">
+                                                    <a href="{{ item.get_absolute_url }}">
+                                                        {% if item.main_image %}
+                                                        <figure class="align-items-center">
+                                                            <img src="{{ item.main_image.url }}" class="cover" alt="{{ item.name }}">
+                                                        </figure>
+                                                        {% endif %}
+                                                        <p class="line-clamp2">{{ item.name }}</p>
+                                                    </a>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!-- Catedory inheritance products end -->
+                                    {% endif %}
+                                    <!-- Radio and Select -->
+                                    {#                                <form class="pr-options" id="addToCartForm" onchange='featureForm(this,`{{ obj.id }}`,`#}
+                                    {#                                    {{ obj.price|currency:request.session.currency }}`,`#}
+                                    {#                                    {{ obj.sale|currency:request.session.currency }}`)'>#}
+                                    <!-- Radio button -->
+                                    <form class="pr-options" id="addToCartForm" onchange="fetchPrice()">
+                                        {% for field in variant_fields %}
+                                        {% if field.field_type == 'radio' %}
+                                        <div class="pr-options-radio">
+                                            <div class="pr-filed-radio">
+                                                <div class="pr-field-title">{{ field.title }}</div>
+                                                {% for val in field.productfeature_set.all|features:obj.id %}
+                                                <div class="radio-button align-items-center">
+                                                    <input type="radio" name="{{ field.filter_key }}" value="{{ val.id }}" {% if forloop.first and val.price == 0 %}checked{% endif %} data-price="{{ val.price|currency:request.session.currency }}" id="pr_id-{{ val.id }}" data-value="{{ val.id }}">
+                                                    <label for="pr_id-{{ val.id }}" class="radio-label">{{ val.value.title }} {{ val.measure_unit.title }} (+ {% if request.session.currency_icon != "$" %}{{ val.price|currency:request.session.currency }} {{ request.session.currency_icon }}{% else %}{{ request.session.currency_icon }} {{ val.price|currency:request.session.currency }}{% endif %})</label>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <!-- Radio button end -->
+                                        {% else %}
+                                        <!-- Select -->
+                                        <div class="pr-options-select">
+                                            <div class="pr-filed-select align-items-center">
+                                                <div class="pr-select-field-title">{{ field.title }}:</div>
+                                                <select name="{{ field.filter_key }}" class="">
+                                                    <option value="">{% trans 'Ընտրել' %}</option>
+                                                    {% for val in field.productfeature_set.all|features:obj.id %}
+                                                    {% if val.is_active %}
+                                                    <option id="pr_id-{{ val.id }}" value="{{ val.id }}" data-price="{{ val.price|currency:request.session.currency }}">{{ val.value.title }} {{ val.measure_unit.title }} (+ {% if request.session.currency_icon != "$" %}{{ val.price|currency:request.session.currency }} {{ request.session.currency_icon }}{% else %}{{ request.session.currency_icon }} {{ val.price|currency:request.session.currency }}{% endif %})</option>
+                                                    {% else %}
+                                                    <option disabled id="pr_id-{{ val.id }}" value="{{ val.id }}" data-price="{{ val.price|currency:request.session.currency }}">{{ val.value.title }} {{ val.measure_unit.title }} (+ {% if request.session.currency_icon != "$" %}{{ val.price|currency:request.session.currency }} {{ request.session.currency_icon }}{% else %}{{ request.session.currency_icon }} {{ val.price|currency:request.session.currency }}{% endif %})</option>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <!-- Select end -->
+                                        {% endfor %}
+                                    </form>
+                                    <!-- Radio and Select end -->
+                                    <!-- Add to Cart and Wishlist -->
+                                    <div class="pr-wish-basket align-items-center">
+                                        {% if obj.is_active %}
+                                        <button type="button" class="button dark normal addtocart-but flex-content-center" onclick="addToCart({{ obj.id }})">
+                                            <img src="{% static 'img/icons/cart-prod.svg' %}" alt="{% trans 'Ավելացնել' %}">{% trans 'Ավելացնել' %}
+                                        </button>
+                                        {% else %}
+                                        <!-- if product out of stock -->
+                                        <button type="button" class="button dark normal flex-content-center addtocart-but diss-prod">
+                                            <img src="{% static 'img/icons/diss-prod.svg' %}" alt="{% trans 'Առկա չէ' %}">{% trans 'Առկա չէ' %}
+                                        </button>
+                                        <!-- if product out of stock end -->
+                                        {% endif %}
+                                        <button id="add-wish-active" data-url="{% url 'add_to_wish' %}" data-product="{{ obj.id }}" onclick="addToWish(this)" class="button normal wish-list-icon flex-content-center addTOWISH-{{ obj.id }}{% if obj.id in wish_ids %} active{% endif %}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M0.40482 9.82952C-0.826136 6.00569 0.811517 1.99738 4.48311 0.815291C6.2404 0.250031 8.14194 0.45344 9.73299 1.35623L9.99639 1.51429L10.2645 1.35535C11.773 0.501301 13.5624 0.273087 15.2463 0.736231L15.512 0.81535C19.1847 1.9978 20.8291 6.00801 19.5937 9.84515C18.9743 11.6301 17.9584 13.2485 16.6174 14.5824C14.7927 16.3545 12.7812 17.9194 10.6218 19.2473L10.3926 19.3897C10.1598 19.5344 9.86561 19.5369 9.63044 19.3961L9.38488 19.2491C7.22254 17.9194 5.21101 16.3545 3.38004 14.5762C2.04534 13.2485 1.02947 11.6301 0.40482 9.82952ZM9.57075 2.99539L9.37402 2.85428C8.06994 1.9629 6.43269 1.7234 4.93091 2.20647C2.08684 3.12213 0.797453 6.27802 1.79145 9.36636C2.33814 10.9418 3.23443 12.3696 4.40519 13.5344C6.15312 15.2319 8.07986 16.7309 10.1434 17.9999L10.0006 17.9099L10.4685 17.6156C12.1019 16.561 13.6404 15.3642 15.063 14.0421L15.591 13.5405C16.768 12.3696 17.6643 10.9418 18.2058 9.382C19.2041 6.28097 17.9091 3.12285 15.0635 2.2067C13.4866 1.70083 11.7654 1.99058 10.4354 2.98627C10.18 3.17743 9.83009 3.18113 9.57075 2.99539Z" fill="#223C05" />
+                                            </svg>
+                                            {% trans 'Ցանկալի' %}
+                                        </button>
+
+                                    </div>
+                                    <!-- Add to Cart and Wishlist end -->
+
+                                    <!-- info icons -->
+                                    <div class="pr-info-more">
+                                        <div class="info-item">
+                                            <a href="#" class="align-items-center">
+                                                <img src="{% static 'img/icons/pr-payment.svg' %}" alt="{% trans 'Վճարում' %}">
+                                                <span>{% trans 'Վճարում' %}</span>
+                                            </a>
+                                        </div>
+                                        <div class="info-item">
+                                            <a href="#" class="align-items-center">
+                                                <img src="{% static 'img/icons/pr-delivery.svg' %}" alt="{% trans 'Առաքում' %}">
+                                                <span>{% trans 'Առաքում' %}</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- info icons end -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="product-page-largetdesc">
+                                <div class="full-desc-payments">
+                                    <ul class="tabs align-items-center">
+                                        
+                                        {% if obj.large_description or features %}
+                                        <li class="col-auto tabel" rel="tab0">
+                                            <span>{% trans 'Նկարագրություն' %}</span>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+
+                                    <div class="tab_container">
+                                        <div id="tab0" class="tab_content">
+                                           <div class="prod-desc-large characteristics"> 
+                                            {% if obj.large_description or features %}
+                                               
+                                               <div class="only_desc">
+                                                    {% if obj.large_description %}
+                                                        {{ obj.large_description|safe }}
+                                                    {% endif %}
+                                                </div>
+                                               
+                                                {% for feature in features %}
+                                                <div class="card-character-block align-items-center">
+                                                    <div class="card-character-name">
+                                                        <span><b>{{ feature.field.title }}:</b></span>
+                                                    </div>
+                                                    <div class="card-character-value">
+                                                        <span>{{ feature.value }} {{ feature.measure_unit.title }}</span>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                                
+                                            </div>
+                                        </div>
+                                         {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product page end  -->
+                
+                {% if buy_with_this_item %}
+                <!-- Bought with this product -->
+                <div class="section">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col">
+                                <div class="swiper-container slider-4">
+
+                                    <div class="section-title">
+                                        <div class="tith3 align-items-center">
+                                            <span class="tith3-name">{% trans 'Այս Ապրանքի հետ գնել են' %}</span>
+                                        </div>
+                                        <div class="swiper-button-next swiper-next"></div>
+                                        <div class="swiper-button-prev swiper-prev"></div>
+                                    </div>
+
+                                    <div class="swiper-wrapper">
+                                        {% for product in buy_with_this_item %}
+                                        <div class="swiper-slide">
+                                            {% include 'includes/product.html' %}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="swiper-pagination"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Bought with this product end -->
+                {% endif %}
+                
+                {% if category_items %}
+                <!-- Similar Products -->
+                <div class="section">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col">
+                                <div class="swiper-container slider-4">
+                                    <div class="section-title">
+                                        <div class="tith3 align-items-center">
+                                            <span class="tith3-name">{% trans 'Առաջարկվող ապրանքներ' %}</span>
+                                        </div>
+                                        <div class="swiper-button-next swiper-next"></div>
+                                        <div class="swiper-button-prev swiper-prev"></div>
+                                    </div>
+                                    <div class="swiper-wrapper">
+                                        {% for product in category_items %}
+                                        <div class="swiper-slide">
+                                            {% include 'includes/product.html' %}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="swiper-pagination"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Similar Products end -->
+                {% endif %}
+                
+                <!-- Recently Viewed Products -->
+                {% if recently_views %}
+                <div class="section">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col">
+                                <div class="swiper-container slider-4">
+
+                                    <div class="section-title">
+                                        <div class="tith3 align-items-center">
+                                            <span class="tith3-name">{% trans 'Նախկինում դիտվածները' %}</span>
+                                        </div>
+                                        <div class="swiper-button-next swiper-next"></div>
+                                        <div class="swiper-button-prev swiper-prev"></div>
+                                    </div>
+
+                                    <div class="swiper-wrapper">
+                                        {% for product in recently_views %}
+                                        <div class="swiper-slide">
+                                            {% include 'includes/product.html' %}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="swiper-pagination"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Recently Viewed Products end -->
+                {% endif %}
+                
+            </section>
+        </main>
+        <!-- Main content end -->
+        {% include 'includes/footer.html' %}
+    </div>
+
+    <script src="{% static 'js/canapea3.6_main.js' %}"></script>
+    <script src="{% static 'js/canapea_script.js' %}"></script>
+    <script src="{% static 'js/canapea_swiper.js' %}"></script>
+    <script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+    <script src="{% static 'js/canapea_product_page.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+    <script src="{% static 'js/wish.js' %}"></script>
+    <script src="{% static 'js/cart.js' %}"></script>
+    <script>
+        const tabElements = document.querySelector('.tabel')
+        tabElements.classList.toggle('active')
+
+        fetchPrice = () => {
+            const form = new FormData(document.getElementById('addToCartForm'))
+
+            const qty = document.getElementById(`qty-{{ obj.id }}`)
+
+            if (+qty.value < +qty.getAttribute('min')) {
+                qty.setAttribute('disabled', true)
+                qty.value = +qty.getAttribute('min')
+                document.getElementById('warningQuantity').style.display = 'block'
+            } else {
+                qty.removeAttribute('disabled')
+                document.getElementById('warningQuantity').style.display = 'none'
+            }
+            form.append("qty", qty.value)
+            const formParams = new URLSearchParams(form).toString()
+
+            fetch(`{% url 'change_qty' pk=obj.pk %}?${formParams}`, {
+                    method: "GET",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                }).then(response => response.json())
+                .then(data => {
+                    document.getElementById('natPrice').innerText = data.price;
+                    if (document.getElementById('minQtyProd')) {
+                        document.getElementById('minQtyProd').innerText = qty.value
+                    }
+                    if (document.getElementById('ItemPrice')) {
+                        document.querySelector('#ItemPrice').innerHTML = data.obj_price;
+                        document.querySelector('#ItemTotalPrice').innerHTML = data.price;
+                    }
+                    if (data.sale) {
+                        document.getElementById('salePrice').innerText = data.sale
+                        if (document.getElementById('ItemPrice')) {
+                            document.querySelector('#ItemPrice').innerHTML = data.obj_sale
+                            document.querySelector('#ItemTotalPrice').innerHTML = data.sale;
+                        }
+                    }
+                })
+
+        }
+
+        $(".tab_content").hide();
+        $(".tab_content:first").show();
+
+        const ratingForm = document.getElementById('ratingForm')
+        ratingForm.addEventListener('change', async function(event) {
+            event.preventDefault();
+            const data = Object.fromEntries(new FormData(this));
+            try {
+                const resp = await fetch(`${window.location.origin}/add-rating/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(data)
+                })
+                const {
+                    rating
+                } = await resp.json();
+                document.getElementById('MiddleScore').innerText = parseFloat(rating).toFixed(1);
+                const ratingInputs = document.getElementsByClassName('addRatings')
+
+                for (let k = 1; k <= 5; k++) {
+
+                    if (k <= data.rating) {
+                        if (!document.getElementById(`id-${k}`).classList.contains('starActive')) {
+                            document.getElementById(`id-${k}`).classList.add('starActive')
+                        }
+                    } else {
+                        if (document.getElementById(`id-${k}`).classList.contains('starActive')) {
+                            document.getElementById(`id-${k}`).classList.remove('starActive')
+                        }
+                    }
+                }
+                for (let index = 0; index < ratingInputs.length; index++) {
+                    const element = ratingInputs[index];
+                    element.setAttribute('disabled', true)
+                }
+            } catch (e) {
+                throw e
+            }
+        })
+    </script>
+</body>
+
+</html>

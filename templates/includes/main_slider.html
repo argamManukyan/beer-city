@@ -1,0 +1,31 @@
+{% load static %}{% load i18n %}
+<div class="swiper-slide">
+    <div class="slide-desc-image">
+        <div class="cnt">
+            <div class="row flex-center-between">
+                <div class="col col-auto">
+                    <div class="slide-desc">
+                        {% if slide.text %}
+                        {{ slide.text|safe }}
+                        {% endif %}
+                        {% if slide.url %}
+                        <div class="slide-desc-button align-items-center">
+                            <a href="{{ slide.url }}" class="button big yellow">{% trans 'Անցնել Գնումների' %}
+                                <img src="{% static 'img/icons/big-arrow-black.svg' %}" alt="{% trans 'Անցնել Գնումների' %}">
+                            </a>
+                            <a href="#" class="button big transparent">{% trans 'Կապ մեզ հետ' %}
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col col-auto">
+                    <div class="slide-image">
+                        <img class="main-slide-img" src="{{ slide.lg_image.url }}" alt="Beer City">
+                        <!-- <img class="main-slide-xs ml-none" src="{{ slide.xl_image.url }}" alt="Beer City">-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
