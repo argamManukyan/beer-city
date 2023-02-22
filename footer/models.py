@@ -1,6 +1,6 @@
 from django.db import models
 
-from canapea.utils import CustomLogoField
+from beercity.utils import CustomLogoField
 
 
 class FooterCategory(models.Model):
@@ -83,18 +83,3 @@ class PersonalData(models.Model):
 
     def __str__(self):
         return self.text
-
-
-class Partners(models.Model):
-    name = models.CharField(max_length=200, blank=True, null=True, verbose_name='Անուն (alt)')
-    icon = CustomLogoField()
-    url = models.URLField(null=True, blank=True, verbose_name='Հղում դեպի գործընկերոջ կայքէջ')
-    my_order = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Դասավորել')
-
-    class Meta:
-        ordering = ['my_order']
-        verbose_name = 'Գործընկեր'
-        verbose_name_plural = 'Գործընկերներ'
-
-    def __str__(self):
-        return self.name if self.name else str(self.pk)

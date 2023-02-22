@@ -4,7 +4,7 @@
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
-    <title>{% if obj.meta_title %}{{ obj.meta_title|safe }}{% else %}{{ obj.name }} | {{ domain }}{% endif %}</title>
+    <title>{% if obj.meta_title %}{{ obj.meta_title|safe }}{% else %}{{ obj.name }} | {{ request.get_host }}{% endif %}</title>
     <meta name="Description" content="{% if obj.meta_description %}{{ obj.meta_description|safe }}{% endif %}">
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
     <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
@@ -85,23 +85,23 @@
 
                                         <div class="swiper-wrapper">
                                             {% for img in obj.productimage_set.all %}
-                                            {% if forloop.first %}
-                                            <div class="swiper-slide">
-                                                <a data-fancybox="images" href="{{ img.image.url }}">
-                                                    <figure>
-                                                        <img src="{{ img.image.url }}" class="cover" alt="{{ obj.name }}">
-                                                    </figure>
-                                                </a>
-                                            </div>
-                                            {% else %}
-                                            <div class="swiper-slide">
-                                                <a data-fancybox="images" href="{{ img.image.url }}">
-                                                    <figure>
-                                                        <img src="{{ img.image.url }}" class="cover" alt="{{ obj.name }}">
-                                                    </figure>
-                                                </a>
-                                            </div>
-                                            {% endif %}
+                                                {% if forloop.first %}
+                                                    <div class="swiper-slide">
+                                                        <a data-fancybox="images" href="{{ img.image.url }}">
+                                                            <figure>
+                                                                <img src="{{ img.image.url }}" class="cover" alt="{{ obj.name }}">
+                                                            </figure>
+                                                        </a>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="swiper-slide">
+                                                        <a data-fancybox="images" href="{{ img.image.url }}">
+                                                            <figure>
+                                                                <img src="{{ img.image.url }}" class="cover" alt="{{ obj.name }}">
+                                                            </figure>
+                                                        </a>
+                                                    </div>
+                                                {% endif %}
                                             {% endfor %}
 
                                         </div>
@@ -141,9 +141,8 @@
                                                     <input type="hidden" name="product" value="{{ obj.id }}">
                                                     <div class="star-rating">
                                                         {% for r in ratings %}
-
-                                                        <input type="radio" class="addRatings" id="{{ r.id }}-stars" name="rating" value="{{ r.value }}" {% if user_block %}disabled{% endif %}>
-                                                        <label for="{{ r.id }}-stars" class="star{% if user_block %}{% if r.value <= user_rating.rating.value %} starActive{% endif %}{% elif r.value <= middle %} starActive{% endif %}" id="id-{{ r.value }}">★</label>
+                                                            <input type="radio" class="addRatings" id="{{ r.id }}-stars" name="rating" value="{{ r.value }}" {% if user_block %}disabled{% endif %}>
+                                                            <label for="{{ r.id }}-stars" class="star{% if user_block %}{% if r.value <= user_rating.rating.value %} starActive{% endif %}{% elif r.value <= middle %} starActive{% endif %}" id="id-{{ r.value }}">★</label>
                                                         {% endfor %}
                                                     </div>
                                                 </form>
@@ -155,38 +154,38 @@
                                                 {% if obj.sale %}
                                                 <span class="pr-pice">
                                                     {% if request.session.currency_icon != '$' %}
-                                                    <span id="salePrice" class="wh-point">{{ obj.sale|currency:request.session.currency }}</span>
-                                                    <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                                        <span id="salePrice" class="wh-point">{{ obj.sale|currency:request.session.currency }}</span>
+                                                        <span class="valyuta">{{ request.session.currency_icon }}</span>
                                                     {% else %}
-                                                    <span class="valyuta">{{ request.session.currency_icon }}</span>
-                                                    <span id="salePrice" class="wh-point">{{ obj.sale|currency:request.session.currency }}</span>
+                                                        <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                                        <span id="salePrice" class="wh-point">{{ obj.sale|currency:request.session.currency }}</span>
                                                     {% endif %}
                                                 </span>
 
                                                 <span class="pr-old-pice">
                                                     <s>
                                                         {% if request.session.currency_icon != '$' %}
-                                                        <span id="natPrice" class="wh-point">{{ obj.price|currency:request.session.currency }}</span>
-                                                        <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                                            <span id="natPrice" class="wh-point">{{ obj.price|currency:request.session.currency }}</span>
+                                                            <span class="valyuta">{{ request.session.currency_icon }}</span>
                                                         {% else %}
-                                                        <span class="valyuta">{{ request.session.currency_icon }}</span>
-                                                        <span id="natPrice" class="wh-point">{{ obj.price|currency:request.session.currency }}</span>
+                                                            <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                                            <span id="natPrice" class="wh-point">{{ obj.price|currency:request.session.currency }}</span>
                                                         {% endif %}
                                                     </s>
                                                 </span>
                                                 {% else %}
                                                 <span class="pr-pice">
                                                     {% if request.session.currency_icon != '$' %}
-                                                    <span id="natPrice" class="wh-point">{{ obj.price|currency:request.session.currency }}</span>
-                                                    <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                                        <span id="natPrice" class="wh-point">{{ obj.price|currency:request.session.currency }}</span>
+                                                        <span class="valyuta">{{ request.session.currency_icon }}</span>
                                                     {% else %}
-                                                    <span class="valyuta">{{ request.session.currency_icon }}</span>
-                                                    <span id="natPrice" class="wh-point">{{ obj.price|currency:request.session.currency }}</span>
+                                                        <span class="valyuta">{{ request.session.currency_icon }}</span>
+                                                        <span id="natPrice" class="wh-point">{{ obj.price|currency:request.session.currency }}</span>
                                                     {% endif %}
                                                 </span>
                                                 {% endif %}
                                                 {% if obj.product_code %}
-                                                <div class="pr-code">{% trans 'Ապրանքի կոդ' %}: {{ obj.product_code }}</div>
+                                                    <div class="pr-code">{% trans 'Ապրանքի կոդ' %}: {{ obj.product_code }}</div>
                                                 {% endif %}
                                             </div>
 
@@ -205,7 +204,7 @@
                                         <ul class="shop-options">
                                             <li>
                                                 <span class="opt"><b>{% trans 'Առկայություն:' %}</b></span>
-                                                <span class="val">Առկա է</span>
+                                                <span class="val">{% if obj.is_active %}Առկա է{% else %}Առկա չի{% endif %}</span>
                                             </li>
 
                                             <li>
@@ -214,15 +213,15 @@
                                                     <span class="val">Շշալցված գարեջուր</span>
                                                 </a>
                                             </li>
-
+                                            {% if obj.product_code %}
                                             <li>
                                                 <span class="opt"><b>{% trans 'Ապրանքի կոդ:' %}</b></span>
-                                                <span class="val">001111</span>
+                                                <span class="val">{{obj.product_code}}</span>
                                             </li>
-
+                                            {% endif %}
                                             <li>
                                                 <span class="opt"><b>{% trans 'Ապրանքի ID:' %}</b></span>
-                                                <span class="val">BC0015</span>
+                                                <span class="val">{{obj.product_custom_id}}</span>
                                             </li>
 
 
@@ -236,14 +235,17 @@
                                                 <div class="prod-item-desc-qty">
                                                     <div class="only_qty align-items-center">
                                                         <img src="{% static 'img/icons/minus.svg' %}" class="minus" alt="{% trans 'Նվազեցնել' %}">
-                                                        <input type="number" class="qty-input" value="{% if obj.min_qty %}{{ obj.min_qty }}{% else %}1{% endif %}" min="{% if obj.min_qty %}{{ obj.min_qty }}{% else %}1{% endif %}" {#                                                    onchange="changeQty(this, `{{ obj.pk }}`, `{{ obj.price|currency:request.session.currency }}`, `{{ obj.sale|currency:request.session.currency }}`)"#} id="qty-{{ obj.id }}" onchange="fetchPrice()">
+                                                        <input type="number" class="qty-input" value="{% if obj.min_qty %}{{ obj.min_qty }}{% else %}1{% endif %}" 
+                                                        min="{% if obj.min_qty %}{{ obj.min_qty }}{% else %}1{% endif %}" 
+                                                        {% if obj.max_qty %}max="{{ obj.max_qty}}"{% endif %}
+                                                        id="qty-{{ obj.id }}" onchange="fetchPrice()">
                                                         <img src="{% static 'img/icons/plus.svg' %}" class="plus" alt="{% trans 'Ավելացնել' %}">
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <!-- Notification for min pieces. -->
-                                            {#                                        {% if obj.min_qty > 1 %}#}
+                                            {% if obj.min_qty > 1 %}
                                             <div class="alert-min alert-danger" id="warningQuantity" style="display: none">
                                                 <div class="align-items-center">
                                                     <img src="{% static 'img/icons/alert-warning.svg' %}" class="alert-img" alt="{% trans 'Ծանուցում' %}">
@@ -251,7 +253,16 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            {#                                        {% endif %}#}
+                                            {% endif %}
+                                            {% if obj.max_qty %}
+                                            <div class="alert-min alert-danger" id="warningMaxQuantity" style="display: none">
+                                                <div class="align-items-center">
+                                                    <img src="{% static 'img/icons/alert-warning.svg' %}" class="alert-img" alt="{% trans 'Ծանուցում' %}">
+                                                    <span>{% trans 'Պատվերի մաքսիմալ քանակը' %} <strong>{{ obj.max_qty }}</strong> {% trans 'հատ է' %}։
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            {% endif %}
                                             <!-- Notification for min pieces. end -->
                                         </div>
 
@@ -540,10 +551,7 @@
     <script src="{% static 'js/wish.js' %}"></script>
     <script src="{% static 'js/cart.js' %}"></script>
     <script>
-        const tabElements = document.querySelector('.tabel')
-        tabElements.classList.toggle('active')
-
-        fetchPrice = () => {
+         function fetchPrice(){
             const form = new FormData(document.getElementById('addToCartForm'))
 
             const qty = document.getElementById(`qty-{{ obj.id }}`)
@@ -551,11 +559,33 @@
             if (+qty.value < +qty.getAttribute('min')) {
                 qty.setAttribute('disabled', true)
                 qty.value = +qty.getAttribute('min')
-                document.getElementById('warningQuantity').style.display = 'block'
+                if(document.getElementById('warningQuantity')){
+                    document.getElementById('warningQuantity').style.display = 'block'
+                }
             } else {
                 qty.removeAttribute('disabled')
-                document.getElementById('warningQuantity').style.display = 'none'
+                if(document.getElementById('warningQuantity')){
+                    document.getElementById('warningQuantity').style.display = 'none'
+                }
             }
+            
+            if(qty.hasAttribute('max')) {
+                
+                if (+qty.value > +qty.getAttribute('max')) {
+                    qty.setAttribute('disabled', true)
+                    console.log(+qty.getAttribute('max'))
+                    qty.value = +qty.getAttribute('max')
+                    if(document.getElementById('warningMaxQuantity')){
+                        document.getElementById('warningMaxQuantity').style.display = 'block'
+                    }
+                } else {
+                    qty.removeAttribute('disabled')
+                    if(document.getElementById('warningMaxQuantity')){
+                        document.getElementById('warningMaxQuantity').style.display = 'none'
+                    }
+                }
+            }
+
             form.append("qty", qty.value)
             const formParams = new URLSearchParams(form).toString()
 

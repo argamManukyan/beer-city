@@ -3,6 +3,7 @@ import csv
 from django.contrib import admin
 from django.http import HttpResponse
 from django.utils.safestring import mark_safe
+from singlemodeladmin import SingleModelAdmin
 from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 from mptt.admin import DraggableMPTTAdmin
 from modeltranslation.admin import TabbedDjangoJqueryTranslationAdmin
@@ -11,9 +12,9 @@ from easy_select2 import select2_modelform
 
 from .models import *
 
-admin.site.site_header = 'Canapea catering'                    # default: "Django Administration"
-admin.site.index_title = 'Canapea catering'                 # default: "Site administration"
-admin.site.site_title = 'Canapea catering'
+admin.site.site_header = 'Beer city'                    # default: "Django Administration"
+admin.site.index_title = 'Beer city'                 # default: "Site administration"
+admin.site.site_title = 'Beer city'
 
 ProductForm = select2_modelform(Product,  attrs={"width": "250px"})
 
@@ -166,3 +167,4 @@ admin.site.register(RatingProduct)
 # admin.site.register(ProductFeature)
 admin.site.register(UnitMeasurement, TabbedDjangoJqueryTranslationAdmin)
 
+admin.site.register(SliderPhoneImage, SingleModelAdmin)

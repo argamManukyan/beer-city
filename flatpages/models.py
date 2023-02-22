@@ -2,7 +2,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from django.urls import reverse
 
-from canapea.utils import CustomMetaModel, slug_generator, CustomLogoField, CustomModel
+from beercity.utils import CustomMetaModel, slug_generator, CustomLogoField, CustomModel
 
 
 class FlatPages(CustomMetaModel):
@@ -15,7 +15,7 @@ class FlatPages(CustomMetaModel):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slug_generator(self.page_name, self.__class__)
+            self.slug = slug_generator(self.page_name)
 
         return super().save(*args, **kwargs)
 
@@ -45,7 +45,7 @@ class BlogCategory(CustomMetaModel):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slug_generator(self.name, self.__class__)
+            self.slug = slug_generator(self.name)
 
         return super().save(*args, **kwargs)
 
@@ -78,7 +78,7 @@ class Blog(CustomMetaModel):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slug_generator(self.name, self.__class__)
+            self.slug = slug_generator(self.name)
 
         return super().save(*args, **kwargs)
 
@@ -109,7 +109,7 @@ class GalleryCategory(CustomMetaModel):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slug_generator(self.name, self.__class__)
+            self.slug = slug_generator(self.name)
 
         return super().save(*args, **kwargs)
 
@@ -162,7 +162,7 @@ class ContactUsIcons(models.Model):
     url = models.CharField(verbose_name="Հղում", max_length=1000)
     text = models.CharField(max_length=255, verbose_name="Տեքստ")
     my_order = models.PositiveIntegerField(verbose_name="Դասավորել", default=0)
-
+    
     class Meta:
         ordering = ['-my_order']
         verbose_name = "«Հետադարձ կապ» էջի icon"

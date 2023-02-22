@@ -1,10 +1,10 @@
 from django.db import models
-from canapea.utils import CustomLogoField
+from beercity.utils import CustomLogoField
 
 
 class TopHeader(models.Model):
     title = models.CharField(max_length=255, unique=True, verbose_name='Դաշտի անուն')
-    url = models.URLField(verbose_name='Հղում')
+    url = models.CharField(verbose_name='Հղում', max_length=255)
     icon = CustomLogoField()
     my_order = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Դասավորել')
 
@@ -17,7 +17,7 @@ class TopHeader(models.Model):
 
 class BottomHeader(models.Model):
     title = models.CharField(max_length=255, unique=True, verbose_name='Դաշտի անուն')
-    url = models.URLField(verbose_name='Հղում')
+    url = models.CharField(verbose_name='Հղում', max_length=255)
     # icon = CustomLogoField()
     with_underscore = models.BooleanField(
         default=False,

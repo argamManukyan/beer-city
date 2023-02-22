@@ -1,5 +1,6 @@
 import json
 from decimal import Decimal
+import random
 
 import requests
 from currencies.models import Currency
@@ -90,30 +91,40 @@ class HomePageView(View):
     """ Home page """
 
     def get(self, request, **kwargs):
-        used_ids = []
+        # Slider
         slider = Slider.objects.all()
-        special_offers = Product.objects.filter(special_offer=True)[:16]
-        used_ids.append(special_offers.values_list('id', flat=True))
-        best_sold_furshets = Product.objects.filter(
-            category__slug=FURSHET_SLUG)
-        used_ids.append(best_sold_furshets.values_list('id', flat=True))
-
+        slider_image = SliderPhoneImage.objects.first()
+        # Special offers
+        special_offers = Product.objects.filter(special_offer=True)[:settings.SLIDING_COUNT]
+        
+        used_ids = [special_offers.values_list('id', flat=True)]
+        
+        # Banners
         banners = HomepageBanners.objects.all()
-        homepage_categories = Category.objects.filter(parent=None, show_homepage=True).distinct()
+        
+        homepage_categories = Category.objects.filter(show_in_header=True).distinct()
         bullets = Bullets.objects.all()
         video_and_text = Video.objects.filter(location='home').first()
-        show_products_homepage = Category.objects.filter(show_homepage_products=True).distinct()
-        products = Product.objects.all()
+ 
+        new_products = Product.objects.exclude(id__in=used_ids).order_by('?')[:50]
+        if new_products:
+            if len(new_products) < 16:
+                settings.SLIDING_COUNT = len(new_products)
+            new_products = random.sample(set(new_products), settings.SLIDING_COUNT)
+            used_ids.extend([i.id for i in new_products])
+        
+        sale_products = Product.objects.filter(sale__gt=0).exclude(id__in=used_ids).order_by('?')[:settings.SLIDING_COUNT]
+        
         context = {
             "slider": slider,
+            "sale_products": sale_products,
             "special_offers": special_offers,
-            "best_sold_furshets": best_sold_furshets,
             "banners": banners,
             "homepage_categories": homepage_categories,
-            "show_products_homepage": show_products_homepage,
             "bullets": bullets,
             "used_ids": used_ids,
-            "products": products,
+            "slider_image": slider_image,
+            "new_products": new_products,
             "video_and_text": video_and_text,
         }
         return render(request, 'shop/index.html', context)

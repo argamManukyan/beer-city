@@ -1,5 +1,5 @@
 from django.db import models
-from canapea.utils import CustomModel, CustomLogoField
+from beercity.utils import CustomModel, CustomLogoField
 
 
 TEXT_LOCATION = [

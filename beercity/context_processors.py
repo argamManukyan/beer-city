@@ -6,12 +6,13 @@ from typing import List, Any
 from currencies.models import Currency
 from django.conf import settings
 from django.urls import reverse
+from aboutus.models import Partners
 
 from footer.models import *
 from header.models import *
 from shop.models import Category, BonusDays, CategoryBonuses
 from users.models import User
-
+from flatpages.models import ContactUs
 
 class RemoveCategoryBonusDays(Thread):
     def __init__(self, bday_pk: int):

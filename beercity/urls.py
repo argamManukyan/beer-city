@@ -30,7 +30,6 @@ urlpatterns = [
     path('index/', include('shop.urls')),
     path('index/', include('wish.urls')),
     path('index/', include('cart.urls')),
-    path('index/', include('job.urls')),
     path('index/', include('users.urls', namespace='users')),
     path('index/', include('flatpages.urls')),
     path('change-qty/<pk>/', change_qty, name='change_qty')
@@ -38,7 +37,6 @@ urlpatterns = [
 ]
 #
 urlpatterns += i18n_patterns(
-    path('index/', include('job.urls')),
     path('index/', include('shop.urls')),
     path('index/', include('wish.urls')),
     path('index/', include('cart.urls')),

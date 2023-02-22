@@ -1,16 +1,27 @@
+import time
 from datetime import timedelta
-
 from colorfield.fields import ColorField
 from auditlog.registry import auditlog
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-from canapea.utils import *
+from beercity.utils import *
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from mptt.models import MPTTModel, TreeForeignKey
 
+
+class SliderPhoneImage(models.Model):
+    image = models.FileField(upload_to='slider_image', verbose_name="Գլխավոր էջի սլայդերի ֆոնային նկար")
+    
+    def __str__(self):
+        return "Գլխավոր էջի սլայդերի ֆոնային նկար"
+    
+    class Meta:
+        verbose_name = "Գլխավոր էջի սլայդերի ֆոնային նկար"
+        verbose_name_plural = "Գլխավոր էջի սլայդերի ֆոնային նկար"
+    
 
 class Slider(models.Model):
     xl_image = CustomLogoField(verbose_name='Նկար mobile տարբերակի համար')
@@ -47,44 +58,26 @@ class BonusDays(models.Model):
 class Category(MPTTModel, CustomMetaModel):
     name = models.CharField(max_length=255, verbose_name='Բաժնի անուն')
     slug = models.SlugField(unique=True, null=True, blank=True, verbose_name='Հղում')
-    homepage_name = models.CharField(max_length=255, blank=True, verbose_name='Header -ում երևացող անուն',
-                                     help_text='Եթե բաժնի անունը երկար է, ապա կարող ենք header -ում օգտագործել'
-                                               'ավելի կարճ անուն')
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True,
                             blank=True, related_name='children', verbose_name='Հայրական բաժին')
 
     icon = CustomLogoField(verbose_name='Ընդհանուր կատալոգում երևացող նկար', blank=True, null=True,
                            upload_to='cat-catalog-image/', default='defaults/category-main.jpg')
-    logo = CustomLogoField(verbose_name='Header -ի բաժնի Icon', blank=True,
+    logo = CustomLogoField(verbose_name='Գլխավոր էջի կատեգորիայի նկար', blank=True,
                            null=True, upload_to='cat-img/',)
     breadcrumb_image = CustomLogoField(verbose_name='Բաժնի բանների նկար', default='defaults/category-banner.jpg',
                                        blank=True, null=True, upload_to='cat-bg-image/')
 
     short_description = models.TextField(blank=True, null=True, verbose_name='Հակիրճ նկարագրություն')
     large_description = RichTextUploadingField(blank=True, null=True, verbose_name='Ամբողջական նկարագրություն')
-    notification_text = models.TextField(blank=True, null=True, verbose_name='Notification -ի տեքստ')
-
-    working_hours_from = models.TimeField(blank=True, null=True, verbose_name='Առաքման ժամի սկիզբ')
-    working_hours_to = models.TimeField(blank=True, null=True, verbose_name='Առաքման ժամի ավարտ')
-
     color = ColorField(default='#FF0000', blank=True, null=True, verbose_name='Background -ի գույն',
                        help_text='Ընտրված գույնը երևում է header -ում, որպես տվյալ բաժնի ֆոնի գույն')
 
-    show_in_header = models.BooleanField(default=False, verbose_name='Ցուցադրել header -ում')
+    show_in_header = models.BooleanField(default=False, verbose_name='Ցուցադրել գլխավոր էջում')
     is_active = models.BooleanField(default=True, verbose_name='Ակտիվ կարգավիճակ')
-    show_homepage = models.BooleanField(default=False, verbose_name='Ցուցադրել գլխավոր էջում որպես տարածվող բաժին')
-    homepage_qty = models.PositiveSmallIntegerField(default=0,
-                                                    verbose_name='Գլխավոր էջում ցուցադրվող subcategory / product -ների քանակ')
-    show_homepage_products = models.BooleanField(default=False)
-    sub_title_color = ColorField(default='#FF0000', blank=True, null=True,
-                                 verbose_name='subcategory -ի անվան ֆոնի գույն',
-                                 help_text='Տարածվում է տվյալ բաժնի բոլոր subcategory -ների անվանումների ֆոնի վրա')
-
-    show_bottom = models.ManyToManyField('self', blank=True, verbose_name='Ցուցադրել ներքևում')
-
     # Trigger for example macaroons
-    show_category_all_items = models.BooleanField(default=False, verbose_name='Ցուցադրել բաժնի բոլոր'
-                                                                              ' ապրանքները ապրանքի էջում')
+    show_category_all_items = models.BooleanField(default=False, 
+                                                  verbose_name='Ցուցադրել բաժնի բոլոր ապրանքները ապրանքի էջում')
 
     # Trigger for add products to the ingredients list
     add_to_ingredients = models.BooleanField(default=False, verbose_name='Տվյալ բաժնի ապրանքները ավելացնել «Ինգրեդեիենտներում»')
@@ -95,11 +88,7 @@ class Category(MPTTModel, CustomMetaModel):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slug_generator(title=self.name, model=self.__class__)
-        if self.show_homepage:
-            self.show_homepage_products = False
-        elif self.show_homepage_products:
-            self.show_homepage = False
+            self.slug = slug_generator(title=self.name)
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -114,23 +103,6 @@ class Category(MPTTModel, CustomMetaModel):
             parent = parent.parent
 
         return '-->'.join(title_list[::-1]) or ''
-
-    def clean(self):
-        if self.parent and self.show_homepage:
-            raise ValidationError("Ցուցադրել գլխավոր էջում որպես տարածվող բաժին Ֆունկցիոնալը հասանելի է միայն,"
-                                  " եթե տվյալ բաժինը հանդիսանում է հայրական")
-
-        if not self.parent and not self.sub_title_color:
-            raise ValidationError({"sub_title_color": 'Ընտրեք գույնը'})
-
-        if self.parent and self.sub_title_color:
-            raise ValidationError({"sub_title_color": "Գույնը հասանելի է միայն հայրական բաժնի "
-                                                      "բացակայության դեպքում դեպքում"})
-
-        if self.notification_text and not (self.working_hours_from or self.working_hours_to):
-            raise ValidationError("Notification -ի տեքստի առկայության դեպքում առաքման ժամերի սկիզբը և"
-                                  " ավարտը պարտադիր է լրացնել")
-
 
 auditlog.register(Category)
 
@@ -219,12 +191,12 @@ class Product(CustomMetaModel):
     category = models.ManyToManyField(Category, verbose_name='Ընտրել բաժինը / բաժինները')
     name = models.CharField(max_length=255, verbose_name='Ապրանքի անվանում')
     slug = models.SlugField(max_length=255, unique=True, verbose_name='Հղում', blank=True)
-    short_description = RichTextUploadingField(blank=True, null=True, verbose_name='Հակիրճ նկարագրություն')
     large_description = RichTextUploadingField(blank=True, null=True, verbose_name='Ամբողջական նկարագրություն')
     price = models.IntegerField(default=0, verbose_name='Ապրանքի գին')
     sale = models.IntegerField(default=0, verbose_name='Ապրանքի զեղչված գին')
     is_active = models.BooleanField(default=True, verbose_name='Առկա է')
     min_qty = models.PositiveSmallIntegerField(default=1, verbose_name='Թույլատրելի մինիմալ քանակություն')
+    max_qty = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='Թույլատրելի մաքսիմալ քանակություն')
     main_image = CustomLogoField(upload_to='product-img/', blank=True, default='defaults/product.jpg')
     color = models.ForeignKey(Color, on_delete=models.SET_NULL, null=True, blank=True)
     finally_price = models.PositiveIntegerField(verbose_name='', default=0, editable=False)
@@ -238,24 +210,33 @@ class Product(CustomMetaModel):
     # TODO: Implement logic for filter price
     bonus_day_not_working = models.BooleanField(default=False,
                                                 verbose_name='Անտեսել բաժնի / բաժինների վրա տարածվող զեղչը')
-    product_code = models.CharField(max_length=255, blank=True, null=True, unique=True)
+    product_code = models.CharField(max_length=255,
+                                    blank=True,
+                                    null=True, 
+                                    unique=True,
+                                    verbose_name='Ապրանքի կոդ')
+    product_custom_id = models.CharField(max_length=255, 
+                                    blank=True, 
+                                    null=True, 
+                                    unique=True,
+                                    verbose_name='Ապրանքի ID'
+                                    )
     sold_count = models.PositiveIntegerField(default=0, verbose_name='Վաճառված քանակություն')
     buy_with_this_item = models.ManyToManyField('self', blank=True, related_name='buywiththis',
                                                 verbose_name='Այս ապրանքի հետ գնում են նաև')
     show_minus_and_plus = models.BooleanField(default=True, verbose_name="Ցուցադրել «+» և «-» նշանները ապրանքի բլոկում")
-
+    
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
 
-        if self.sale > 1:
-            self.finally_price = self.sale
-        else:
-            self.finally_price = self.price
-
+        if self._state.adding:
+            self.product_custom_id = f'BC{int(time.time())}'
+        
+        self.finally_price = self.sale if self.sale > 1 else self.price
         if not self.slug:
-            self.slug = slug_generator(title=self.name, model=self.__class__)
+            self.slug = slug_generator(title=self.name)
 
         super().save(*args, **kwargs)
 
@@ -277,10 +258,7 @@ class Product(CustomMetaModel):
 
     @property
     def get_price(self):
-        if self.sale > 0:
-            return self.sale
-        else:
-            return self.price
+        return self.sale if self.sale > 0 else self.price
 
     class Meta:
         ordering = ['-my_order']
@@ -423,7 +401,8 @@ class HomepageBanners(models.Model):
     url = models.URLField(verbose_name='Հղում')
     name = models.CharField(max_length=255, verbose_name='Վերնագիր')
     my_order = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Դասավորել')
-
+    description = RichTextUploadingField(blank=True, verbose_name='Տեքստ')
+    
     class Meta:
         verbose_name = 'Գլխավոր էջի բաններ'
         verbose_name_plural = 'Գլխավոր էջի բաններներ'

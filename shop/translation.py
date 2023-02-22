@@ -67,10 +67,8 @@ class BonusDaysTranslationOptions(TranslationOptions):
 class CategoryTranslationOptions(TranslationOptions):
     fields = [
         'name',
-        'homepage_name',
         'short_description',
         'large_description',
-        'notification_text',
         'meta_title',
         'meta_description'
     ]
@@ -93,7 +91,7 @@ class BulletsTranslationOptions(TranslationOptions):
 
 @register(HomepageBanners)
 class HomepageBannersTranslationOptions(TranslationOptions):
-    fields = ['name', 'url']
+    fields = ['name', 'url', 'description']
 
 
 @register(Color)
@@ -103,7 +101,7 @@ class ColorTranslationOptions(TranslationOptions):
 
 @register(Product)
 class ProductTranslationOptions(TranslationOptions):
-    fields = ['name', 'short_description', 'large_description', 'meta_title', 'meta_description']
+    fields = ['name', 'large_description', 'meta_title', 'meta_description']
 
 @register(Ingredient)
 class IngredientTranslationOptions(TranslationOptions):

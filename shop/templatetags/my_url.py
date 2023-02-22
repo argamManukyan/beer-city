@@ -4,7 +4,7 @@ from django.template import Library
 from django.template.defaultfilters import floatformat
 from django.http import JsonResponse
 from shop.models import Product, Category, ProductFeature, FilterValue
-from canapea.utils import current_request
+from beercity.utils import current_request
 
 register = Library()
 

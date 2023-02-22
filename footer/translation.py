@@ -1,4 +1,6 @@
 from modeltranslation.translator import TranslationOptions, register
+
+
 from .models import *
 
 
@@ -25,8 +27,3 @@ class BankIconsTranslationOptions(TranslationOptions):
 @register(PersonalData)
 class PersonalDataTranslationOptions(TranslationOptions):
     fields = ['text', 'url']
-
-
-@register(Partners)
-class PartnersTranslationOptions(TranslationOptions):
-    fields = ['name', 'url']

@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from auditlog.registry import auditlog
 from django.utils.translation import ugettext_lazy as _
-from canapea.utils import CustomLogoField
+from beercity.utils import CustomLogoField
 
 class State(models.Model):
     name = models.CharField(max_length=100)

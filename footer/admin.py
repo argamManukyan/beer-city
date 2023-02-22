@@ -37,23 +37,11 @@ class BankIconsAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
 class FooterCategoryAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
     pass
 
-
-@admin.register(Partners)
-class PartnersAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
-    def get_icon(self, obj):
-        if obj.icon:
-            return mark_safe("<img src='{}' height='50px' width='50px' />".format(obj.icon.url))
-        return ''
-
-    get_icon.short_description = 'Լոգո'
-    list_display = ['name', 'get_icon']
-
-
 @admin.register(PersonalData)
 class PersonalDataAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
     def get_icon(self, obj):
         if obj.icon:
-            return mark_safe("<img src='{}' height='50px' width='50px' />".format(obj.icon.url))
+            return mark_safe(f"<img src='{obj.icon.url}' height='50px' width='50px' />")
         return ''
 
     get_icon.short_description = 'Լոգո'

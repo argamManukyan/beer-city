@@ -4,7 +4,7 @@
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
-    <title>{% trans 'Կապ' %} | {{ domain }}</title>
+    <title>{% trans 'Կապ' %} | {{ request.get_host }}</title>
     <meta name="Description" content="">
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
     <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
@@ -71,7 +71,9 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-banner-text">
-                                <h1>{{ st_content.page_title }}</h1>
+                                {% if st_content.page_title %}
+                                    <h1>{{ st_content.page_title }}</h1>
+                                {% endif %}
                                 {% if st_content.breadcrumbs_text %}
                                   <p>{{ st_content.breadcrumbs_text|safe }}</p>      
                                 {% endif %}

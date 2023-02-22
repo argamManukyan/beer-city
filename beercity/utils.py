@@ -1,3 +1,4 @@
+import time
 from threading import current_thread
 
 from django.core.validators import FileExtensionValidator
@@ -7,9 +8,8 @@ from django.utils.text import slugify
 from unidecode import unidecode
 
 
-def slug_generator(title, model):
-    last_id = model.objects.last().pk + 1 if model.objects.count() else 1
-    return slugify(unidecode(title) + '-' + str(last_id))
+def slug_generator(title):
+    return slugify(f'{unidecode(title)}-{int(time.time())}')
 
 
 class CustomModel(models.Model):
