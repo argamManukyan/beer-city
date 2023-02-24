@@ -106,12 +106,12 @@ class HomePageView(View):
         bullets = Bullets.objects.all()
         video_and_text = Video.objects.filter(location='home').first()
  
-        new_products = Product.objects.exclude(id__in=used_ids)
-        if new_products.exists():
-            if len(new_products) < 16:
-                settings.SLIDING_COUNT = len(new_products)
-            new_products = random.sample(new_products.order_by('?'), settings.SLIDING_COUNT)
-            used_ids.extend([i.id for i in new_products])
+        new_products = Product.objects.exclude(id__in=used_ids).all()
+        # if new_products.exists():
+        #     if len(new_products) < 16:
+        #         settings.SLIDING_COUNT = len(new_products)
+        #     new_products = random.sample(new_products.order_by('?'), settings.SLIDING_COUNT)
+        #     used_ids.extend([i.id for i in new_products])
         
         sale_products = Product.objects.filter(sale__gt=0).exclude(id__in=used_ids).order_by('?')[:settings.SLIDING_COUNT]
         
