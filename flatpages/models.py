@@ -127,44 +127,7 @@ class Gallery(CustomModel):
         ordering = ['-my_order']
         verbose_name = "Նկար"
         verbose_name_plural = "Տեսադարան"
-
-
-class ContactUs(CustomModel):
-    name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
-    question = models.CharField(max_length=255)
-    message = models.TextField(blank=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Հետադարձ կապ"
-        verbose_name_plural = "Հետադարձ կապ"
-
-
-class ContactUsPageIframe(models.Model):
-    iframe = models.TextField()
-    
-    def __str__(self):
-        return 'Iframe'
-    
-    class Meta:
-        verbose_name = "IFrame"
-        verbose_name_plural = "IFrame"
-
-
-class ContactUsIcons(models.Model):
-    icon = CustomLogoField()
-    url = models.CharField(verbose_name="Հղում", max_length=1000)
-    text = models.CharField(max_length=255, verbose_name="Տեքստ")
-    my_order = models.PositiveIntegerField(verbose_name="Դասավորել", default=0)
-    
-    class Meta:
-        ordering = ['-my_order']
-        verbose_name = "«Հետադարձ կապ» էջի icon"
-        verbose_name_plural = "«Հետադարձ կապ» էջի icon-ներ"
-
+        
 
 class FAQModel(CustomModel):
     question = RichTextUploadingField(verbose_name="Հարց", max_length=500)

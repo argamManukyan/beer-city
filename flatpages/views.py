@@ -1,12 +1,10 @@
 import json
 
-from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from breadcrumbs.models import BreadcrumbTexts
-from flatpages.forms import ContactUsForm
 from flatpages.models import *
 from shop.views import get_ip
 
@@ -119,29 +117,6 @@ def gallery_details(request, slug):
     }
 
     return render(request, 'flatpages/gallery_details.html', context)
-
-
-def contact_us(request):
-
-    contact_icons = ContactUsIcons.objects.all()
-    st_content = BreadcrumbTexts.objects.filter(location='contacts').first()
-    form = ContactUsForm(request.POST)
-
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            messages.success(request, _("Ձեր հարցումը հաջողությամբ ուղարկվել է"))
-        else:
-            messages.error(request, _("Տեղի է ունեցել սխալ։ Խնդրում ենք փորձել կրկին"))
-
-        return redirect('contacts')
-
-    context = {
-        "contact_icons": contact_icons,
-        'st_content': st_content
-    }
-
-    return render(request, 'flatpages/contacts.html', context)
 
 
 def faq_view(request):

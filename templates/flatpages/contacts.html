@@ -4,8 +4,8 @@
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
-    <title>{% trans 'Կապ' %} | {{ request.get_host }}</title>
-    <meta name="Description" content="">
+    <title>{% if contactuspage.meta_title %}{{contactuspage.meta_title}}{% else %}{% trans 'Կապ' %} | {{ request.get_host }}{% endif %}</title>
+    <meta name="Description" content="{% if contactuspage.meta_description %}{{contactuspage.meta_description}}{% endif %}">
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
     <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
@@ -66,7 +66,7 @@
         <main class="content">
             <section class="section page-content">
            <!-- Page Banner -->
-            <div class="page-banner" style="background-image: url({% if st_content.breadcrumbs_image %}{{ st_content.breadcrumbs_image.url }}{% else %}{% static 'img/shop-banner.jpg' %}{% endif %});">
+            <div class="page-banner" style="background-image: url({% if contactuspage.contact_bg_image %}{{ contactuspage.contact_bg_image.url }}{% else %}{% static 'img/shop-banner.jpg' %}{% endif %});">
                 <div class="cnt">
                     <div class="row">
                         <div class="col">
@@ -133,7 +133,7 @@
                                                 <button type="submit" id="SendMess" class="button big dark"
                                                         name="submit">{% trans 'Ուղարկել' %}
                                                     <img src="{% static 'img/icons/big-arrow.svg' %}"
-                                                         alt="{% trans 'Անցնել Գնումների' %}">
+                                                         alt="{% trans 'Ուղարկել' %}">
                                                 </button>
                                             </div>
 
@@ -143,37 +143,41 @@
                             </div>
                             <div class="col col-2">
                                 <div class="form-contact">
+                                    {% if contact_icons %}
                                     <h2>{% trans 'Կապ Մեզ Հետ' %}</h2>
                                     <ul class="cont-r">
                                         {% for icon in contact_icons %}
                                         <li class="align-items-center">
-                                            <a href="{% if icon.url %}{{ icon.url }}{% else %}javascript: void(0){% endif %}">
+                                            <a href="{% if icon.link %}{{ icon.link }}{% else %}javascript: void(0){% endif %}">
                                                 <img src="{% if icon.icon %}{{ icon.icon.url }}{% endif %}"
                                                      alt="{% trans 'Կապ Մեզ Հետ' %}">{{ icon.text }}</a>
                                         </li>
                                         {% endfor %}
                                     </ul>
+                                    {% endif %}
                                     <div class="follow-cont">
+                                        {% if social_buttons %}
                                         <h2>{% trans 'Հետևեք Մեզ' %}</h2>
                                         <ul class="cont-soc-icons align-items-center">
                                             {% for soc_item in social_buttons %}
                                             <li class="align-items-center">
-                                                <a href="{{soc_item.url}}">
+                                                <a href="{{soc_item.link}}">
                                                     <img src="{% if soc_item.icon %}{{ soc_item.icon.url }}{% endif %}"
-                                                         class="lozad loaded" alt="{{ soc_item.title }}">
+                                                         class="lozad loaded" alt="{{ soc_item.text }}">
                                                 </a>
                                             </li>
                                             {% endfor %}
                                         </ul>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    {% if iframe %}
+                    {% if contactuspage.iframe %}
                     <div class="cont-map">
-                        {{ iframe|safe }}
+                        {{ contactuspage.iframe|safe }}
                     </div>
                     {% endif %}
                 </div>

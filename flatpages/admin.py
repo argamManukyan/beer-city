@@ -3,8 +3,6 @@ from django.utils.safestring import mark_safe
 from django import forms
 from modeltranslation.admin import TabbedDjangoJqueryTranslationAdmin
 from adminsortable2.admin import SortableAdminMixin
-from singlemodeladmin import SingleModelAdmin
-from aboutus.models import AboutUs
 from .models import *
 
 admin.site.register(FlatPages, TabbedDjangoJqueryTranslationAdmin)
@@ -58,16 +56,6 @@ class GalleryCategoryAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmi
     pass
 
 
-@admin.register(ContactUsPageIframe)
-class ContactUsPageIframeAdmin(SingleModelAdmin):
-    pass
-
-
 @admin.register(FAQModel)
 class FAQModelAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
     pass
-
-
-@admin.register(ContactUs)
-class ContactUsAdmin(admin.ModelAdmin):
-    list_display = ['name', 'email', 'question', 'created_at']

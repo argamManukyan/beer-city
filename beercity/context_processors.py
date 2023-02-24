@@ -12,7 +12,7 @@ from footer.models import *
 from header.models import *
 from shop.models import Category, BonusDays, CategoryBonuses
 from users.models import User
-from flatpages.models import ContactUs, ContactUsPageIframe
+from contactus.models import ContactUsPage
 
 
 class RemoveCategoryBonusDays(Thread):
@@ -61,7 +61,7 @@ def social_buttons(request):
 
 
 def contact_us_page_iframe(request):
-    return {"iframe": ContactUsPageIframe.objects.first()}
+    return {"iframe": ContactUsPage.objects.first().iframe}
 
 
 def bank_icons(request):

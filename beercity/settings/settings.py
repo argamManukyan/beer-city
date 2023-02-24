@@ -66,16 +66,12 @@ INSTALLED_APPS = [
     'videos',
     'flatpages',
     'aboutus',
+    'contactus',
 ]
 
 LOCALE_PATHS = [
     BASE_DIR / 'locale'
 ]
-
-NIKITA_MOBILE_URL = config('NIKITA_MOBILE_URL')
-NIKITA_MOBILE_USERNAME = config('NIKITA_MOBILE_USERNAME')
-NIKITA_MOBILE_PASSWORD = config('NIKITA_MOBILE_PASSWORD')
-
 # NUMBER_GROUPING = 3
 # THOUSAND_SEPARATOR = '.'
 # DECIMAL_SEPARATOR = '.'
@@ -123,7 +119,6 @@ CUSTOM_CONTEXT_PROCESSORS = [
     'beercity.context_processors.footer_categories',
     'beercity.context_processors.social_buttons',
     'beercity.context_processors.bank_icons',
-    'beercity.context_processors.contact_us_page_iframe',
     'beercity.context_processors.get_year',
     'beercity.context_processors.get_site',
     'beercity.context_processors.to_header_items',
