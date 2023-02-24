@@ -106,7 +106,7 @@ class HomePageView(View):
         bullets = Bullets.objects.all()
         video_and_text = Video.objects.filter(location='home').first()
  
-        new_products = Product.objects.exclude(id__in=used_ids).order_by('?')[:50]
+        new_products = Product.objects.exclude(id__in=used_ids).order_by('?')
         if new_products:
             if len(new_products) < 16:
                 settings.SLIDING_COUNT = len(new_products)
