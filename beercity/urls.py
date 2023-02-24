@@ -29,6 +29,7 @@ urlpatterns = [
     path('like/', csrf_exempt(like_post), name='like_post'),
     path('index/', include('shop.urls')),
     path('index/', include('wish.urls')),
+    path('index/', include('contactus.urls')),
     path('index/', include('cart.urls')),
     path('index/', include('users.urls', namespace='users')),
     path('index/', include('flatpages.urls')),
@@ -38,6 +39,7 @@ urlpatterns = [
 #
 urlpatterns += i18n_patterns(
     path('index/', include('shop.urls')),
+    path('index/', include('contactus.urls')),
     path('index/', include('wish.urls')),
     path('index/', include('cart.urls')),
     path('index/', include('users.urls', namespace='users')),
