@@ -219,11 +219,12 @@
                                                 <span class="val">{{obj.product_code}}</span>
                                             </li>
                                             {% endif %}
+                                            {% if obj.product_custom_id %}
                                             <li>
                                                 <span class="opt"><b>{% trans 'Ապրանքի ID:' %}</b></span>
-                                                <span class="val">{{obj.product_custom_id}}</span>
+                                                <span class="val">{{ obj.product_custom_id }}</span>
                                             </li>
-
+                                            {% endif %}
 
                                         </ul>
                                     </div>

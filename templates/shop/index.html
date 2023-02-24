@@ -81,7 +81,6 @@
                     <div class="row">
                         <div class="col">
                             <div class="swiper-container slider-4">
-
                                 <div class="section-title">
                                     <div class="tith3 flex-content-center">
                                         <span class="tith3-name">{% trans 'Նորույթներ' %}</span>
@@ -132,7 +131,8 @@
                             {% else %}
                                 <iframe data-src="{{ video_and_text.video_file.url }}" class="lozad"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowfullscreen=""></iframe>
+                                        allowfullscreen="">
+                                </iframe>
                             {% endif %}
                         </div>
                     </div>
