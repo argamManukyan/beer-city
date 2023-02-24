@@ -17,7 +17,7 @@ def contact_us(request):
 
     if request.method == 'POST':
         if form.is_valid():
-            form.save()
+            form = form.save()
             
             messages.add_message(request, messages.SUCCESS,
                                  _('Ձեր Հաղորդագրությունը հաջողությամբ ուղարկված է:<br>Մեր մենեջերը '
