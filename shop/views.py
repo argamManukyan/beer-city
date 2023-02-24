@@ -114,7 +114,8 @@ class HomePageView(View):
         #     new_products = random.sample(new_products.order_by('?'), settings.SLIDING_COUNT)
         #     used_ids.extend([i.id for i in new_products])
         
-        sale_products = Product.objects.filter(sale__gt=0).exclude(id__in=used_ids).order_by('?')[:settings.SLIDING_COUNT]
+        # sale_products = Product.objects.filter(sale__gt=0).exclude(id__in=used_ids).order_by('?')[:settings.SLIDING_COUNT]
+        sale_products = Product.objects.filter(sale__gt=0)[:settings.SLIDING_COUNT]
         
         context = {
             "slider": slider,
