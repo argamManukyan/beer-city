@@ -3,7 +3,7 @@ from django.utils.safestring import mark_safe
 from django import forms
 from modeltranslation.admin import TabbedDjangoJqueryTranslationAdmin
 from adminsortable2.admin import SortableAdminMixin
-
+from singlemodeladmin import SingleModelAdmin
 from aboutus.models import AboutUs
 from .models import *
 
@@ -58,13 +58,8 @@ class GalleryCategoryAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmi
     pass
 
 
-@admin.register(ContactUsIcons)
-class GalleryCategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
-    pass
-
-
-@admin.register(ContactUsThemes)
-class GalleryCategoryAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
+@admin.register(ContactUsPageIframe)
+class ContactUsPageIframeAdmin(SingleModelAdmin):
     pass
 
 

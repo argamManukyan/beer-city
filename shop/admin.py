@@ -116,6 +116,11 @@ class ColorModelAdmin(TabbedDjangoJqueryTranslationAdmin):
     pass
 
 
+@admin.register(Brand)
+class ColorModelAdmin(TabbedDjangoJqueryTranslationAdmin):
+    pass
+
+
 @admin.register(HomepageBanners)
 class HomepageBannersModelAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
     pass

@@ -187,8 +187,27 @@ class Color(CustomModel):
         verbose_name_plural = 'Գույներ'
 
 
+class Brand(models.Model):
+    name = models.CharField(max_length=120, unique=True, verbose_name='Անուն')
+    slug = models.SlugField(verbose_name='Հղում', blank=True, null=True, unique=True)
+    icon = models.FileField(verbose_name='Լոգո', blank=True, null=True)
+    shipper_email = models.EmailField(verbose_name='Էլ. փոստ', blank=True, null=True)
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Բրենդ'
+        verbose_name_plural = 'Բրենդներ'
+        
+    
 class Product(CustomMetaModel):
     category = models.ManyToManyField(Category, verbose_name='Ընտրել բաժինը / բաժինները')
+    brand = models.ForeignKey(Brand, verbose_name='Բրենդ', 
+                              blank=True, 
+                              null=True,
+                              on_delete=models.CASCADE
+                              )
     name = models.CharField(max_length=255, verbose_name='Ապրանքի անվանում')
     slug = models.SlugField(max_length=255, unique=True, verbose_name='Հղում', blank=True)
     large_description = RichTextUploadingField(blank=True, null=True, verbose_name='Ամբողջական նկարագրություն')
@@ -402,6 +421,7 @@ class HomepageBanners(models.Model):
     name = models.CharField(max_length=255, verbose_name='Վերնագիր')
     my_order = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Դասավորել')
     description = RichTextUploadingField(blank=True, verbose_name='Տեքստ')
+    color = ColorField(verbose_name='Գույն', blank=True, null=True)
     
     class Meta:
         verbose_name = 'Գլխավոր էջի բաններ'

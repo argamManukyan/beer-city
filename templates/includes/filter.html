@@ -84,6 +84,42 @@
                         </div>
                     {% endif %}
 
+                    {% if brands %}
+                        <div class="filter-params active">
+                            <div class="filter-params-title">
+                                <h4 class="filter-params-hint flex-center-between active">{% trans 'Բրենդ' %}
+                                    <img src="{% static 'img/icons/cat-filter.svg' %}"
+                                         class="cat-left border-icons up-cat"
+                                         alt="{% trans 'Ֆիլտրեր' %}">
+                                </h4>
+                            </div>
+                            <div class="filter-params-content">
+                                {% for brand in brands %}
+                                    <div class="box-list">
+                                        <label class="checkbox-design align-items-center">
+                                            <input
+                                                    type="checkbox"
+                                                    class="color check"
+                                                    value="{{ brand.name }}"
+                                                    id="id_brands_{{ forloop.counter }}"
+                                                    name="brand"
+                                                    {% for k,v in request.GET.lists %}
+                                                        {% if brand.name in v %}
+                                                    checked
+                                                        {% endif %}
+                                                    {% endfor %}
+                                            >
+                                            <span class="checkbox-square"></span>
+                                            <img src="{% if brand.icon %}{{brand.icon.url}}{% else %}{% static 'icons/brand.jpg' %}{% endif %}" 
+                                                style="height: 40px; width: 40px; border-radius: 15% 15% 15% 15%; padding-left: 8px;"/>
+                                        </span>{{ brand.name }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
                     {% for field in filter_fields %}
                         <div class="filter-params">
                             <div class="filter-params-title">

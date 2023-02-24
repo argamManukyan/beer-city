@@ -49,6 +49,10 @@ class ShopMixin(View):
                     if key == 'color':
                         q_condition_queries.append(
                             {'color__title__in': value})
+                    elif key == 'brand':
+                        q_condition_queries.append(
+                            {'brand__name__in': value}
+                        )
                     else:
                         q_condition_queries.append(
                             {f'productfeature__field__filter_key': key, 'productfeature__value__title__in': value})
@@ -56,6 +60,10 @@ class ShopMixin(View):
                     if key == 'color':
                         q_condition_queries.append(
                             {'color__title': value})
+                    elif key == 'brand':
+                        q_condition_queries.append(
+                            {'brand__name': value}
+                        )
                     else:
                         q_condition_queries.append(
                             {f'productfeature__value__title': value, 'productfeature__field__filter_key': key})

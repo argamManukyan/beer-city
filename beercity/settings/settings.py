@@ -123,6 +123,7 @@ CUSTOM_CONTEXT_PROCESSORS = [
     'beercity.context_processors.footer_categories',
     'beercity.context_processors.social_buttons',
     'beercity.context_processors.bank_icons',
+    'beercity.context_processors.contact_us_page_iframe',
     'beercity.context_processors.get_year',
     'beercity.context_processors.get_site',
     'beercity.context_processors.to_header_items',

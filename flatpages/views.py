@@ -123,22 +123,13 @@ def gallery_details(request, slug):
 
 def contact_us(request):
 
-    themes = ContactUsThemes.objects.all()
     contact_icons = ContactUsIcons.objects.all()
     st_content = BreadcrumbTexts.objects.filter(location='contacts').first()
     form = ContactUsForm(request.POST)
 
     if request.method == 'POST':
-        theme = None
-        if request.POST.get('question') and request.POST.get('question').isdigit():
-            theme = ContactUsThemes.objects.filter(id=request.POST.get('question')).first()
-
         if form.is_valid():
-            contact_form = form.save(commit=False)
-            if theme:
-                contact_form.question = theme
-            contact_form.save()
-
+            form.save()
             messages.success(request, _("Ձեր հարցումը հաջողությամբ ուղարկվել է"))
         else:
             messages.error(request, _("Տեղի է ունեցել սխալ։ Խնդրում ենք փորձել կրկին"))
@@ -146,7 +137,6 @@ def contact_us(request):
         return redirect('contacts')
 
     context = {
-        "themes": themes,
         "contact_icons": contact_icons,
         'st_content': st_content
     }

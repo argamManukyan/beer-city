@@ -143,18 +143,15 @@ class ContactUs(CustomModel):
         verbose_name_plural = "Հետադարձ կապ"
 
 
-class ContactUsThemes(CustomModel):
-    name = models.CharField(max_length=255, unique=True, verbose_name="Թեմայի անուն")
-    my_order = models.PositiveIntegerField(verbose_name="Դասավորել", default=0)
-
-    class Meta:
-        ordering = ['-my_order']
-        verbose_name = "Հետադարձ կապի թեմա"
-        verbose_name_plural = "Հետադարձ կապի թեմաներ"
-
+class ContactUsPageIframe(models.Model):
+    iframe = models.TextField()
+    
     def __str__(self):
-        return self.name
-
+        return 'Iframe'
+    
+    class Meta:
+        verbose_name = "IFrame"
+        verbose_name_plural = "IFrame"
 
 
 class ContactUsIcons(models.Model):

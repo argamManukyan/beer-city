@@ -1,20 +1,17 @@
 from modeltranslation.translator import TranslationOptions, register
 
 from aboutus.models import OurGoals, AboutUs, Reviews, OurAdvantages
-from flatpages.models import FlatPages, Blog, BlogCategory, GalleryCategory, ContactUsThemes, FAQModel
+from flatpages.models import FlatPages, Blog, BlogCategory, GalleryCategory, FAQModel
 from .models import *
 from users.models import State, Country
 from breadcrumbs.models import BreadcrumbTexts
 
+
 @register(AboutUs)
 class AboutsTrans(TranslationOptions):
     fields = ['text']
-
-@register([State, ContactUsThemes])
-class StateTranslation(TranslationOptions):
-    fields = ['name']
-
-
+    
+    
 @register([OurGoals, Reviews, OurAdvantages])
 class OurGoalsTrans(TranslationOptions):
     fields = ['name', 'text']
@@ -34,7 +31,7 @@ class StateTranslation(TranslationOptions):
     fields = ['name', 'large_text', 'short_text', 'meta_title', 'meta_description']
 
 
-@register(Country)
+@register([Country, Brand])
 class CountryTranslation(TranslationOptions):
     fields = ['name',]
 

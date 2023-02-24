@@ -156,12 +156,14 @@ class CategoryDetailView(ShopMixin):
                                                        productfeature__field__show_in_filters=True),
                                                      Q(productfeature__value__isnull=False)).distinct()
         colors = Color.objects.filter(product__category=category).distinct()
-
+        brands = Brand.objects.filter(product__category__in=list_id_category).distinct()
+        
         if self.request.is_ajax():
             return self.show_filter_data(products)
 
         context = {
             "category": category,
+            "brands": brands,
             "category_min_price": category_min_price,
             "category_max_price": category_max_price,
             "page_obj": page_obj,

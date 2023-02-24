@@ -12,7 +12,8 @@ from footer.models import *
 from header.models import *
 from shop.models import Category, BonusDays, CategoryBonuses
 from users.models import User
-from flatpages.models import ContactUs
+from flatpages.models import ContactUs, ContactUsPageIframe
+
 
 class RemoveCategoryBonusDays(Thread):
     def __init__(self, bday_pk: int):
@@ -57,6 +58,10 @@ def footer_categories(request):
 def social_buttons(request):
     """ Return all social share icons """
     return {"social_buttons": SocialIcons.objects.all()}
+
+
+def contact_us_page_iframe(request):
+    return {"iframe": ContactUsPageIframe.objects.first()}
 
 
 def bank_icons(request):

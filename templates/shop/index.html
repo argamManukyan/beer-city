@@ -179,28 +179,33 @@
         <!-- Best Sellers end -->
         
         <!-- Special offer banners -->
-        <section class="section special-offer-banners_index">
-            <div class="cnt">
-                <div class="row rec-banner">
-                    {% if banners %}
-                    {% for banner in banners %}
-                    <div class="col col-2">
-                        <div class="org-block">
-                            <div class="org-block-img">
-                                <img data-src="{{ banner.image.url }}" class="lozad cover" alt="{{ banner.name }}">
-                            </div>
-                            <div class="org-block-desc flex-center-between">
-                                <h2>{{ banner.name }}</h2>
-                                <a href="{{ banner.url }}" class="button big red">{% trans 'Մանրամասն' %}
-                                    <img src="{% static 'img/icons/big-arrow.svg' %}" alt="{% trans 'Անցնել Գնումների' %}"></a>
+        {% if banners %}
+            {% for banner in banners %}
+                <section class="section special-offer-banners_index">
+                <div class="cnt">
+                    <div class="row rec-banner">
+                        <div class="col col-2">
+                            <div class="org-block">
+                                <div class="org-block-img">
+                                    <img data-src="{{ banner.image.url }}" class="lozad cover" alt="{{ banner.name }}">
+                                </div>
+                                    <div class="org-block-desc flex-center-between">
+                                        <h2>{{ banner.name }}</h2>
+                                        <!-- {{ banner.color }} -->
+                                        {% if banner.description %}
+                                            <p>{{ banner.description|safe }}</p>
+                                        {% endif %}
+                                        <a href="{{ banner.url }}" class="button big red">{% trans 'Մանրամասն' %}
+                                            <img src="{% static 'img/icons/big-arrow.svg' %}" alt="{% trans 'Անցնել Գնումների' %}">
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-        </section>
+                </section>
+            {% endfor %}
+        {% endif %}
         <!-- Special offer banners -->
         
         <!-- Sale Products -->
@@ -210,7 +215,6 @@
                     <div class="row">
                         <div class="col">
                             <div class="swiper-container slider-4">
-
                                 <div class="section-title">
                                     <div class="tith3 flex-content-center">
                                         <span class="tith3-name">{% trans 'Զեղչված Տեսականի' %}</span>
@@ -252,7 +256,7 @@
                                     </div>
                                     <div class="bullet-txt">
                                         <h3>{{ bullet.title }}</h3>
-                                        <p>{{ bullet.text|safe }}</p>
+                                        {% if bullet.text %}<p>{{ bullet.text|safe }}</p>{% endif %}
                                     </div>
                                 </div>
                             </div>

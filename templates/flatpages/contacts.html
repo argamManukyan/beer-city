@@ -124,17 +124,6 @@
                                                 <input type="email" id="email" name="email" placeholder="">
                                             </div>
 
-                                            <div class="input-fields all-auth s2">
-                                                <label for="question">{% trans 'Թեմա' %} *</label>
-                                                <select id="question" class="js-select2 another-field" name="question">
-                                                    <option value=""> -- {% trans 'Ընտրել' %} -- </option>
-                                                    {% for theme in themes %}
-                                                    <option value="{{ theme.id }}">{{ theme.name }}</option>
-                                                    {% endfor %}
-                                                    <option value="other">{% trans 'Այլ' %}</option>
-                                                </select>
-                                            </div>
-
                                             <div class="input-fields all-auth">
                                                 <label for="message">{% trans 'Հաղորդագրություն' %} *</label>
                                                 <textarea id="message" name="message" class="fw" rows="4"></textarea>
@@ -182,13 +171,13 @@
                         </div>
                     </div>
                     
+                    {% if iframe %}
                     <div class="cont-map">
-                        <iframe data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d291.6518490450727!2d44.474241106123905!3d40.19279530787512!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x406abdd2f1c8d25f%3A0x40db3978e27fc49f!2sCanapea!5e0!3m2!1sen!2s!4v1648581548476!5m2!1sen!2s" class="lozad" width="100%" height="500" style="border:0;" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        {{ iframe|safe }}
                     </div>
-                    
+                    {% endif %}
                 </div>
                 <!-- contacts end -->
-
             </section>
         </main>
         {% include 'includes/footer.html' %}
