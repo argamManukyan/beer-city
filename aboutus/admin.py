@@ -13,7 +13,7 @@ class AboutUsAdmin(SingleModelAdmin, TabbedDjangoJqueryTranslationAdmin):
 admin.site.register(OurGoals, TabbedDjangoJqueryTranslationAdmin)
 admin.site.register(OurAdvantages, TabbedDjangoJqueryTranslationAdmin)
 admin.site.register(GoalImage)
-admin.site.register(Reviews, TabbedDjangoJqueryTranslationAdmin)
+# admin.site.register(Reviews, TabbedDjangoJqueryTranslationAdmin)
 
 
 

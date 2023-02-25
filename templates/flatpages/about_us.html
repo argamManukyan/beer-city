@@ -4,7 +4,7 @@
     <meta charset='utf-8'/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
-    <title>{% trans 'Մեր Մասին' %} | {{ domain }}</title>
+    <title>{% trans 'Մեր Մասին' %} | {{ request.get_host }}</title>
     <meta name="Description" content="">
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
     <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
@@ -28,7 +28,9 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-banner-text">
-                                <h1>{{ st_content.page_title }}</h1>
+                                {% if st_content.page_title %}
+                                    <h1>{{ st_content.page_title }}</h1>
+                                {% endif %}
                                 {% if st_content.breadcrumbs_text %}
                                   <p>{{ st_content.breadcrumbs_text|safe }}</p>      
                                 {% endif %}
@@ -96,8 +98,7 @@
                                         <div class="bullet-img">
                                             <figure>
                                                 <img
-                                                        data-src="
-                                                                {% if adv.icon %}{{ adv.icon.url }}{% else %}{% static 'img/icons/b-1.svg' %}{% endif %}"
+                                                        data-src="{% if adv.icon %}{{ adv.icon.url }}{% else %}{% static 'img/icons/b-1.svg' %}{% endif %}"
                                                         class="lozad" alt="{{ adv.name }}">
                                             </figure>
                                         </div>
@@ -122,7 +123,7 @@
                         <div class="row align-items-center">
                             <div class="col col-2">
                                 <div class="ab-p_txt">
-                                    <h2>{% trans 'Կանապեա Քեյթրինգ' %}</h2>
+                                    <h2>{% trans 'Beer City' %}</h2>
                                     <ul class="ab-goals">
                                         {% for goal in our_goals %}
                                             <li class="d-flex">
@@ -139,8 +140,7 @@
 
                             <div class="col col-2">
                                 <div class="ab-p">
-                                    <img src="
-                                            {% if goal_img %}{{ goal_img.image.url }}{% else %}{% static 'img/ab2.jpg' %}{% endif %}"
+                                    <img src="{% if goal_img %}{{ goal_img.image.url }}{% else %}{% static 'img/ab2.jpg' %}{% endif %}"
                                          alt="">
                                 </div>
                             </div>
@@ -151,62 +151,30 @@
                 <!-- About second text end -->
             {% endif %}
             <!-- Review -->
-            {% if reviews %}
-            <div class="section ab-review cat-trigger">
+            {% if bullets %}
+            <section class="section bullets-canapea">
                 <div class="cnt">
-                    <div class="row">
-                        <div class="col">
-                            <div class="swiper-container slider-4">
-
-                                <div class="section-title">
-                                    <div class="tith3 align-items-center">
-                                        <span class="tith3-name">{% trans 'Կարծիքներ' %}</span>
+                    <div class="row no-margs">
+                        {% for bullet in bullets %}
+                            <div class="col-4">
+                                <div class="bullet-block text-center">
+                                    <div class="bullet-img">
+                                        <figure>
+                                            <img data-src="{{ bullet.icon.url }}" class="lozad"
+                                                 alt="{{ bullet.title }}">
+                                        </figure>
+                                    </div>
+                                    <div class="bullet-txt">
+                                        <h3>{{ bullet.title }}</h3>
+                                        {% if bullet.text %}<p>{{ bullet.text|safe }}</p>{% endif %}
                                     </div>
                                 </div>
-
-                                <div class="swiper-wrapper">
-                                    {% for review in reviews %}
-                                    <div class="swiper-slide">
-                                        <!-- Review item -->
-                                        <div class="review-item text-center">
-                                            <figure class="review-author">
-                                                <img
-                                                        src="{% if review.image %}{{ review.image.url }}{% else %}https://sun9-5.userapi.com/yqqyYEYjeGYfTIpNku8RxQfKH_q-k0istyavRA/e1Rn4v2xO2Y.jpg?ava=1{% endif %}"
-                                                     alt="Username">
-                                            </figure>
-                                            <div class="review-author_name">
-                                                <h3>{{ review.name }}</h3>
-                                                <ul class="review-rating flex-content-center">
-                                                    <li><img src="{% static 'img/icons/review-star.svg' %}"
-                                                             alt="Վարկանիշ"></li>
-                                                    <li><img src="{% static 'img/icons/review-star.svg' %}"
-                                                             alt="Վարկանիշ"></li>
-                                                    <li><img src="{% static 'img/icons/review-star.svg' %}"
-                                                             alt="Վարկանիշ"></li>
-                                                    <li><img src="{% static 'img/icons/review-star.svg' %}"
-                                                             alt="Վարկանիշ"></li>
-                                                    <li><img src="{% static 'img/icons/review-star.svg' %}"
-                                                             alt="Վարկանիշ"></li>
-                                                </ul>
-                                            </div>
-                                            <div class="review-desc">
-                                                <p>{{ review.text }}</p>
-                                            </div>
-
-                                        </div>
-                                        <!-- Review item end -->
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                                <div class="swiper-button-next swiper-next"></div>
-                                <div class="swiper-button-prev swiper-prev"></div>
-                                <div class="swiper-pagination"></div>
                             </div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
-            </div>
-            {% endif %}
+            </section>
+        {% endif %}      
             <!-- Review end -->
             {% if posts %}
                 <!-- Blog related -->
