@@ -243,7 +243,7 @@
                                                         <input type="number" class="qty-input" value="{% if obj.min_qty %}{{ obj.min_qty }}{% else %}1{% endif %}" 
                                                         min="{% if obj.min_qty %}{{ obj.min_qty }}{% else %}1{% endif %}" 
                                                         {% if obj.max_qty %}max="{{ obj.max_qty}}"{% endif %}
-                                                        id="qty-{{ obj.id }}" onchange="fetchPrice()">
+                                                        id="qty-{{ obj.id }}">
                                                         <img src="{% static 'img/icons/plus.svg' %}" class="plus" alt="{% trans 'Ավելացնել' %}">
                                                     </div>
                                                 </div>
@@ -271,7 +271,6 @@
                                             <!-- Notification for min pieces. end -->
                                         </div>
 
-                                        {% if obj.min_qty > 1 %}
                                         <div class="qty-change-price">
                                             <div class="only-change-num">
 
@@ -290,31 +289,8 @@
 
                                             </div>
                                         </div>
-                                        {% endif %}
                                     </div>
 
-                                    <!-- Catedory inheritance products -->
-                                    {% if inheritance_items %}
-                                    <div class="category-inheritance">
-                                        <div class="pr-filed-inheritance">
-                                            <div class="pr-field-title">{% trans 'Տարբերակներ' %}</div>
-
-                                            <ul class="inheritance-row d-flex">
-                                                {% for item in inheritance_items %}
-                                                <li class="inheritance-item {% if obj.id == item.id %}active{% endif %}">
-                                                    <a href="{{ item.get_absolute_url }}">
-                                                        {% if item.main_image %}
-                                                        <figure class="align-items-center">
-                                                            <img src="{{ item.main_image.url }}" class="cover" alt="{{ item.name }}">
-                                                        </figure>
-                                                        {% endif %}
-                                                        <p class="line-clamp2">{{ item.name }}</p>
-                                                    </a>
-                                                </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </div>
-                                    </div>
                                     <!-- Catedory inheritance products end -->
                                     {% endif %}
                                     <!-- Radio and Select -->
