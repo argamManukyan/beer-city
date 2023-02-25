@@ -191,3 +191,17 @@ def breadcrumbs(categories: Category, request):
         for item in bin_tree
     ]
 
+
+@register.filter
+def volumeChecker(product: Product):
+    has_volume = ProductFeature.objects.filter(product=product, measure_unit_id=1)
+    
+    volume = None
+    if has_volume.exists():
+        volume = float(has_volume.first().value.title)
+        
+        min_qty = round(volume * product.min_qty, 2)
+        max_qty = round(volume * product.max_qty, 2)
+        
+        return min_qty, max_qty, isinstance(volume, float)
+    return product.min_qty, product.max_qty, False

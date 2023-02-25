@@ -238,7 +238,7 @@
                                                         <input type="number" class="qty-input" value="{% if obj.min_qty %}{{ obj.min_qty }}{% else %}1{% endif %}" 
                                                         min="{% if obj.min_qty %}{{ obj.min_qty }}{% else %}1{% endif %}" 
                                                         {% if obj.max_qty %}max="{{ obj.max_qty}}"{% endif %}
-                                                        id="qty-{{ obj.id }}" onchange="fetchPrice()">
+                                                        id="qty-{{ obj.id }}" onchange="fetchPrice()" data-instance="{{ obj|volumeChecker }}">
                                                         <img src="{% static 'img/icons/plus.svg' %}" class="plus" alt="{% trans 'Ավելացնել' %}">
                                                     </div>
                                                 </div>
@@ -249,7 +249,7 @@
                                             <div class="alert-min alert-danger" id="warningQuantity" style="display: none">
                                                 <div class="align-items-center">
                                                     <img src="{% static 'img/icons/alert-warning.svg' %}" class="alert-img" alt="{% trans 'Ծանուցում' %}">
-                                                    <span>{% trans 'Պատվերի նվազագույն քանակը' %} <strong>{{ obj.min_qty }}</strong> {% trans 'հատ է' %}։
+                                                    <span>{% trans 'Պատվերի նվազագույն քանակը' %} <strong id="warningQuantityValue"></strong> {% trans 'հատ է' %}։
                                                     </span>
                                                 </div>
                                             </div>
@@ -258,7 +258,7 @@
                                             <div class="alert-min alert-danger" id="warningMaxQuantity" style="display: none">
                                                 <div class="align-items-center">
                                                     <img src="{% static 'img/icons/alert-warning.svg' %}" class="alert-img" alt="{% trans 'Ծանուցում' %}">
-                                                    <span>{% trans 'Պատվերի մաքսիմալ քանակը' %} <strong>{{ obj.max_qty }}</strong> {% trans 'հատ է' %}։
+                                                    <span>{% trans 'Պատվերի մաքսիմալ քանակը' %} <strong id="warningMaxQuantityValue"></strong> {% trans 'հատ է' %}։
                                                     </span>
                                                 </div>
                                             </div>
@@ -524,7 +524,8 @@
             const form = new FormData(document.getElementById('addToCartForm'))
 
             const qty = document.getElementById(`qty-{{ obj.id }}`)
-
+            min_qty, max_qty, hasVolume = qty.dataset.instance.split(',')
+            console.log(max_qty, 'MAX QTY:', min_qty, 'MIN QTY:', hasVolume, "Has volume")
             if (+qty.value < +qty.getAttribute('min')) {
                 qty.setAttribute('disabled', true)
                 qty.value = +qty.getAttribute('min')
