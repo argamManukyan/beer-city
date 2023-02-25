@@ -1,3 +1,4 @@
+import random
 import time
 from datetime import timedelta
 from colorfield.fields import ColorField
@@ -248,11 +249,18 @@ class Product(CustomMetaModel):
     def __str__(self):
         return self.name
 
+    def get_product_custom_id(self):
+        
+        rand_id = random.randrange(10000, 9999)
+        while self.__class__.objects.filter(product_custom_id=rand_id).exists():
+            rand_id = random.randrange(10000, 9999)
+        return rand_id
+    
     def save(self, *args, **kwargs):
 
         if not self.product_custom_id:
-            n = f'{int(time.time())}'
-            self.product_custom_id = f'BC0{n[:8]}'
+            rand_id = self.get_product_custom_id()
+            self.product_custom_id = f'BC0{rand_id}'
         
         self.finally_price = self.sale if self.sale > 1 else self.price
         if not self.slug:

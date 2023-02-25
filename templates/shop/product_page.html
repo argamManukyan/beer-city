@@ -184,9 +184,6 @@
                                                     {% endif %}
                                                 </span>
                                                 {% endif %}
-                                                {% if obj.product_code %}
-                                                    <div class="pr-code">{% trans 'Ապրանքի կոդ' %}: {{ obj.product_code }}</div>
-                                                {% endif %}
                                             </div>
 
                                             {% if obj.productfeature_set.all|cardfilter %}
@@ -213,6 +210,13 @@
                                                     <span class="val">Շշալցված գարեջուր</span>
                                                 </a>
                                             </li>
+                                            <li>
+                                                <span class="opt"><b>{% trans 'Բրենդ:' %}</b></span>
+                                                <a href="#" class="linkcolor">
+                                                    <span class="val">{{obj.brand.name}}</span>
+                                                </a>
+                                            </li>
+
                                             {% if obj.product_code %}
                                             <li>
                                                 <span class="opt"><b>{% trans 'Ապրանքի կոդ:' %}</b></span>
