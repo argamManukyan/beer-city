@@ -1,4 +1,5 @@
 import decimal
+import json
 from currencies.templatetags import currency as cr
 from django.template import Library
 from django.template.defaultfilters import floatformat
@@ -207,11 +208,11 @@ def volumeChecker(product: Product):
         if product.max_qty:
             max_qty = round(volume * product.max_qty, 2)
         
-        return {
+        return json.dumps({
             "min_qty": min_qty, 
             "max_qty": max_qty, 
             "has_volume": isinstance(volume, float),
             "volume": volume
-            }
+            })
    
-    return  {"min_qty": product.min_qty, "max_qty": product.max_qty, "has_volume": False}
+    return  json.dumps({"min_qty": product.min_qty, "max_qty": product.max_qty, "has_volume": False})
