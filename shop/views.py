@@ -196,7 +196,6 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        inheritance_items = self.get_object().category.first()
 
         context['ratings'] = Rating.objects.order_by('-value')
         context['middle_score'] = self.get_object().ratingproduct_set.aggregate(middle=Avg('rating__value'))
@@ -207,10 +206,6 @@ class ProductDetailView(DetailView):
         if context['user_block']:
             context['user_rating'] = RatingProduct.objects.get(ip=get_ip(self.request),
                                                                product_id=self.get_object().pk)
-
-        if inheritance_items:
-            context['inheritance_items'] = sorted(inheritance_items.product_set.all(),
-                                                  key=lambda x: x.id == self.get_object().id, reverse=True)
         context['variant_fields'] = FilterField.objects.filter(productfeature__product_id=self.get_object().id,
                                                                is_main=True,
                                                                productfeature__value__isnull=False).distinct()
