@@ -37,7 +37,7 @@ class SignupView(View):
         data = request.POST.dict()
         
         if User.objects.filter(email=data['email']).exists():
-            messages.error(request, CUSTOM_MESSAGES['INVALID_LOGIN_OR_PASSWORD'])
+            messages.error(request, CUSTOM_MESSAGES['EMAIL_DUPLICATE'])
             return redirect(reverse('users:signup'))
 
         if data.get('password') != data.get('password2'):
