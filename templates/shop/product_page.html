@@ -40,6 +40,17 @@
                                             <span>{% trans 'Բաժիններ' %}</span>
                                         </a>
                                     </li>
+                                    {% if obj.category %}
+                                    {% for k, j, i in obj.category.all|breadcrumbs:request %}
+                                        {{ i|safe }}
+                                        {% endfor %}
+                                    {% endif %}
+                                    <span class="bread-arrow">→</span>
+                                    <li class="b-list-item">
+                                        <span>{{ obj.title|safe }}</span>
+                                    </li>
+
+
 
                                     {% if breadcrumbs %}
                                     {% for b_cumb in breadcrumbs %}
@@ -71,16 +82,6 @@
                                         {% if obj.sale %}
                                         <span class="pr-page-sale-icon">-{{ obj.get_sale_percent }} %</span>
                                         {% endif %}
-
-                                        <!-- if yes category sale and yes icon -->
-                                        {% for bday in obj.category.all|returnbonusday %}
-                                        <!-- if yes category sale and yes icon -->
-                                        <div class="cat-sale-icon">
-                                            <img src="{{ bday.icon.url }}" alt="{{ bday.category.name }}">
-                                        </div>
-                                        <!-- if yes category sale and yes icon end -->
-                                        {% endfor %}
-
                                         <!-- if yes category sale and yes icon end -->
 
                                         <div class="swiper-wrapper">
@@ -206,17 +207,28 @@
 
                                             <li>
                                                 <span class="opt"><b>{% trans 'Բաժնի անվանում:' %}</b></span>
-                                                <a href="#" class="linkcolor">
-                                                    <span class="val">Շշալցված գարեջուր</span>
-                                                </a>
+                                                {% if obj.category %}
+                                                    {% for k, j, i in obj.category.all|breadcrumbs:request %}
+                                                        {% if forloop.last %}
+                                                            {{ j|safe }}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
                                             </li>
+                                            {% if obj.brand %}
                                             <li>
                                                 <span class="opt"><b>{% trans 'Բրենդ:' %}</b></span>
-                                                <a href="#" class="linkcolor">
-                                                    <span class="val">{{obj.brand.name}}</span>
-                                                </a>
+                                                {% if obj.category %}
+                                                    {% for k, j, i in obj.category.all|breadcrumbs:request %}
+                                                        {% if forloop.last %}
+                                                            <a href="{{k}}?brand={{obj.brand.name}}" class="linkcolor">
+                                                                <span class="val">{{obj.brand.name}}</span>
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
                                             </li>
-
+                                            {% endif %}
                                             {% if obj.product_code %}
                                             <li>
                                                 <span class="opt"><b>{% trans 'Ապրանքի կոդ:' %}</b></span>

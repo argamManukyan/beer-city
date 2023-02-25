@@ -113,3 +113,82 @@ def ignoreused(qs, category_id, used_ids):
     category = Category.objects.get(id=category_id)
     categories = category.get_family().values_list('id', flat=True)
     return qs.filter(category__in=categories).exclude(id__in=used_ids)
+
+
+def main_category_tree(bred_category, product):
+    bin_tree = []
+    if bred_category.parent:
+        select_main = bred_category
+        while select_main.parent:
+            bin_tree.append(select_main.parent)
+            select_main = select_main.parent
+        if select_main not in bin_tree:
+            bin_tree.append(select_main)
+        bin_tree.reverse()
+    else:
+        # get all categories of the category tree
+        categories_l = bred_category.get_descendants().values_list('id', flat=True)
+
+        filtered_categories = list(filter(lambda x: x.id in categories_l, product.category.all()))
+
+        # warning
+        inherit_category = list(filter(lambda x: x.parent in filtered_categories, filtered_categories))
+
+        if inherit_category:
+            bin_tree.extend((bred_category, inherit_category[0].parent, inherit_category[0]))
+        else:
+            if filtered_categories:
+                bin_tree.extend([bred_category, filtered_categories[0]])
+            else:
+                bin_tree.append(bred_category)
+
+    return bin_tree
+
+
+@register.filter
+def breadcrumbs(categories: Category, request):
+    slug = request.resolver_match.kwargs.get('slug')
+
+    has_error = False
+    try:
+        latest_visited_cat = request.META.get('HTTP_REFERER').split('/')[-2]
+        bred_category = Category.objects.get(slug=latest_visited_cat, is_active=True)
+    except:
+        # when user signed in with product link
+        has_error = True
+        bred_category = categories.first()
+
+    product = Product.objects.get(slug__iexact=slug)
+
+    if has_error:
+        get_parent_categories = list(filter(lambda x: x.parent is None, categories.all()))
+        if not get_parent_categories:
+            bin_tree = main_category_tree(bred_category, product)
+        else:
+            bred_category = get_parent_categories[0]
+            bin_tree = main_category_tree(bred_category, product)
+    else:
+        bin_tree = main_category_tree(bred_category, product)
+
+    breadcrumb_elements = []
+    for item in bin_tree:
+
+        breadcrumb_elements.append(
+            (   
+                item.get_absolute_url(),
+                f"""
+                    <a href="{item.get_absolute_url()}" class="linkcolor">
+                        <span class="val">{ item.title }</span>
+                    </a>
+                 """,
+                f"""
+                <span class="bread-arrow">→</span>
+                <li class="breadcrumbs-item">
+                    <a href="{item.get_absolute_url()}"
+                       class="breadcrumbs-link">{item.title}</a>
+                </li>
+                """
+            )
+        )
+
+    return breadcrumb_elements
