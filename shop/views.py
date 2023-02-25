@@ -138,7 +138,7 @@ class CategoryDetailView(ShopMixin):
     def get(self, request, **kwargs):
         category = get_object_or_404(Category, slug=kwargs['slug'])
 
-        list_id_category = [i.id for i in category.get_descendants(include_self=True).filter(is_active=True)]
+        list_id_category = [i.id for i in category.get_descendants(include_self=True)]
 
         category_min_price = Product.objects.filter(
             category__in=list_id_category).aggregate(min_price=Min('finally_price'))['min_price'] or 0
@@ -223,10 +223,9 @@ class ProductDetailView(DetailView):
         context['ingredients'] = ProductIngredient.objects.filter(product=self.get_object())
         try:
             latest_visited_cat = self.request.META.get('HTTP_REFERER').split('/')[-2]
-            bred_category = Category.objects.get(slug=latest_visited_cat, is_active=True)
+            bred_category = Category.objects.get(slug=latest_visited_cat)
         except:
-            bred_category = Category.objects.filter(product__slug__iexact=self.get_object().slug,
-                                                    is_active=True).first()
+            bred_category = Category.objects.filter(product__slug__iexact=self.get_object().slug).first()
 
         context["breadcrumbs"] = bred_category.get_ancestors(include_self=True)
 

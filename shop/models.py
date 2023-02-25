@@ -66,23 +66,15 @@ class Category(MPTTModel, CustomMetaModel):
                            upload_to='cat-catalog-image/', default='defaults/category-main.jpg')
     logo = CustomLogoField(verbose_name='Գլխավոր էջի կատեգորիայի նկար', blank=True,
                            null=True, upload_to='cat-img/',)
-    breadcrumb_image = CustomLogoField(verbose_name='Բաժնի բանների նկար', default='defaults/category-banner.jpg',
+    breadcrumb_image = CustomLogoField(verbose_name='Բաժնի բանների նկար', 
+                                       default='defaults/category-banner.jpg',
                                        blank=True, null=True, upload_to='cat-bg-image/')
 
     short_description = models.TextField(blank=True, null=True, verbose_name='Հակիրճ նկարագրություն')
-    large_description = RichTextUploadingField(blank=True, null=True, verbose_name='Ամբողջական նկարագրություն')
     color = ColorField(default='#FF0000', blank=True, null=True, verbose_name='Background -ի գույն',
-                       help_text='Ընտրված գույնը երևում է header -ում, որպես տվյալ բաժնի ֆոնի գույն')
-
+                       help_text='Ընտրված գույնը երևում է գլխավոր էջում, որպես տվյալ բաժնի ֆոնի գույն')
     show_in_header = models.BooleanField(default=False, verbose_name='Ցուցադրել գլխավոր էջում')
-    is_active = models.BooleanField(default=True, verbose_name='Ակտիվ կարգավիճակ')
-    # Trigger for example macaroons
-    show_category_all_items = models.BooleanField(default=False, 
-                                                  verbose_name='Ցուցադրել բաժնի բոլոր ապրանքները ապրանքի էջում')
-
-    # Trigger for add products to the ingredients list
-    add_to_ingredients = models.BooleanField(default=False, verbose_name='Տվյալ բաժնի ապրանքները ավելացնել «Ինգրեդեիենտներում»')
-
+    
     class Meta:
         verbose_name = 'Բաժին'
         verbose_name_plural = 'Բաժիններ'

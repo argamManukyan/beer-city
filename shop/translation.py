@@ -65,7 +65,6 @@ class CategoryTranslationOptions(TranslationOptions):
     fields = [
         'name',
         'short_description',
-        'large_description',
         'meta_title',
         'meta_description'
     ]

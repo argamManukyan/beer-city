@@ -67,7 +67,6 @@ class SliderAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(TabbedDjangoJqueryTranslationAdmin, DraggableMPTTAdmin):
-    exclude = ['large_description']
     form = select2_modelform(Category, attrs={"width": "250px"})
 
     def get_fields(self, request, obj=None):
