@@ -525,7 +525,7 @@
 
             const qty = document.getElementById(`qty-{{ obj.id }}`)
             
-            const metaData = JSON.parse(JSON.stringify(qty.dataset.instance))
+            const metaData = JSON.stringify(JSON.parse(JSON.stringify(qty.dataset.instance)))
             
             console.log(typeof metaData)
             if(metaData.has_volume === 'True'){
