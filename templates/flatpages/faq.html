@@ -62,10 +62,10 @@
                                     {% for question in questions %}
                                     <div class="nav-item">
                                         <h2 class="nav-item-inner-heading">
-                                            <span>{{ question.question }}</span>
+                                            <span>{{ question.question|safe }}</span>
                                         </h2>
                                         <div class="nav-sub-list">
-                                            <p>{{ question.answer }}</p>
+                                            <p>{{ question.answer|safe }}</p>
                                         </div>
                                     </div>
                                     {% endfor %}
