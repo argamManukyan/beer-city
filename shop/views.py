@@ -196,12 +196,10 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        inheritance_items = self.get_object().category.filter(
-            show_category_all_items=True).first()
+        inheritance_items = self.get_object().category.first()
 
         context['ratings'] = Rating.objects.order_by('-value')
-        context['middle_score'] = self.get_object().ratingproduct_set.aggregate(
-            middle=Avg('rating__value'))
+        context['middle_score'] = self.get_object().ratingproduct_set.aggregate(middle=Avg('rating__value'))
         context['middle'] = float('{:.1f}'.format(context['middle_score'].get('middle') or 0))
         context['user_block'] = RatingProduct.objects.filter(ip=get_ip(self.request),
                                                              product_id=self.get_object().id).exists()
