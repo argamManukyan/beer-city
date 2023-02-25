@@ -528,7 +528,7 @@
             if(metaData.has_volume){
                 if (qty.value * parseFloat(metaData.volume) > metaData.max_qty){
                     qty.value = +qty.getAttribute('max')
-                    document.getElementById('warningMaxQuantityValue').innerText = qty.value * metaData.volume;
+                    document.getElementById('warningMaxQuantityValue').innerText = (qty.value * metaData.volume).toFixed(2);
                     qty.setAttribute('disabled', true)
                     if(document.getElementById('warningMaxQuantity')){
                         document.getElementById('warningMaxQuantity').style.display = 'block'
