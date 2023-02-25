@@ -6,9 +6,9 @@ from beercity.utils import CustomMetaModel, slug_generator, CustomLogoField, Cus
 
 
 class FlatPages(CustomMetaModel):
-    page_name = models.CharField(max_length=255, unique=True)
-    slug = models.SlugField(unique=True, blank=True, null=True)
-    content = RichTextUploadingField()
+    page_name = models.CharField(max_length=255, unique=True, verbose_name='Էջի անուն')
+    slug = models.SlugField(unique=True, blank=True, null=True, verbose_name='Հղում')
+    content = RichTextUploadingField(verbose_name='Տեքստ')
 
     def __str__(self):
         return self.page_name

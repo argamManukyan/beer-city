@@ -45,22 +45,15 @@ def set_meta_fields_before_form(resp):
 @admin.register(Slider)
 class SliderAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
 
-    def get_xl_image(self, instance: Slider):
-        if instance.xl_image:
-            return mark_safe(
-                f'<img src="{instance.xl_image.url}" height="120px" width="120px" />'
-            )
-
     def get_lg_image(self, instance: Slider):
         if instance.lg_image:
             return mark_safe(
                 f'<img src="{instance.lg_image.url}" height="120px" width="320px" />'
             )
 
-    get_xl_image.short_description = 'Mobile Նկար'
     get_lg_image.short_description = 'Desktop Նկար'
 
-    list_display = ['get_xl_image', 'get_lg_image']
+    list_display = ['get_lg_image']
 
 
 @admin.register(Category)

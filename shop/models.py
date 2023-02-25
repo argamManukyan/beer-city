@@ -25,10 +25,9 @@ class SliderPhoneImage(models.Model):
     
 
 class Slider(models.Model):
-    xl_image = CustomLogoField(verbose_name='Նկար mobile տարբերակի համար')
-    lg_image = CustomLogoField(verbose_name='Նկար desktop տարբերակի համար')
+    lg_image = CustomLogoField(verbose_name='Նկար')
     url = models.URLField(verbose_name='Հղում', blank=True, null=True)
-    text = RichTextUploadingField(blank=True, null=True)
+    text = RichTextUploadingField(blank=True, null=True, verbose_name='Տեքստ')
     my_order = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Դասավորել')
 
     class Meta:
@@ -182,7 +181,7 @@ class Color(CustomModel):
 
 class Brand(models.Model):
     name = models.CharField(max_length=120, unique=True, verbose_name='Անուն')
-    slug = models.SlugField(verbose_name='Հղում', blank=True, null=True, unique=True)
+    slug = models.SlugField(verbose_name='Հղում', blank=True, null=True, unique=True, editable=False)
     icon = models.FileField(verbose_name='Լոգո', blank=True, null=True)
     shipper_email = models.EmailField(verbose_name='Էլ. փոստ', blank=True, null=True)
     
@@ -192,6 +191,12 @@ class Brand(models.Model):
     class Meta:
         verbose_name = 'Բրենդ'
         verbose_name_plural = 'Բրենդներ'
+        
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slug_generator(self.name)
+            
+        super().save(*args, **kwargs)
         
     
 class Product(CustomMetaModel):

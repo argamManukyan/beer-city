@@ -5,9 +5,6 @@ from django.db import models
 class Video(models.Model):
     LOCATION_OF_VIDEO = [
         ('home', 'Գլխավոր էջ'),
-        ('how_to_order', 'Ինչպես պատվիրել'),
-        ('product_page', 'Ապրանքի էջ'),
-        ('job', 'Թափուր հաստիքներ')
     ]
 
     location = models.CharField(
