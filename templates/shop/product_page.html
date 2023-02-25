@@ -525,9 +525,9 @@
 
             const qty = document.getElementById(`qty-{{ obj.id }}`)
             
-            const metaData = JSON.stringify(JSON.parse(JSON.stringify(qty.dataset.instance)))
+            const metaData = JSON.stringify(qty.dataset.instance)
             
-            console.log(typeof metaData)
+            console.log(metaData)
             if(metaData.has_volume === 'True'){
                 console.log(metaData.has_volume)
                 if (qty.value * parseFloat(volume.volume) > metaData.max_qty){
