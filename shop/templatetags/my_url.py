@@ -182,10 +182,9 @@ def breadcrumbs(categories: Category, request):
                     </a>
                 """,
             f"""
-                <span class="bread-arrow">→</span>
-                <li class="b-list-item">
+                <li class="breadcrumbs-item">
                     <a href="{item.get_absolute_url()}"
-                       class="b-list-link">{item.name}</a>
+                       class="breadcrumbs-link">{item.name}</a>
                 </li>
             """
         )
