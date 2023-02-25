@@ -574,14 +574,14 @@
                         document.getElementById('minQtyProd').innerText = qty.value
                     }
                     if (document.getElementById('ItemPrice')) {
-                        document.querySelector('#ItemPrice').innerHTML = data.obj_price;
-                        document.querySelector('#ItemTotalPrice').innerHTML = data.price;
+                        document.querySelector('#ItemPrice').innerHTML = data.obj_price.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        document.querySelector('#ItemTotalPrice').innerHTML = data.price.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                     }
                     if (data.sale) {
-                        document.getElementById('salePrice').innerText = data.sale
+                        document.getElementById('salePrice').innerText = data.sale.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
                         if (document.getElementById('ItemPrice')) {
-                            document.querySelector('#ItemPrice').innerHTML = data.obj_sale
-                            document.querySelector('#ItemTotalPrice').innerHTML = data.sale;
+                            document.querySelector('#ItemPrice').innerHTML = data.obj_sale.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                            document.querySelector('#ItemTotalPrice').innerHTML = data.sale.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                         }
                     }
                 })
