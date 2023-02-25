@@ -207,5 +207,6 @@ def volumeChecker(product: Product):
         if product.max_qty:
             max_qty = round(volume * product.max_qty, 2)
         
-        return min_qty, max_qty, isinstance(volume, float)
-    return product.min_qty, product.max_qty, False
+        return {"min_qty": min_qty, "max_qty": max_qty, "has_volume": isinstance(volume, float)}
+   
+    return  {"min_qty": product.min_qty, "max_qty": product.max_qty, "has_volume": False}

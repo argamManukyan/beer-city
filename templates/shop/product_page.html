@@ -524,7 +524,7 @@
             const form = new FormData(document.getElementById('addToCartForm'))
 
             const qty = document.getElementById(`qty-{{ obj.id }}`)
-            min_qty, max_qty, hasVolume = qty.dataset.instance.split(',')
+            
             console.log(max_qty, 'MAX QTY:', min_qty, 'MIN QTY:', hasVolume, "Has volume")
             if (+qty.value < +qty.getAttribute('min')) {
                 qty.setAttribute('disabled', true)
