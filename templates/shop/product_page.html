@@ -525,7 +525,7 @@
 
             const qty = document.getElementById(`qty-{{ obj.id }}`)
             
-            console.log(max_qty, 'MAX QTY:', min_qty, 'MIN QTY:', hasVolume, "Has volume")
+            console.log(JSON.parse(qty.dataset.instance))
             if (+qty.value < +qty.getAttribute('min')) {
                 qty.setAttribute('disabled', true)
                 qty.value = +qty.getAttribute('min')
