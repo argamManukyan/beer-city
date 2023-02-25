@@ -1,26 +1,37 @@
-{% load static %}
-{% load i18n %}
-<!DOCTYPE html>
+{% load static %}{% load i18n %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
-
 <head>
-    <meta charset='utf-8'/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name='viewport'
-          content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
-    <title>{% trans 'Մոռացե՞լ եք գաղտնաբառը' %} | {{ domain }}</title>
-    <meta name="Description" content="">
-    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
-    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
-    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
-    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
-    <link rel="stylesheet" href="{% static 'css/sms.css' %}">
-    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
-    <style>
-        .input-fields.all-auth .iti {
-            display: block;
-        }
-    </style>
+      <meta charset='utf-8'/>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+      <title>{% trans 'Մոռացե՞լ եք գաղտնաբառը' %} | {{ request.get_host }}</title>
+      <meta name="Description" content="{% trans 'Մոռացե՞լ եք գաղտնաբառը' %} 🍺 Beer City ☎ +374(33) 299 299">
+      <!-- Open Graph -->
+      <meta property="og:locale" content="hy_HY">
+      <meta property="og:locale:alternate" content="en_US">
+      <meta property="og:locale:alternate" content="ru_RU">
+      <meta property="og:type" content="website">
+      <meta property="og:title" content="{% trans 'Մոռացե՞լ եք գաղտնաբառը' %}">
+      <meta property="og:description" content="Beer City ☎ +374(33) 299 299">
+      <meta property="og:url" content="{{ absolute_url }}">
+      <meta property="og:site_name" content="{{ request.get_host|capfirst }}">
+      <meta property="og:image" content="{{ full_path }}{% static 'img/share/reset.jpg' %}">
+      <meta property="og:image:secure_url" content="{{ full_path }}{% static 'img/share/reset.jpg' %}">
+      <!-- Open Graph end -->
+      
+      <!-- Alternate Languages -->
+      {% if not request.GET.page %}
+      <link rel="alternate" hreflang="hy" href="{{ hy_url }}" />
+      <link rel="alternate" hreflang="en" href="{{ en_url }}">
+      <link rel="alternate" hreflang="ru" href="{{ ru_url }}">
+      {% endif %}
+      <!-- Alternate Languages end -->
+      <link rel="canonical" href="{{ absolute_url }}">
+      
+      <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+      <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+      <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+      <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
 </head>
 
 <body>
@@ -66,7 +77,7 @@
                     <div class="row">
                         <div class="col col-2 md-none">
                             <div class="sign-in-img">
-                                <img src="{% static 'img/auth.svg' %}" alt="Մուտք">
+                                <img src="{% static 'img/reset.jpg' %}" alt="{% trans 'Մոռացե՞լ եք գաղտնաբառը' %}">
                             </div>
                         </div>
                         <div class="col col-2">
@@ -74,107 +85,35 @@
                                 <div class="all-forms-items">
 
                                     <div class="auth-title">
-                                        {% block newPass %}
-                                            <h1 class="auth_title-h1">
-                                                {% trans 'Մոռացե՞լ եք գաղտնաբառը' %}
-                                            </h1>
-                                        {% endblock %}
+                                        <h1 class="auth_title-h1">{% trans 'Մոռացե՞լ եք գաղտնաբառը' %}</h1>
                                     </div>
-                                    {% block tabs %}
-                                        <ul class="tabs flex-content-center after_click-hide">
-                                            <li class="col-auto {% if request.GET.account_type != 'company' %}active{% endif %}" rel="tab0">
-                                                <span class="flex-content-center">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="15"
-                                                         viewBox="0 0 12 15" fill="none">
-                                                        <circle cx="6.20995" cy="4.51073" r="3.04686" stroke="#201e1e"
-                                                                stroke-width="1.5" stroke-linecap="round"
-                                                                stroke-linejoin="round"/>
-                                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                                              d="M1.37696 11.7951C1.37614 11.5809 1.42405 11.3693 1.51705 11.1764C1.80889 10.5927 2.6319 10.2833 3.31481 10.1432C3.80733 10.0381 4.30666 9.96791 4.80906 9.93311C5.73923 9.8514 6.67477 9.8514 7.60494 9.93311C8.1073 9.96831 8.60659 10.0385 9.09918 10.1432C9.7821 10.2833 10.6051 10.5635 10.8969 11.1764C11.084 11.5697 11.084 12.0263 10.8969 12.4196C10.6051 13.0325 9.7821 13.3127 9.09918 13.4469C8.60724 13.5564 8.10774 13.6286 7.60494 13.6629C6.84786 13.7271 6.08724 13.7388 5.32854 13.6979C5.15344 13.6979 4.98417 13.6979 4.80906 13.6629C4.30814 13.629 3.81055 13.5568 3.32065 13.4469C2.6319 13.3127 1.81473 13.0325 1.51705 12.4196C1.42452 12.2244 1.37667 12.0111 1.37696 11.7951Z"
-                                                              stroke="#201e1e" stroke-width="1.5" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                    </svg>
-                                                    <span>{% trans 'Ֆիզիկական' %}</span>
-                                                </span>
-                                            </li>
-                                            <li class="col-auto {% if request.GET.account_type == 'company' %}active{% endif %} flex-content-center" rel="tab1">
-                                                <span class="flex-content-center">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13"
-                                                         viewBox="0 0 13 13" fill="none">
-                                                        <path d="M1.04492 8.59985C1.04492 8.59985 1.12823 9.61948 1.14759 9.94097C1.1734 10.3722 1.34002 10.8538 1.6181 11.1882C2.01058 11.6623 2.47287 11.8295 3.09004 11.8306C3.81575 11.8318 9.09281 11.8318 9.81852 11.8306C10.4357 11.8295 10.898 11.6623 11.2905 11.1882C11.5685 10.8538 11.7352 10.3722 11.7616 9.94097C11.7803 9.61948 11.8636 8.59985 11.8636 8.59985"
-                                                              stroke="#201E1E" stroke-width="1.5" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M4.38428 2.64656V2.4289C4.38428 1.71317 4.9639 1.13354 5.67964 1.13354H7.19441C7.90956 1.13354 8.48977 1.71317 8.48977 2.4289L8.49036 2.64656"
-                                                              stroke="#201E1E" stroke-width="1.5" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M6.43689 9.30456V8.54541" stroke="#201E1E"
-                                                              stroke-width="1.5" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                                              d="M1.01318 4.44149V6.47546C2.13841 7.2176 3.48657 7.73738 4.96614 7.9433C5.14332 7.29738 5.72588 6.82394 6.43398 6.82394C7.13094 6.82394 7.72524 7.29738 7.89068 7.94917C9.37612 7.74325 10.7296 7.22346 11.8607 6.47546V4.44149C11.8607 3.44767 11.061 2.64746 10.0672 2.64746H2.81249C1.81868 2.64746 1.01318 3.44767 1.01318 4.44149Z"
-                                                              stroke="#201E1E" stroke-width="1.5" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                    </svg>
-                                                    <span>{% trans 'Իրավաբանական' %}</span>
-                                                </span>
-                                            </li>
-                                        </ul>
-                                    {% endblock tabs %}
                                     <div class="tab_container">
+                                       
                                         {% include 'includes/message.html' %}
-                                        {% block content %}
-                                            <div id="tab0" class="tab_content after_click-hide "
-                                                 {% if request.GET.account_type != 'company' %}style="display: block" {% else %}style="display: none" {% endif %}
-                                            >
-                                                <div class="only_form">
-                                                    <form method="post" id="PersonRegisterForm">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="account_type" value="personal">
-                                                        <div class="input-fields all-auth">
-                                                            <label for="login">Email / {% trans 'Հեռախոսահամար' %}
-                                                                *</label>
-                                                            <input type="text" id="login" name="login" placeholder="">
-                                                        </div>
-                                                        <div class="line-inputs-group">
-                                                            <div class="butt-sign">
-                                                                <input type="submit" id="ContinueRegistration"
-                                                                       class="button big dark" name="submit"
-                                                                       value="{% trans 'Վերականգնել գաղտնաբառը' %}">
-                                                            </div>
-                                                        </div>
-                                                        <!--  Forgot pass fields end -->
-                                                    </form>
 
+                                        <div class="only_form">
+                                           
+                                            <form method="post" id="PersonRegisterForm">
+                                                {% csrf_token %}
+                                                <div class="input-fields flex-content-center">
+                                                    <p class="forgot-info align-items-center">
+                                                        <img src="{% static 'img/icons/info.svg' %}" alt="{% trans 'Մոռացե՞լ եք գաղտնաբառը' %}" />
+                                                        <span>{% trans 'Խնդրում ենք ստորև մուտքագրել Ձեր էլ.փոստի հասցեն, և մենք կուղարկենք նոր գաղտնաբառ ստեղծելու կարգավորումները:' %}</span>
+                                                    </p>
                                                 </div>
-                                            </div>
-                                            <div id="tab1" class="tab_content after_click-hide "
-                                            {% if request.GET.account_type == 'company' %}style="display: block" {% else %}style="display: none" {% endif %}
-                                            >
-                                                <div class="only_form">
-                                                    <form id="CompanyRegisterForm" method="post">
-                                                        {% csrf_token %}
-                                                        <!--  Forgot companmy pass fields -->
-                                                         <input type="hidden" name="account_type" value="company">
-                                                        <div class="input-fields all-auth">
-                                                            <label for="email">{% trans 'Ընկերության' %} Email *</label>
-                                                            <input type="email" id="email" name="email" placeholder="">
-                                                        </div>
-
-                                                        <div class="line-inputs-group">
-                                                            <div class="butt-sign">
-                                                                <input type="submit" id="CompanyRegister"
-                                                                       class="button big dark" name="submit"
-                                                                       value="{% trans 'Վերականգնել գաղտնաբառը' %}">
-                                                            </div>
-                                                        </div>
-
-                                                        <!--  Forgot companmy pass fields end -->
-
-                                                    </form>
-
+                                                <div class="input-fields all-auth">
+                                                    <label for="email">{% trans 'Էլ. փոստ' %} *</label>
+                                                    <input type="email" id="email" name="email">
                                                 </div>
-                                            </div>
-                                        {% endblock content %}
+                                                <div class="line-inputs-group">
+                                                    <div class="butt-sign">
+                                                        <input type="submit" id="ContinueRegistration" class="button big dark" name="submit" value="{% trans 'Վերականգնել գաղտնաբառը' %}">
+                                                    </div>
+                                                </div>
+                                                <!--  Forgot pass fields end -->
+                                            </form>
+
+                                        </div>
                                     </div>
 
                                 </div>
@@ -192,58 +131,25 @@
 
 <script src="{% static 'js/canapea3.6_main.js' %}"></script>
 <script src="{% static 'js/canapea_script.js' %}"></script>
-<script src="{% static 'js/canapea_swiper.js' %}"></script>
-<script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
 <script>
-
-    {#$(".tab_content").hide();#}
-    {#$(".tab_content:first").show();#}
-
-    // Person forgot
     $("#PersonRegisterForm").validate({
         rules: {
-            login: {
+            email: {
                 required: true,
+                email: true
             },
         },
-
         messages: {
-            login: {
+            email: {
                 required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                email: "{% trans 'Մուտքագրեք ճիշտ Էլ. փոստի հասցե' %}"
             },
         },
-
-        submitHandler: function (form) {
-            form.submit()
-        }
+        submitHandler: function(form) {
+            form.submit();
+        },
     });
-    // Company forgot
-    $(function () {
-        $("#CompanyRegisterForm").validate({
-            rules: {
-                email: {
-                    required: true,
-                    email: true
-                },
-            },
-            messages: {
-                email: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
-                    email: "{% trans 'Մուտքագրեք ճիշտ Էլ. Փոստի հասցե' %}"
-                },
-            },
-            submitHandler: function (form) {
-                form.submit();
-            },
-        });
-    });
-
 </script>
-{% block js %}
-
-{% endblock js %}
-
 </body>
-
 </html>

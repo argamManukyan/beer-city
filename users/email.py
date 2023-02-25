@@ -40,9 +40,11 @@ class SendMail:
         token = PasswordResetTokenGenerator().make_token(user=user)
         request.session['password_reset_token'] = token
 
-        url = 'http://' + site + reverse('users:password-reset-confirm', kwargs={"uid64": uid64, "token": token})
+        url = f'http://{site}' + reverse(
+            'users:password-reset-confirm', kwargs={"uid64": uid64, "token": token}
+        )
         recipient_list = [user.email]
-        message = render_to_string('users/email/password-reset.html', {'user': user, 'site': site, 'link': url})
+        message = render_to_string('users/email/password-reset.html', {'user': user, 'site': site, 'link': url}, request=request)
 
         send_mail(_('Գաղտնաբառի վերականգնում'), message, from_email=admin_email, recipient_list=recipient_list,
                   html_message=message, fail_silently=True)

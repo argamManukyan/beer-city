@@ -38,18 +38,6 @@ def informative_links(request):
     """ Return all informative datas """
     return {"informative_links": PersonalData.objects.all()}
 
-
-def delete_user(request):
-    """ Delete the user which not set password """
-    if request.resolver_match.url_name != "set_password" and \
-            request.META.get('HTTP_REFERER') and request.META.get('HTTP_REFERER') \
-            == request.build_absolute_uri(reverse('users:set_password')):
-        if 'phone_number' in request.session:
-            User.objects.filter(phone_number=request.session.get('phone_number')).delete()
-            del request.session['phone_number']
-    return []
-
-
 def footer_categories(request):
     """ Get all footer categories with select_related """
     return {"footer_categories": FooterCategory.objects.prefetch_related('items').distinct()}

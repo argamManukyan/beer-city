@@ -1,6 +1,6 @@
 {% load i18n %}
 {% autoescape off %}
-    <p>{% trans "Ողջույն" %} {{ user.company_name }},<br>{% trans "Շնորհակալություն գրանցման համար:" %}</p>
+    <p>{% trans "Ողջույն" %} {{ user.full_name }},<br>{% trans "Շնորհակալություն գրանցման համար:" %}</p>
     <p>{% trans "Խնդրում ենք սեղմել հղման վրա, որպեսզի ակտիվանա Ձեր էջը:" %}<br>{% trans "Հղումը ակտիվ է 24 ժամվա ընթացքում:" %}</p>
     <a href="{{ link }}" style="background-color: #00b74a;
                                 border-color: #00b74a; border-radius: 3px;
@@ -11,5 +11,5 @@
                                 font-weight: 600;
                                 text-align: center; text-decoration-line: none !important; -break: break-word;
                                 letter-spacing: 2px;">{% trans 'Ակտիվացնել' %}</a>
-    <p>{% trans "Սիրով՝ " %} Canapea Catering</p>
+    <p>{% trans "Սիրով՝ " %} Beer City</p>
 {% endautoescape %}

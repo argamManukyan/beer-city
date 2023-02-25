@@ -1,19 +1,38 @@
-{% load i18n %}
-{% load static %}
-<!DOCTYPE html>
+{% load i18n %}{% load static %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
-
 <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
     <title>{%  trans 'Նոր Գաղտնաբառ' %} | {{ domain }}</title>
+    <meta name="Description" content="{%  trans 'Նոր Գաղտնաբառ' %} 🍺 Beer City ☎ +374(33) 299 299">
+    <!-- Open Graph -->
+    <meta property="og:locale" content="hy_HY">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:locale:alternate" content="ru_RU">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{%  trans 'Նոր Գաղտնաբառ' %}">
+    <meta property="og:description" content="Beer City ☎ +374(33) 299 299">
+    <meta property="og:url" content="{{ absolute_url }}">
+    <meta property="og:site_name" content="{{ request.get_host|capfirst }}">
+    <meta property="og:image" content="{{ full_path }}{% static 'img/share/reset.jpg' %}">
+    <meta property="og:image:secure_url" content="{{ full_path }}{% static 'img/share/reset.jpg' %}">
+    <!-- Open Graph end -->
+
+    <!-- Alternate Languages -->
+    {% if not request.GET.page %}
+    <link rel="alternate" hreflang="hy" href="{{ hy_url }}" />
+    <link rel="alternate" hreflang="en" href="{{ en_url }}">
+    <link rel="alternate" hreflang="ru" href="{{ ru_url }}">
+    {% endif %}
+    <!-- Alternate Languages end -->
+    <link rel="canonical" href="{{ absolute_url }}">
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
     <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
     <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
     <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
-    
+
 </head>
 
 <body>
@@ -24,7 +43,7 @@
         <!-- Main content -->
         <main class="content">
             <section class="section page-content">
-            <div class="no-page-banner" style="background-image: url({% static 'img/shop-banner.jpg' %})"></div>
+                <div class="no-page-banner" style="background-image: url({% static 'img/shop-banner.jpg' %})"></div>
                 <!-- Breadcrumbs -->
                 <div class="breadcrumbs">
                     <div class="cnt">
@@ -35,6 +54,11 @@
                                     <li class="breadcrumbs-item">
                                         <a href="{% url 'home_page' %}" class="breadcrumbs-link">
                                             <span>{% trans 'Գլխավոր' %}</span>
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumbs-item">
+                                        <a href="{% url 'users:signin' %}" class="breadcrumbs-link">
+                                            <span>{% trans 'Մուտք' %}</span>
                                         </a>
                                     </li>
                                     <li class="breadcrumbs-item">
@@ -66,35 +90,46 @@
                                             <h1 class="auth_title-h1">{% trans 'Նոր գաղտնաբառ' %}</h1>
                                         </div>
 
-                                        <div class="tab_container">
-                                             <div class="only_form">
-                                                    <!-- Form errors-->
-                                                    {% include 'includes/message.html' %}
-                                                    <!-- Form errors end-->
 
-                                                    <form id="CompanyRegisterForm" method="post">
+                                        <div class="only_form">
+                                           
+                                            <!-- Form errors-->
+                                            {% include 'includes/message.html' %}
+                                            <!-- Form errors end-->
 
-                                                        <!--  Register Company fields -->
-                                                            <div class="input-fields all-auth">
-                                                                <label for="companyPassword">{% trans 'Նոր գաղտնաբառ' %} *</label>
-                                                                <img src="{% static 'img/icons/eye-sign.svg' %}" toggle="#password-field" class="toggle-password">
-                                                                <input type="password" id="companyPassword" name="companyPassword" placeholder="">
-                                                            </div>
-                                                            
-                                                            <div class="input-fields all-auth">
-                                                                <label for="confirmPassword">{% trans 'Կրկնել գաղտնաբառը' %} *</label>
-                                                                <img src="{% static 'img/icons/eye-sign.svg' %}" toggle="#password-field" class="toggle-password">
-                                                                <input type="password" id="companyPasswordConfirm" name="companyPasswordConfirm" placeholder="">
-                                                            </div>
-                                                        <div class="line-inputs-group">
-                                                            <div class="butt-sign">
-                                                                <input type="submit" id="CompanyRegister" class="button big dark" name="submit" value="{% trans 'Հաստատել' %}">
-                                                            </div>
-                                                        </div>
-                                                        <!--  Register Company fields end -->
-                                                    </form>
+                                            <form id="new-password" method="post">
+
+
+                                                <div class="input-fields flex-content-center">
+                                                    <p class="forgot-info align-items-center">
+                                                        <img src="/static/img/icons/info.svg" alt="Մոռացե՞լ եք գաղտնաբառը">
+                                                        <span>
+                                                            {% trans 'Խնդրում ենք մուտքագրել Ձեր նոր գաղտնաբառը կրկնակի, որպեսզի համոզվենք տպագրման ճշգրտության մեջ:' %}
+                                                        </span>
+                                                    </p>
                                                 </div>
-                                          </div>
+
+                                                <!--  Register Company fields -->
+                                                <div class="input-fields all-auth">
+                                                    <label for="password">{% trans 'Նոր գաղտնաբառ' %} *</label>
+                                                    <img src="{% static 'img/icons/eye-sign.svg' %}" toggle="#password-field" class="toggle-password">
+                                                    <input type="password" id="password" name="password">
+                                                </div>
+
+                                                <div class="input-fields all-auth">
+                                                    <label for="password2">{% trans 'Կրկնել գաղտնաբառը' %} *</label>
+                                                    <img src="{% static 'img/icons/eye-sign.svg' %}" toggle="#password-field" class="toggle-password">
+                                                    <input type="password" id="password2" name="password2">
+                                                </div>
+                                                <div class="line-inputs-group">
+                                                    <div class="butt-sign">
+                                                        <input type="submit" class="button big dark" name="submit" value="{% trans 'Հաստատել' %}">
+                                                    </div>
+                                                </div>
+                                                <!--  Register Company fields end -->
+                                            </form>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -106,43 +141,41 @@
         </main>
         <!-- Main content end -->
 
-      {% include 'includes/footer.html' %}
+        {% include 'includes/footer.html' %}
     </div>
 
     <script src="{% static 'js/canapea3.6_main.js' %}"></script>
     <script src="{% static 'js/canapea_script.js' %}"></script>
-    <script src="{% static 'js/canapea_swiper.js' %}"></script>
-    <script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
     <script>
         //Validate Company
         $(function() {
-            $("#CompanyRegisterForm").validate({
+            $("#new-password").validate({
                 rules: {
-                     companyPassword: {
+                    password: {
                         required: true,
                         minlength: 8,
                     },
-                    companyPasswordConfirm: {
-                         required: true,
-                        equalTo: "#companyPassword",
+                    password2: {
+                        required: true,
+                        equalTo: "#password",
                     },
                 },
 
                 messages: {
-                   companyPassword: {
+                    password: {
                         required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
                         minlength: "{% trans 'Գաղտնաբառը պետք է լինի 8 նիշ կամ ավելի երկար' %}",
                     },
-                    
-                   companyPasswordConfirm: {
-                         required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
-                         equalTo: "{% trans 'Գաղտնաբառը չի համընկնում' %}",
+
+                    password2: {
+                        required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                        equalTo: "{% trans 'Գաղտնաբառը չի համընկնում' %}",
                     },
                 },
-                
+
                 submitHandler: function(form) {
-                   form.submit();          
+                    form.submit();
                 },
             });
         });

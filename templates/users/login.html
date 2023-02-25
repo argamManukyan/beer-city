@@ -1,19 +1,36 @@
-{% load static %}
-{% load i18n %}
+{% load static %}{% load i18n %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
-    <meta charset='utf-8'/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name='viewport'
-          content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
-    <title>{% trans 'Մուտք' %} | {{ domain }}</title>
-    <meta name="Description" content="">
-    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
-    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
-    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
-    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
-    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+      <meta charset='utf-8'/>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+      <title>{% trans 'Մուտք' %} | {{ domain }}</title>
+      <meta name="Description" content="{% trans 'Մուտք' %} 🍺 Beer City ☎ +374(33) 299 299">
+      <!-- Open Graph -->
+      <meta property="og:locale" content="hy_HY">
+      <meta property="og:locale:alternate" content="en_US">
+      <meta property="og:locale:alternate" content="ru_RU">
+      <meta property="og:type" content="website">
+      <meta property="og:title" content="{% trans 'Մուտք' %} | {{ domain }}">
+      <meta property="og:description" content="Beer City ☎ +374(33) 299 299">
+      <meta property="og:url" content="{{ absolute_url }}">
+      <meta property="og:site_name" content="{{ request.get_host|capfirst }}">
+      <meta property="og:image" content="{{ full_path }}{% static 'img/share/auth.jpg' %}">
+      <meta property="og:image:secure_url" content="{{ full_path }}{% static 'img/share/auth.jpg' %}">
+      <!-- Open Graph end -->
+      
+      <!-- Alternate Languages -->
+      <link rel="alternate" hreflang="hy" href="{{ hy_url }}" />
+      <link rel="alternate" hreflang="en" href="{{ en_url }}">
+      <link rel="alternate" hreflang="ru" href="{{ ru_url }}">
+      <!-- Alternate Languages end -->
+      <link rel="canonical" href="{{ absolute_url }}">
+      
+      <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+      <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+      <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+      <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
 </head>
 
 <body>
@@ -52,7 +69,7 @@
                     <div class="row">
                         <div class="col col-2 md-none">
                             <div class="sign-in-img">
-                                <img src="{% static 'img/auth.svg' %}" alt="{% trans 'Մուտք' %}">
+                                <img src="{% static 'img/auth.jpg' %}" alt="{% trans 'Մուտք' %}">
                             </div>
                         </div>
                         <div class="col col-2">
@@ -67,18 +84,17 @@
                                         {% include 'includes/message.html' %}
                                         <!-- Form errors end-->
                                         <form action="" id="login-form" method="post">
-
+                                            {% csrf_token %}
                                             <!--  Login fields -->
                                             <div class="input-fields all-auth">
-                                                <label for="email">Email / {% trans 'Հեռախոսահամար' %} *</label>
-                                                <input type="text" id="login" name="login" placeholder="">
+                                                <label for="email">{% trans 'Էլ. փոստ' %} *</label>
+                                                <input type="email" id="email" name="email">
                                             </div>
 
                                             <div class="input-fields all-auth">
                                                 <label for="password">{% trans 'Գաղտնաբառ' %} *</label>
-                                                <img src="{% static 'img/icons/eye-sign.svg' %}"
-                                                     toggle="#password-field" class="toggle-password">
-                                                <input type="password" id="password" name="password" placeholder="">
+                                                <img src="{% static 'img/icons/eye-sign.svg' %}" toggle="#password-field" class="toggle-password">
+                                                <input type="password" id="password" name="password">
                                             </div>
                                             <div class="line-inputs-group saved-sysytem flex-center-between">
                                                 <a href="{% url 'users:password-reset' %}">{% trans 'Մոռացե՞լ եք գաղտնաբառը' %}</a>
@@ -89,15 +105,12 @@
                                             </div>
                                             <div class="line-inputs-group">
                                                 <div class="butt-sign">
-                                                    <input type="submit" class="button big dark" name="submit"
-                                                           value="{% trans 'Մուտք' %}">
+                                                    <input type="submit" class="button big dark" name="submit"  value="{% trans 'Մուտք' %}">
                                                 </div>
                                             </div>
 
                                             <div class="login-or-create">
-                                                <a href="{% url 'users:signup' %}"
-                                                   class="ls_butt">{% trans 'Չունե՞ք հաշիվ:' %}
-                                                    <span>{% trans 'Գրանցվել' %}</span></a>
+                                                  <a href="{% url 'users:signup' %}" class="ls_butt">{% trans 'Չունե՞ք հաշիվ:' %}<span>{% trans 'Գրանցվել' %}</span></a>
                                             </div>
                                             <!--  Login fields end -->
                                         </form>
@@ -116,26 +129,27 @@
 
 <script src="{% static 'js/canapea3.6_main.js' %}"></script>
 <script src="{% static 'js/canapea_script.js' %}"></script>
-<script src="{% static 'js/canapea_swiper.js' %}"></script>
-<script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
 <script>
     //Validate
     $(function () {
         $("#login-form").validate({
-            rules: {
-                login: {
-                    required: true,
-                },
-                password: {
-                    required: true,
-                },
+          rules: {
+            email: {
+              required: true,
+              email: true,
             },
+            password: {
+              required: true,
+            },
+          },
 
             messages: {
-                login: {
+                email: {
                     required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                    email: "{% trans 'Մուտքագրեք ճիշտ Էլ. փոստի հասցե' %}",
                 },
+                
                 password: {
                     required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
                 },

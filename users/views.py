@@ -19,87 +19,9 @@ from django.views import View
 from django.views.decorators.cache import never_cache
 
 from .email import SendMail
-from .forms import UserCompanyModelForm, UserForm
+from .forms import UserForm
 from .settings import CUSTOM_MESSAGES
 from users.models import User, State, Country
-
-
-def check_otp(request):
-
-    if request.is_ajax() and 'phone_number' not in request.session:
-        data = json.loads(request.body)
-        verify_code = data['verify_code']
-        phone_number = data['phone_number'][1:]
-    else:
-        data = json.loads(request.body)
-        verify_code = data['verify_code']
-        phone_number = request.session['phone_number']
-    print(phone_number)
-    print(verify_code)
-    user = User.objects.filter(phone_number=phone_number).first()
-    print(user)
-    if not user:
-        messages.error(request, CUSTOM_MESSAGES['USER_NOT_FOUND'])
-        return JsonResponse({"not_found": CUSTOM_MESSAGES['USER_NOT_FOUND']}, status=400)
-
-    if verify_code != user.verification_code:
-        print(user.verification_code, "USER CODE")
-        if user.attempts_count >= 1:
-            user.attempts_count -= 1
-            user.save()
-            return JsonResponse({"otp_error": CUSTOM_MESSAGES['OTP_ERROR']}, status=400)
-        messages.error(request, CUSTOM_MESSAGES['SMTH_WENT_WRONG'])
-        user.delete()
-        return JsonResponse({"otp_link": request.build_absolute_uri(reverse('users:signup'))}, status=400)
-    else:
-        user.verification_code = None
-        user.sent_verification_code = False
-        user.phone_verified = True
-        user.email_verified = True
-        user.is_active = True
-        user.attempts_count = 4
-        request.session['phone_number'] = phone_number
-        user.save()
-
-        return JsonResponse({"otp_right": CUSTOM_MESSAGES['OTP_RIGHT']})
-
-
-def resend_otp_code(request):
-    data = json.loads(request.body)
-    phone_number = data.get('phone_number')[1:] if data.get('phone_number') and len(data['phone_number']) > 1 else request.session.get('phone_number')
-    phone_number = str(phone_number).replace(' ', '')
-
-    if not User.objects.filter(phone_number=phone_number).exists():
-        return JsonResponse({"url": request.build_absolute_uri(reverse('users:signup'))}, status=400)
-
-    user = User.objects.get(phone_number=phone_number)
-    if user.attempts_count == 0:
-        user.delete()
-        return JsonResponse({"url": request.build_absolute_uri(reverse('users:signin'))}, status=400)
-
-    message_text = 'Verification code: '
-    if request.LANGUAGE_CODE == 'hy':
-        message_text = 'Հաստատման կոդ: '
-    elif request.LANGUAGE_CODE == 'ru':
-        message_text = 'Код верификации: '
-    user.send_otp_code(message_text)
-
-    return HttpResponse(status=200)
-
-
-def delete_user(request):
-    data = json.loads(request.body)
-    phone_number = data['phone_number'].replace(' ', '')
-    phone_number = phone_number[1:]
-    User.objects.filter(phone_number=phone_number).delete()
-    return JsonResponse({'url': request.build_absolute_uri(reverse('users:signup'))})
-
-
-@login_required(login_url='users:signup', redirect_field_name='redirect_to')
-def delete_user_photo(request):
-    user: User = request.user
-    user.avatar.delete()
-    return redirect('users:profile')
 
 
 class SignupView(View):
@@ -112,87 +34,26 @@ class SignupView(View):
 
     @transaction.atomic
     def post(self, request, **kwargs):
+        data = request.POST.dict()
+        
+        if User.objects.filter(email=data['email']).exists():
+            messages.error(request, CUSTOM_MESSAGES['INVALID_LOGIN_OR_PASSWORD'])
+            return redirect(reverse('users:signup'))
 
-        if request.is_ajax():
-            json_data = json.loads(request.body)
-            if 'email' in json_data and json_data.get('account_type') == 'personal':
-                username = f"{json_data['email'].split('@')[0]}-{str(int(time.time()))}"
-                data = {k: v for k, v in json_data.items() if k not in ['submit', 'csrfmiddlewaretoken', 'phone']}
-
-                data['phone_number'] = f'{data["phone_number"]}{json_data["phone"].replace(" ", "")}'
-
-                if User.objects.filter(phone_number=data['phone_number']).exists():
-                    messages.error(request, CUSTOM_MESSAGES['PHONE_NUMBER_DUPLICATE'])
-                    return JsonResponse({"url": request.build_absolute_uri()}, status=400)
-
-                if User.objects.filter(email=data['email']).exists():
-                    messages.error(request, CUSTOM_MESSAGES['EMAIL_DUPLICATE'])
-                    return JsonResponse({"url": request.build_absolute_uri()}, status=400)
-
-                if User.objects.filter(blocked_time__isnull=False, phone_number=data['phone_number']).exists():
-                    messages.error(request, CUSTOM_MESSAGES['BLOCKED_TIME'])
-                    return JsonResponse({"url": request.build_absolute_uri()}, status=400)
-
-                user = User.objects.create_user(username, **data)
-                user.is_active = False
-                user.save()
-
-                if data['account_type'] == 'personal':
-
-                    message_text = 'Verification code: '
-                    if request.LANGUAGE_CODE == 'hy':
-                        message_text = 'Հաստատման կոդ: '
-                    elif request.LANGUAGE_CODE == 'ru':
-                        message_text = 'Код верификации: '
-                    user.send_otp_code(message_text)
-
-                    return JsonResponse({"sent_code": True})
-        else:
-            json_data = request.POST
-
-            data = {'phone_number': json_data['companyPhone'][1:] if json_data['companyPhone']\
-                .startswith('+') else f"{json_data['companyPhone']}",
-                    'password': json_data['companyPassword'],
-                    'email': json_data['email'],
-                    'company_name': json_data['companyName'],
-                    "account_type": 'company',
-                    "username": json_data['email'].split('@')[0] + f'{int(time.time())}'
-                    }
-
-            if User.objects.filter(phone_number=data['phone_number']).exists():
-                messages.error(request, CUSTOM_MESSAGES['PHONE_NUMBER_DUPLICATE'])
-                return redirect(reverse('users:signup') + '?company=True')
-
-            if User.objects.filter(email=data['email']).exists():
-                messages.error(request, CUSTOM_MESSAGES['EMAIL_DUPLICATE'])
-                return redirect(reverse('users:signup') + '?company=True')
-
-            user = User.objects.create_user(**data)
-            user.is_active = False
-            user.save()
-            SendMail.send_activation_message({"user": user, "request": request})
-            messages.success(request, CUSTOM_MESSAGES['USER_CREATED'])
-            return redirect('users:signin')
-
-
-class SetPasswordForSignup(View):
-
-    def get(self, request, **kwargs):
-        if 'phone_number' not in self.request.session:
-            return redirect('users:signup')
-        return render(request, 'includes/register-password.html')
-
-    def post(self, request, **kwargs):
-        password = request.POST.get('companyPassword')
-        user = get_object_or_404(User, phone_number=request.session['phone_number'])
-        user.set_password(password)
+        if data.get('password') != data.get('password2'):
+            messages.error(request, CUSTOM_MESSAGES['PASSWORD_MISS_MATCH'])
+            return redirect(reverse('users:signup'))
+        
+        del data['password2']
+        del data['submit']
+        
+        data['username'] = data['email']
+        user = User.objects.create_user(**data)
+        user.is_active = False
         user.save()
-        authenticate(request, username=user.email, password=password)
-        login(request, user)
-        if 'phone_number' in request.session:
-            del request.session['phone_number']
-        return redirect('users:profile')
-
+        SendMail.send_activation_message({"user": user, "request": request})
+        messages.success(request, CUSTOM_MESSAGES['USER_CREATED'])
+        return redirect('users:signin')
 
 class LoginView(View):
 
@@ -205,30 +66,19 @@ class LoginView(View):
 
     def post(self, request, **kwargs):
 
-        login_value = request.POST.get('login')
-        if login_value and login_value.startswith('+'):
-            login_value = login_value.replace(' ', '')[1:]
-        elif login_value and login_value.isdigit():
-            login_value = login_value.replace(' ', '')
-
+        login_value = request.POST.get('email')
         password = request.POST.get('password')
         remember = request.POST.get('remember' or None)
 
-        if not User.objects.filter(Q(email=login_value) | Q(phone_number=login_value)).distinct().exists():
+        if not User.objects.filter(email=login_value).distinct().exists():
             messages.error(request, CUSTOM_MESSAGES['USER_WITH_LOGIN_NOT_FOUND'])
             return redirect('users:signin')
 
-        if User.objects.filter(Q(email=login_value) | Q(phone_number=login_value),
-                               Q(phone_verified=False, email_verified=True)).distinct().exists():
-            messages.error(request, CUSTOM_MESSAGES['REQUIRED_PHONE_VERIFICATION'])
-            return redirect('users:signin')
-
-        if User.objects.filter(Q(email=login_value) | Q(phone_number=login_value),
-                               Q(phone_verified=True, email_verified=False)).distinct().exists():
+        if User.objects.filter(email=login_value, is_active=False).distinct().exists():
             messages.error(request, CUSTOM_MESSAGES['REQUIRED_EMAIL_VERIFICATION'])
             return redirect('users:signin')
 
-        check_user = User.objects.filter(Q(email=login_value) | Q(phone_number=login_value)).distinct().first()
+        check_user = User.objects.filter(email=login_value).distinct().first()
 
         user = authenticate(username=check_user.email, password=password)
         if not user:
@@ -262,8 +112,6 @@ class ActivationEmail(View):
 
             if PasswordResetTokenGenerator().check_token(user=user, token=_kw_token):
                 user.is_active = True
-                user.phone_verified = True
-                user.email_verified = True
                 user.save(force_update=True)
             else:
                 user.delete()
@@ -293,7 +141,6 @@ class ForgotPassword(View):
     def get(self, request, **kwargs):
         if request.user.is_authenticated:
             return redirect('home_page')
-        print(request.session.get('phone_number'))
         return render(request, 'users/forgot_pass.html')
 
     def post(self, request):
@@ -301,65 +148,21 @@ class ForgotPassword(View):
         if username and username.startswith('+'):
             username = username[1:]
 
-        if not User.objects.filter(Q(email=username) | Q(phone_number=username),
-                               account_type=request.POST.get("account_type")).distinct().exists():
+        if not User.objects.filter(email=username).distinct().exists():
             messages.error(request, CUSTOM_MESSAGES['EMAIL_NOT_FOUND'])
-            return redirect(reverse('users:password-reset') + f'?account_type={request.POST.get("account_type")}')
+            return redirect(reverse('users:password-reset'))
 
-        if '@' in username and User.objects.filter(email=username, email_verified=False).exists():
-            messages.error(request, CUSTOM_MESSAGES['VERIFY_EMAIL'])
-            return redirect(reverse('users:password-reset') + f'?account_type={request.POST.get("account_type")}')
-
-        if not User.objects.filter(Q(email=username) | Q(phone_number=username),
-                                   email_verified=True, phone_verified=True,
-                                   account_type=request.POST.get("account_type")).distinct().exists():
-            messages.error(request, CUSTOM_MESSAGES['SMTH_WENT_WRONG'])
-            return redirect(reverse('users:password-reset') + f'?account_type={request.POST.get("account_type")}')
-
-        if username.find('@') == -1 :
-            request.session['phone_number'] = username
-            print(username, "USER PASSWORD")
-            user = User.objects.filter(phone_number=username).first()
-            message_text = 'Verification code: '
-            if request.LANGUAGE_CODE == 'hy':
-                message_text = 'Հաստատման կոդ: '
-            elif request.LANGUAGE_CODE == 'ru':
-                message_text = 'Код верификации: '
-            user.send_otp_code(message_text)
-
-
-            return redirect(reverse('users:forgot-otp') + f'?account_type={request.POST.get("account_type")}')
-
-        data = {}
-        data['request'] = request
-        data['user'] = User.objects.filter(Q(email=username) | Q(phone_number=username)).distinct().first()
+        user = User.objects.filter(email=username).first()
+        
+        data = {
+            "request": request,
+            "user": user
+        }
         SendMail.send_password_reset_mail(data)
 
         messages.success(request, CUSTOM_MESSAGES['RESET_SUCCESS'])
 
         return redirect('users:signin')
-
-
-class ForgotOTP(View):
-
-    def get(self, request, **kwargs):
-        if self.request.user.is_authenticated or 'phone_number' not in request.session:
-            return redirect('home_page')
-        return render(request, 'users/forgot-otp.html')
-
-    def post(self, request, **kwargs):
-
-        data = json.loads(request.body)
-
-        user = User.objects.filter(phone_number=data['phone_number']).first()
-        print(data, 'BODY')
-        if user.verification_code != data['verify_code']:
-            return HttpResponse(status=400)
-
-        user.verification_code = ''
-        user.save()
-
-        return HttpResponse(status=200)
 
 
 class ForgotPasswordConfirm(View):
@@ -368,53 +171,43 @@ class ForgotPasswordConfirm(View):
         if request.user.is_authenticated:
             return redirect('home_page')
 
-        if 'phone_number' not in request.session:
-            _token = kwargs.get('token')
-            _uid = kwargs.get('uid64')
+        _token = kwargs.get('token')
+        _uid = kwargs.get('uid64')
 
-            session_token = request.session.get('password_reset_token')
-            user_id = urlsafe_base64_decode(_uid).decode()
+        user_id = urlsafe_base64_decode(_uid).decode()
 
-            try:
-                self.user = User.objects.get(id=user_id)
-            except User.DoesNotExist:
-                return HttpResponse(CUSTOM_MESSAGES['USER_NOT_FOUND'])
+        try:
+            self.user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return HttpResponse(CUSTOM_MESSAGES['USER_NOT_FOUND'])
 
-            if not PasswordResetTokenGenerator().check_token(user=self.user, token=_token) \
-                    or not session_token:
-                messages.error(request, CUSTOM_MESSAGES['INVALID_DATA'])
-                return redirect('users:password-reset')
+        if not PasswordResetTokenGenerator().check_token(user=self.user, token=_token):
+            messages.error(request, CUSTOM_MESSAGES['INVALID_DATA'])
+            return redirect('users:password-reset')
 
         return render(request, 'users/new_pass_company.html')
+    
+    def post(self, request, *args, **kwargs):
+        data = request.POST.dict()
+        
+        _uid = kwargs.get('uid64')
 
-    def post(self, request, **kwargs):
+        user_id = urlsafe_base64_decode(_uid).decode()
 
-        if 'phone_number' not in request.session:
-            form = request.POST.get('companyPassword')
-            _uid = kwargs.get('uid64')
-            user_id = urlsafe_base64_decode(_uid).decode()
-
-            try:
-                user = User.objects.get(id=user_id)
-            except User.DoesNotExist:
-                return HttpResponse(CUSTOM_MESSAGES['USER_NOT_FOUND'])
-
-            user.set_password(form)
-            user.save()
-            messages.success(request, CUSTOM_MESSAGES['PASSWORD_UPDATE_SUCCESS'])
-            return redirect('users:signin')
-        else:
-            try:
-                user = User.objects.get(phone_number=request.session['phone_number'])
-            except:
-                raise Http404
-
-            form = request.POST.get('companyPassword')
-            user.set_password(form)
-            user.save()
-            messages.success(request, CUSTOM_MESSAGES['PASSWORD_UPDATE_SUCCESS'])
-            return redirect('users:signin')
-
+        try:
+            self.user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return HttpResponse(CUSTOM_MESSAGES['USER_NOT_FOUND'])
+        
+        if data.get('password') != data.get('password2'):
+            messages.error(request, CUSTOM_MESSAGES['PASSWORD_MISS_MATCH'])            
+            return redirect(request.build_absolute_uri())
+        
+        self.user.set_password(data['password'])
+        self.user.save()
+        messages.success(request, CUSTOM_MESSAGES['SUCCESS_UPDATE_PASSWORD'])
+        return redirect('users:signin')        
+        
 
 class ProfileView(LoginRequiredMixin, View):
     login_url = 'users:signin'
@@ -460,25 +253,8 @@ class ProfileView(LoginRequiredMixin, View):
                 messages.error(request, CUSTOM_MESSAGES['DATETIME_ERROR'])
                 return redirect('users:profile')
 
-        if email:
-            if request.user.email != email:
-                if User.objects.filter(email=email).exists():
-                    messages.error(request, CUSTOM_MESSAGES['EMAIL_DUPLICATE'])
-                    return redirect('users:profile')
-            else:
-                email = None
-
-        if phone_number:
-            if request.user.phone_number != phone_number:
-                if User.objects.filter(phone_number=phone_number).exists():
-                    messages.error(request, CUSTOM_MESSAGES['EMAIL_DUPLICATE'])
-                    return redirect('users:profile')
-            else:
-                phone_number = None
-
-        form = UserCompanyModelForm(request.POST, instance=request.user) \
-            if request.user.account_type == 'company' \
-            else UserForm(request.POST or None, instance=request.user)
+        
+        form = UserForm(request.POST or None, instance=request.user)
 
         if form.is_valid():
             data = form.save(commit=False)

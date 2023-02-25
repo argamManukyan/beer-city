@@ -129,7 +129,6 @@ CUSTOM_CONTEXT_PROCESSORS = [
     'beercity.context_processors.get_domain',
     'wish.context_processors.get_wish',
     'cart.context_processors.get_cart',
-    'beercity.context_processors.delete_user',
 ]
 
 TEMPLATES[0]['OPTIONS']['context_processors'] += CUSTOM_CONTEXT_PROCESSORS

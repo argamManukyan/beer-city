@@ -7,7 +7,6 @@ from django.conf.urls.i18n import i18n_patterns
 from cart.views import AddToCartView, ChangeQuantityBasketView, RemoveFromBAsketView
 from flatpages.views import like_post
 from shop.views import create_rating, setcurrency, ajaxSearch, change_qty
-from users.views import check_otp, resend_otp_code
 from wish.views import add_to_wish
 
 urlpatterns = [
@@ -25,7 +24,6 @@ urlpatterns = [
     path('add-to-cart/', csrf_exempt(AddToCartView.as_view())),
     path('change-qty/', csrf_exempt(ChangeQuantityBasketView.as_view())),
     path('remove-basket/', csrf_exempt(RemoveFromBAsketView.as_view())),
-    path('check-otp/', csrf_exempt(check_otp), name='check_otp'),
     path('like/', csrf_exempt(like_post), name='like_post'),
     path('index/', include('shop.urls')),
     path('index/', include('wish.urls')),
