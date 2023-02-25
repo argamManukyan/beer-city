@@ -250,8 +250,8 @@ class Product(CustomMetaModel):
 
     def save(self, *args, **kwargs):
 
-        if self._state.adding:
-            self.product_custom_id = f'BC{int(time.time())}'
+        if not self.product_custom_id:
+            self.product_custom_id = f'BC0{int(time.time())}'
         
         self.finally_price = self.sale if self.sale > 1 else self.price
         if not self.slug:
