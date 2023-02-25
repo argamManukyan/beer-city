@@ -524,11 +524,8 @@
             const form = new FormData(document.getElementById('addToCartForm'))
 
             const qty = document.getElementById(`qty-{{ obj.id }}`)
-            
             const metaData = JSON.parse(qty.dataset.instance)
-            
-            console.log(metaData.has_volume)
-            if(metaData.has_volume === 'True'){
+            if(metaData.has_volume){
                 console.log(metaData.has_volume)
                 if (qty.value * parseFloat(volume.volume) > metaData.max_qty){
                     console.log(qty.value * volume.volume);
