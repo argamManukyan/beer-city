@@ -433,13 +433,13 @@ def change_qty(request, pk):
     if product.sale:
         return JsonResponse(
             {
-                "price": round(qty * calculate(product.price + items_total, request.session.get('currency'))),
-                "sale": round(qty * calculate(product.sale + items_total, request.session.get('currency'))),
-                "obj_price": round(calculate(product.price, request.session.get('currency'))),
-                "obj_sale": round(calculate(product.sale, request.session.get('currency')))
+                "price": "{:.0f}".format(qty * calculate(product.price + items_total, request.session.get('currency'))),
+                "sale": "{:.0f}".format(qty * calculate(product.sale + items_total, request.session.get('currency'))),
+                "obj_price": "{:.0f}".format(calculate(product.price, request.session.get('currency'))),
+                "obj_sale": "{:.0f}".format(calculate(product.sale, request.session.get('currency')))
              })
     return JsonResponse(
         {
-            "price": round(qty * calculate(product.price + items_total, request.session.get('currency'))),
-            "obj_price": round(calculate(product.price, request.session.get('currency'))),
+            "price": "{:.0f}".format(qty * calculate(product.price + items_total, request.session.get('currency'))),
+            "obj_price": "{:.0f}".format(calculate(product.price, request.session.get('currency'))),
         })
