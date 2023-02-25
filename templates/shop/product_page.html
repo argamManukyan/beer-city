@@ -527,8 +527,8 @@
             const metaData = JSON.parse(qty.dataset.instance)
             if(metaData.has_volume){
                 console.log(metaData.has_volume)
-                if (qty.value * parseFloat(volume.volume) > metaData.max_qty){
-                    console.log(qty.value * volume.volume);
+                if (qty.value * parseFloat(metaData.volume) > metaData.max_qty){
+                    console.log(qty.value * metaData.volume);
                     qty.setAttribute('disabled', true)
                     qty.value = +qty.getAttribute('max')
                     if(document.getElementById('warningMaxQuantity')){
