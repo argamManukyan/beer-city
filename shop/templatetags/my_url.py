@@ -178,14 +178,14 @@ def breadcrumbs(categories: Category, request):
                 item.get_absolute_url(),
                 f"""
                     <a href="{item.get_absolute_url()}" class="linkcolor">
-                        <span class="val">{ item.title }</span>
+                        <span class="val">{ item.name }</span>
                     </a>
                  """,
                 f"""
                 <span class="bread-arrow">→</span>
                 <li class="breadcrumbs-item">
                     <a href="{item.get_absolute_url()}"
-                       class="breadcrumbs-link">{item.title}</a>
+                       class="breadcrumbs-link">{item.name}</a>
                 </li>
                 """
             )
