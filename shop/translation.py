@@ -98,7 +98,3 @@ class ColorTranslationOptions(TranslationOptions):
 @register(Product)
 class ProductTranslationOptions(TranslationOptions):
     fields = ['name', 'large_description', 'meta_title', 'meta_description']
-
-@register(Ingredient)
-class IngredientTranslationOptions(TranslationOptions):
-    fields = ['name']

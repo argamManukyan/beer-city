@@ -212,16 +212,10 @@ class Product(CustomMetaModel):
     main_image = CustomLogoField(upload_to='product-img/', blank=True, default='defaults/product.jpg')
     color = models.ForeignKey(Color, on_delete=models.SET_NULL, null=True, blank=True)
     finally_price = models.PositiveIntegerField(verbose_name='', default=0, editable=False)
-    mark_as_bestseller_count = models.PositiveSmallIntegerField(default=1,
-                                                                verbose_name='Վաճառքի քանակ, որից հետո ապրանքը'
-                                                                             ' կհամարվի best seller ')
     my_order = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Դասավորել')
     special_offer = models.BooleanField(default=False, verbose_name="Հատուկ առաջարկ")
     # TODO: after sold selected count of this product mark as best seller
     best_seller = models.BooleanField(default=False, verbose_name="Բեսթսելեր")
-    # TODO: Implement logic for filter price
-    bonus_day_not_working = models.BooleanField(default=False,
-                                                verbose_name='Անտեսել բաժնի / բաժինների վրա տարածվող զեղչը')
     product_code = models.CharField(max_length=255,
                                     blank=True,
                                     null=True, 
@@ -305,23 +299,6 @@ class RatingProduct(CustomModel):
         return f'{self.product.name} - {self.rating}'
 
 
-class Ingredient(models.Model):
-    """ Ingredient table for occasions """
-
-    product = models.OneToOneField("Product", on_delete=models.CASCADE, blank=True, null=True)
-    name = models.CharField(max_length=255, verbose_name='Ապրանքի անվանում')
-    price = models.IntegerField(default=0, verbose_name='Ապրանքի գին')
-    is_active = models.BooleanField(default=True, verbose_name='Առկա է')
-    main_image = CustomLogoField()
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Ինգրեդիենտ'
-        verbose_name_plural = 'Ինգրեդիենտներ'
-
-
 class ProductImage(CustomModel):
     """ Product images table """
 
@@ -378,42 +355,6 @@ class UnitMeasurement(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class ProductIngredient(models.Model):
-    """ for canape """
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='ingredients')
-    ingredients = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name='product_ingredients')
-    qty = models.PositiveIntegerField(default=1)
-    total_price = models.FloatField(default=0)
-    my_order = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Դասավորել')
-    infinite = models.BooleanField(default=False, verbose_name='Անսահմանափակ')
-    measure_unit = models.ForeignKey(
-                                UnitMeasurement,
-                                on_delete=models.SET_NULL,
-                                null=True,
-                                blank=True,
-                                verbose_name='Չափման միավոր'
-                            )
-
-    def __str__(self):
-        return str(self.pk)
-
-    def save(self, *args, **kwargs):
-        if self.total_price == 0:
-            self.total_price = self.qty * self.ingredients.price
-
-        super().save(*args, **kwargs)
-
-    def clean(self):
-        if self.pk and self.ingredients.product and self.product.pk == self.ingredients.product_id:
-            raise ValidationError({"ingredients": "Ապրանքը չի կարող լինել ինքն իրեն որպես ինգրեդիենտ"})
-
-    class Meta:
-        verbose_name = 'Ապրանքի Ինգրեդիենտ'
-        verbose_name_plural = 'Ապրանքի Ինգրեդիենտներ'
-        unique_together = ['product', 'ingredients']
-        ordering = ['my_order']
 
 
 class HomepageBanners(models.Model):

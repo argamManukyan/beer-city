@@ -30,12 +30,6 @@ class ProductFeatureInlineAdmin(SortableInlineAdminMixin, admin.TabularInline):
     form = select2_modelform(model,  attrs={"width": "250px"})
 
 
-class ProductIngredientInlineAdmin(SortableInlineAdminMixin, admin.TabularInline):
-    model = ProductIngredient
-    extra = 0
-    form = select2_modelform(model,  attrs={"width": "250px"})
-
-
 def set_meta_fields_before_form(resp):
     """ custom method for moving meta fields """
 
@@ -53,11 +47,15 @@ class SliderAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
 
     def get_xl_image(self, instance: Slider):
         if instance.xl_image:
-            return mark_safe('<img src="{}" height="120px" width="120px" />'.format(instance.xl_image.url))
+            return mark_safe(
+                f'<img src="{instance.xl_image.url}" height="120px" width="120px" />'
+            )
 
     def get_lg_image(self, instance: Slider):
         if instance.lg_image:
-            return mark_safe('<img src="{}" height="120px" width="320px" />'.format(instance.lg_image.url))
+            return mark_safe(
+                f'<img src="{instance.lg_image.url}" height="120px" width="320px" />'
+            )
 
     get_xl_image.short_description = 'Mobile Նկար'
     get_lg_image.short_description = 'Desktop Նկար'
@@ -71,9 +69,7 @@ class CategoryAdmin(TabbedDjangoJqueryTranslationAdmin, DraggableMPTTAdmin):
 
     def get_fields(self, request, obj=None):
         resp = super().get_fields(request, obj)
-        if 'meta_title' in resp:
-            return set_meta_fields_before_form(resp)
-        return resp
+        return set_meta_fields_before_form(resp) if 'meta_title' in resp else resp
 
 
 #     # fieldsets = [
@@ -93,21 +89,22 @@ class CategoryAdmin(TabbedDjangoJqueryTranslationAdmin, DraggableMPTTAdmin):
 #
 
 class ProductAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
-    inlines = [ProductFeatureInlineAdmin, ProductImageInlineAdmin, ProductIngredientInlineAdmin]
+    inlines = [ProductFeatureInlineAdmin, ProductImageInlineAdmin]
     form = ProductForm
     list_filter = ['category']
     search_fields = ['name', 'product_code', 'name_ru', 'name_en']
 
     def get_image(self, obj):
         if obj.main_image:
-            return mark_safe('<img src="{}" height="200px" width="200px" />'.format(obj.main_image.url))
+            return mark_safe(
+                f'<img src="{obj.main_image.url}" height="200px" width="200px" />'
+            )
 
     get_image.short_description = "Նկար"
     list_display = ['get_image', 'name', 'price', 'sale',  'product_code']
 
 
 admin.site.register(Product, ProductAdmin)
-admin.site.register(Ingredient)
 
 
 @admin.register(Color)
