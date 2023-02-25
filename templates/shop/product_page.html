@@ -526,7 +526,7 @@
             const qty = document.getElementById(`qty-{{ obj.id }}`)
             
             const metaData = JSON.parse(JSON.stringify(qty.dataset.instance))
-            log(metaData)
+            console.log(metaData)
             if (+qty.value < +qty.getAttribute('min')) {
                 qty.setAttribute('disabled', true)
                 qty.value = +qty.getAttribute('min')
