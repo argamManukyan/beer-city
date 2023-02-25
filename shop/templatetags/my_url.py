@@ -160,34 +160,40 @@ def breadcrumbs(categories: Category, request):
 
     product = Product.objects.get(slug__iexact=slug)
 
+    get_parent_categories = list(filter(lambda x: x.parent is None, categories.all()))
     if has_error:
-        get_parent_categories = list(filter(lambda x: x.parent is None, categories.all()))
         if not get_parent_categories:
             bin_tree = main_category_tree(bred_category, product)
         else:
             bred_category = get_parent_categories[0]
             bin_tree = main_category_tree(bred_category, product)
     else:
-        bin_tree = main_category_tree(bred_category, product)
+        try:
+            bred_category = get_parent_categories[0]
+            bin_tree = main_category_tree(bred_category, product)
+        except Exception as e:
+            selected_cat = bred_category
+            while selected_cat.parent:
+                selected_cat = selected_cat.parent
 
-    breadcrumb_elements = []
-    for item in bin_tree:
+            bin_tree = main_category_tree(selected_cat, product)
 
-        breadcrumb_elements.append(
-            (   
-                item.get_absolute_url(),
-                f"""
+    return [
+        (
+            item.get_absolute_url(),
+            f"""
                     <a href="{item.get_absolute_url()}" class="linkcolor">
-                        <span class="val">{ item.name }</span>
+                        <span class="val">{item.name}</span>
                     </a>
-                 """,
-                f"""
-                <li class="breadcrumbs-item">
+                """,
+            f"""
+                <span class="bread-arrow">→</span>
+                <li class="b-list-item">
                     <a href="{item.get_absolute_url()}"
-                       class="breadcrumbs-link">{item.name}</a>
+                       class="b-list-link">{item.name}</a>
                 </li>
-                """
-            )
+            """
         )
+        for item in bin_tree
+    ]
 
-    return breadcrumb_elements
