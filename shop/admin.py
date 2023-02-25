@@ -85,7 +85,7 @@ class ProductAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
     inlines = [ProductFeatureInlineAdmin, ProductImageInlineAdmin]
     form = ProductForm
     list_filter = ['category']
-    search_fields = ['name', 'product_code', 'name_ru', 'name_en']
+    search_fields = ['name', 'name_ru', 'name_en', 'product_code', 'product_custom_id']
     readonly_fields = ['product_custom_id', 'sold_count']
     
     def get_image(self, obj):
