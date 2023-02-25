@@ -231,6 +231,7 @@ class Product(CustomMetaModel):
     buy_with_this_item = models.ManyToManyField('self', blank=True, related_name='buywiththis',
                                                 verbose_name='Այս ապրանքի հետ գնում են նաև')
     show_minus_and_plus = models.BooleanField(default=True, verbose_name="Ցուցադրել «+» և «-» նշանները ապրանքի բլոկում")
+    show_products = models.BooleanField(default=True, verbose_name='Ցուցադրել կայքում')
     
     def __str__(self):
         return self.name
