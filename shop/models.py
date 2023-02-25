@@ -207,6 +207,7 @@ class Product(CustomMetaModel):
     price = models.IntegerField(default=0, verbose_name='Ապրանքի գին')
     sale = models.IntegerField(default=0, verbose_name='Ապրանքի զեղչված գին')
     is_active = models.BooleanField(default=True, verbose_name='Առկա է')
+    show_products = models.BooleanField(default=True, verbose_name='Ցուցադրել կայքում')
     min_qty = models.PositiveSmallIntegerField(default=1, verbose_name='Թույլատրելի մինիմալ քանակություն')
     max_qty = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='Թույլատրելի մաքսիմալ քանակություն')
     main_image = CustomLogoField(upload_to='product-img/', blank=True, default='defaults/product.jpg')
@@ -231,7 +232,6 @@ class Product(CustomMetaModel):
     buy_with_this_item = models.ManyToManyField('self', blank=True, related_name='buywiththis',
                                                 verbose_name='Այս ապրանքի հետ գնում են նաև')
     show_minus_and_plus = models.BooleanField(default=True, verbose_name="Ցուցադրել «+» և «-» նշանները ապրանքի բլոկում")
-    show_products = models.BooleanField(default=True, verbose_name='Ցուցադրել կայքում')
     
     def __str__(self):
         return self.name

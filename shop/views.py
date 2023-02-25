@@ -95,7 +95,7 @@ class HomePageView(View):
         slider = Slider.objects.all()
         slider_image = SliderPhoneImage.objects.first()
         # Special offers
-        special_offers = Product.objects.filter(special_offer=True)[:settings.SLIDING_COUNT]
+        special_offers = Product.objects.filter(special_offer=True, show_products=True)[:settings.SLIDING_COUNT]
         
         used_ids = [special_offers.values_list('id', flat=True)]
         
@@ -141,11 +141,11 @@ class CategoryDetailView(ShopMixin):
         list_id_category = [i.id for i in category.get_descendants(include_self=True)]
 
         category_min_price = Product.objects.filter(
-            category__in=list_id_category).aggregate(min_price=Min('finally_price'))['min_price'] or 0
+            category__in=list_id_category, show_products=True).aggregate(min_price=Min('finally_price'))['min_price'] or 0
         category_max_price = Product.objects.filter(
-            category__in=list_id_category).aggregate(max_price=Max('finally_price'))['max_price'] or 0
+            category__in=list_id_category, show_products=True).aggregate(max_price=Max('finally_price'))['max_price'] or 0
 
-        products = Product.objects.filter(category__in=list_id_category).order_by('-id').distinct()
+        products = Product.objects.filter(category__in=list_id_category, show_products=True).order_by('-id').distinct()
         page_obj = self.filter_products(products)
 
         filter_fields = FilterField.objects.filter(Q(productfeature__product__category__in=list_id_category) |
@@ -179,7 +179,7 @@ class CategoryDetailView(ShopMixin):
 
 class ProductDetailView(DetailView):
     model = Product
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(show_products=True)
     slug_field = 'slug'
     template_name = 'shop/product_page.html'
     context_object_name = 'obj'
@@ -222,11 +222,11 @@ class ProductDetailView(DetailView):
         context["breadcrumbs"] = bred_category.get_ancestors(include_self=True)
 
         # bellow sections
-        recently_views = Product.objects.filter(id__in=self.add_viewed_list()).exclude(
+        recently_views = Product.objects.filter(id__in=self.add_viewed_list(), show_products=True).exclude(
             pk=self.get_object().pk).distinct()
         buy_with_this_item = self.get_object().buy_with_this_item.exclude(
             Q(id__in=recently_views.values_list('id', flat=True)) | Q(id=self.get_object().pk)).distinct()
-        category_items = Product.objects.filter(
+        category_items = Product.objects.filter(show_products=True,
             category__in=self.get_object().category.first().get_family().values_list(
                 'id', flat=True)).exclude(
             Q(id__in=recently_views.values_list('id', flat=True)) | Q(id=self.get_object().pk) |
@@ -320,7 +320,7 @@ class SaleOfferNewBestSellerView(ShopMixin):
         return products
 
     def get(self, request, **kwargs):
-        products = self.get_queryset(Product.objects.filter(is_active=True))
+        products = self.get_queryset(Product.objects.filter(is_active=True, show_products=True))
         category_min_price = products.aggregate(min_price=Min('finally_price'))['min_price'] or 0
         category_max_price = products.aggregate(max_price=Max('finally_price'))['max_price'] or 0
 
@@ -371,7 +371,7 @@ class SearchView(ShopMixin):
     def get(self, request, **kwargs):
 
         q = request.GET.get('q')
-        products = Product.objects.all()
+        products = Product.objects.filter(show_products=True)
         if q:
             products = products.filter(Q(name__icontains=q) | Q(slug__icontains=q))
         page_obj = self.filter_products(products)
@@ -411,7 +411,8 @@ def ajaxSearch(request):
     return_dict['products'] = list()
     if data or data == "":
         products = Product.objects.filter(Q(name__icontains=data) | Q(slug__icontains=data) |
-                                          Q(product_code__contains=data)).distinct().order_by('?')[:15]
+                                          Q(product_code__contains=data), Q(show_products=True)
+                                          ).distinct().order_by('?')[:15]
         for product in products:
             new_dict = dict()
             new_dict['name'] = product.name
@@ -424,7 +425,7 @@ def ajaxSearch(request):
 
 
 def change_qty(request, pk):
-    product = Product.objects.get(pk=pk)
+    product = Product.objects.get(pk=pk, show_products=True)
     items = {k: v for k, v in request.GET.items() if k != "qty" and v != ""}
     values = list(items.values())
     qty = int(request.GET.get('qty'))
