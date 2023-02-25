@@ -1,7 +1,7 @@
 import json
 from decimal import Decimal
 import random
-
+from django.template.defaultfilters import floatformat
 import requests
 from currencies.models import Currency
 from currencies.utils import calculate
@@ -433,13 +433,13 @@ def change_qty(request, pk):
     if product.sale:
         return JsonResponse(
             {
-                "price": "{:.0f}".format(qty * calculate(product.price + items_total, request.session.get('currency'))),
-                "sale": "{:.0f}".format(qty * calculate(product.sale + items_total, request.session.get('currency'))),
-                "obj_price": "{:.0f}".format(calculate(product.price, request.session.get('currency'))),
-                "obj_sale": "{:.0f}".format(calculate(product.sale, request.session.get('currency')))
+                "price": floatformat(format(qty * calculate(product.price + items_total, request.session.get('currency')))),
+                "sale": floatformat(format(qty * calculate(product.sale + items_total, request.session.get('currency')))),
+                "obj_price": floatformat(format(calculate(product.price, request.session.get('currency')))),
+                "obj_sale": floatformat(format(calculate(product.sale, request.session.get('currency'))))
              })
     return JsonResponse(
         {
-            "price": "{:.0f}".format(qty * calculate(product.price + items_total, request.session.get('currency'))),
-            "obj_price": "{:.0f}".format(calculate(product.price, request.session.get('currency'))),
+            "price": floatformat(format(qty * calculate(product.price + items_total, request.session.get('currency')))),
+            "obj_price": floatformat(format(calculate(product.price, request.session.get('currency')))),
         })
