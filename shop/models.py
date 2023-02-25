@@ -68,7 +68,8 @@ class Category(MPTTModel, CustomMetaModel):
     breadcrumb_image = CustomLogoField(verbose_name='Բաժնի բանների նկար', 
                                        default='defaults/category-banner.jpg',
                                        blank=True, null=True, upload_to='cat-bg-image/')
-
+    social_image = CustomLogoField(verbose_name='Social Media նկար', 
+                                   upload_to='cat-social-image/', blank=True, null=True)
     short_description = models.TextField(blank=True, null=True, verbose_name='Հակիրճ նկարագրություն')
     color = ColorField(default='#FF0000', blank=True, null=True, verbose_name='Background -ի գույն',
                        help_text='Ընտրված գույնը երևում է գլխավոր էջում, որպես տվյալ բաժնի ֆոնի գույն')
