@@ -251,7 +251,8 @@ class Product(CustomMetaModel):
     def save(self, *args, **kwargs):
 
         if not self.product_custom_id:
-            self.product_custom_id = f'BC0{int(time.time())}'
+            n = f'{int(time.time())}'
+            self.product_custom_id = f'BC0{n[:8]}'
         
         self.finally_price = self.sale if self.sale > 1 else self.price
         if not self.slug:
