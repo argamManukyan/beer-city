@@ -291,13 +291,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Catedory inheritance products end -->
-                                    {% endif %}
-                                    <!-- Radio and Select -->
-                                    {#                                <form class="pr-options" id="addToCartForm" onchange='featureForm(this,`{{ obj.id }}`,`#}
-                                    {#                                    {{ obj.price|currency:request.session.currency }}`,`#}
-                                    {#                                    {{ obj.sale|currency:request.session.currency }}`)'>#}
-                                    <!-- Radio button -->
                                     <form class="pr-options" id="addToCartForm" onchange="fetchPrice()">
                                         {% for field in variant_fields %}
                                         {% if field.field_type == 'radio' %}
