@@ -249,7 +249,7 @@
                                             <div class="alert-min alert-danger" id="warningQuantity" style="display: none">
                                                 <div class="align-items-center">
                                                     <img src="{% static 'img/icons/alert-warning.svg' %}" class="alert-img" alt="{% trans 'Ծանուցում' %}">
-                                                    <span>{% trans 'Պատվերի նվազագույն քանակը' %} <strong id="warningQuantityValue"></strong> {% trans 'հատ է' %}։
+                                                    <span>{% trans 'Պատվերի նվազագույն քանակը' %} <strong id="warningQuantityValue">{% if not obj|volumeChecker|checkPcs %}{{ obj.min_qty }}{% endif %}</strong> {% if not obj|volumeChecker|checkPcs %}{% trans 'հատ է' %}{% else %}{% trans 'լիտր է' %}{% endif %}։
                                                     </span>
                                                 </div>
                                             </div>
@@ -258,7 +258,7 @@
                                             <div class="alert-min alert-danger" id="warningMaxQuantity" style="display: none">
                                                 <div class="align-items-center">
                                                     <img src="{% static 'img/icons/alert-warning.svg' %}" class="alert-img" alt="{% trans 'Ծանուցում' %}">
-                                                    <span>{% trans 'Պատվերի մաքսիմալ քանակը' %} <strong id="warningMaxQuantityValue"></strong> {% trans 'հատ է' %}։
+                                                    <span>{% trans 'Պատվերի մաքսիմալ քանակը' %} <strong id="warningMaxQuantityValue">{% if not obj|volumeChecker|checkPcs %}{{obj.max_qty}}{% endif %}</strong> {% if not obj|volumeChecker|checkPcs %}{% trans 'հատ է' %}{% else %}{% trans 'լիտր է' %}{% endif %}։
                                                     </span>
                                                 </div>
                                             </div>
@@ -526,11 +526,10 @@
             const qty = document.getElementById(`qty-{{ obj.id }}`)
             const metaData = JSON.parse(qty.dataset.instance)
             if(metaData.has_volume){
-                console.log(metaData.has_volume)
                 if (qty.value * parseFloat(metaData.volume) > metaData.max_qty){
-                    console.log(qty.value * metaData.volume);
-                    qty.setAttribute('disabled', true)
                     qty.value = +qty.getAttribute('max')
+                    document.getElementById('warningMaxQuantityValue').innerText = qty.value * metaData.volume;
+                    qty.setAttribute('disabled', true)
                     if(document.getElementById('warningMaxQuantity')){
                         document.getElementById('warningMaxQuantity').style.display = 'block'
                     }

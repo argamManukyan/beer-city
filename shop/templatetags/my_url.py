@@ -215,4 +215,9 @@ def volumeChecker(product: Product):
             "volume": volume
             })
    
-    return  json.dumps({"min_qty": product.min_qty, "max_qty": product.max_qty, "has_volume": False})
+    return  json.dumps({"min_qty": product.min_qty, "max_qty": product.max_qty, 
+                        "has_volume": False, "volume": volume})
+    
+@register.filter
+def checkPcs(props: dict):
+    return props["volume"]
