@@ -213,7 +213,6 @@ class ProductDetailView(DetailView):
         context['variant_values'] = context['main_fields'].filter(field__is_main=True).order_by('price')
 
         context['features'] = context['main_fields'].filter(field__is_main=False)
-        context['ingredients'] = ProductIngredient.objects.filter(product=self.get_object())
         try:
             latest_visited_cat = self.request.META.get('HTTP_REFERER').split('/')[-2]
             bred_category = Category.objects.get(slug=latest_visited_cat)

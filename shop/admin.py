@@ -93,7 +93,8 @@ class ProductAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
     form = ProductForm
     list_filter = ['category']
     search_fields = ['name', 'product_code', 'name_ru', 'name_en']
-
+    readonly_fields = ['product_custom_id', 'sold_count']
+    
     def get_image(self, obj):
         if obj.main_image:
             return mark_safe(
