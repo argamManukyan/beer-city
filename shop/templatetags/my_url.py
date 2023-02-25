@@ -150,13 +150,8 @@ def breadcrumbs(categories: Category, request):
     slug = request.resolver_match.kwargs.get('slug')
 
     has_error = False
-    try:
-        latest_visited_cat = request.META.get('HTTP_REFERER').split('/')[-2]
-        bred_category = Category.objects.get(slug=latest_visited_cat, is_active=True)
-    except:
-        # when user signed in with product link
-        has_error = True
-        bred_category = categories.first()
+    
+    bred_category = categories.first()
 
     product = Product.objects.get(slug__iexact=slug)
 
