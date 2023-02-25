@@ -529,6 +529,7 @@
             
             if(metaData.has_volume){
                 if (qty.value * volume.volume > metaData.max_qty){
+                    console.log(qty.value * volume.volume);
                     qty.setAttribute('disabled', true)
                     qty.value = +qty.getAttribute('max')
                     if(document.getElementById('warningMaxQuantity')){
