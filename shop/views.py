@@ -440,8 +440,8 @@ def ajaxSearch(request):
     return_dict['products'] = list()
     if data or data == "":
         products = Product.objects.filter(Q(name__icontains=data) | Q(slug__icontains=data) |
-                                          Q(product_code__contains=data), Q(
-                                              show_products=True)
+                                          Q(product_code__contains=data) | Q(product_custom_id__icontains=data)
+                                          , Q(show_products=True)
                                           ).distinct().order_by('?')[:15]
         for product in products:
             new_dict = dict()
