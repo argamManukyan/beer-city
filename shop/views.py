@@ -1,3 +1,6 @@
+from .models import *
+from .mixins import ShopMixin
+from itertools import product
 import json
 from decimal import Decimal
 import random
@@ -18,9 +21,6 @@ from videos.models import Video
 
 FURSHET_SLUG = settings.FURSHET_CATEGORY_SLUG_NAME
 MENU_SLUG = settings.MENU_CATEGORY_SLUG_NAME
-
-from .mixins import ShopMixin
-from .models import *
 
 
 @csrf_exempt
@@ -73,7 +73,8 @@ def setcurrency(request):
 
     if request.method == 'POST':
         request.session['currency'] = request.POST['currency']
-        request.session['currency_icon'] = Currency.objects.get(code__icontains=request.POST['currency']).symbol
+        request.session['currency_icon'] = Currency.objects.get(
+            code__icontains=request.POST['currency']).symbol
         return HttpResponseRedirect(last_link)
     return HttpResponseRedirect(last_link)
 
@@ -95,17 +96,19 @@ class HomePageView(View):
         slider = Slider.objects.all()
         slider_image = SliderPhoneImage.objects.first()
         # Special offers
-        special_offers = Product.objects.filter(special_offer=True, show_products=True)[:settings.SLIDING_COUNT]
-        
+        special_offers = Product.objects.filter(special_offer=True, show_products=True)[
+            :settings.SLIDING_COUNT]
+
         used_ids = [special_offers.values_list('id', flat=True)]
-        
+
         # Banners
         banners = HomepageBanners.objects.all()
-        
-        homepage_categories = Category.objects.filter(show_in_header=True).distinct()
+
+        homepage_categories = Category.objects.filter(
+            show_in_header=True).distinct()
         bullets = Bullets.objects.all()
         video_and_text = Video.objects.filter(location='home').first()
- 
+
         # new_products = Product.objects.filter(~Q(id__in=used_ids))
         new_products = Product.objects.all()
         # if new_products.exists():
@@ -113,10 +116,10 @@ class HomePageView(View):
         #         settings.SLIDING_COUNT = len(new_products)
         #     new_products = random.sample(new_products.order_by('?'), settings.SLIDING_COUNT)
         #     used_ids.extend([i.id for i in new_products])
-        
+
         # sale_products = Product.objects.filter(sale__gt=0).exclude(id__in=used_ids).order_by('?')[:settings.SLIDING_COUNT]
         sale_products = Product.objects.filter(sale__gt=0)
-        
+
         context = {
             "slider": slider,
             "sale_products": sale_products,
@@ -138,14 +141,16 @@ class CategoryDetailView(ShopMixin):
     def get(self, request, **kwargs):
         category = get_object_or_404(Category, slug=kwargs['slug'])
 
-        list_id_category = [i.id for i in category.get_descendants(include_self=True)]
+        list_id_category = [
+            i.id for i in category.get_descendants(include_self=True)]
 
         category_min_price = Product.objects.filter(
             category__in=list_id_category, show_products=True).aggregate(min_price=Min('finally_price'))['min_price'] or 0
         category_max_price = Product.objects.filter(
             category__in=list_id_category, show_products=True).aggregate(max_price=Max('finally_price'))['max_price'] or 0
 
-        products = Product.objects.filter(category__in=list_id_category, show_products=True).order_by('-id').distinct()
+        products = Product.objects.filter(
+            category__in=list_id_category, show_products=True).order_by('-id').distinct()
         page_obj = self.filter_products(products)
 
         filter_fields = FilterField.objects.filter(Q(productfeature__product__category__in=list_id_category) |
@@ -157,8 +162,9 @@ class CategoryDetailView(ShopMixin):
                                                        productfeature__field__show_in_filters=True),
                                                      Q(productfeature__value__isnull=False)).distinct()
         colors = Color.objects.filter(product__category=category).distinct()
-        brands = Brand.objects.filter(product__category__in=list_id_category).distinct()
-        
+        brands = Brand.objects.filter(
+            product__category__in=list_id_category).distinct()
+
         if self.request.is_ajax():
             return self.show_filter_data(products, lazy=True)
 
@@ -197,8 +203,10 @@ class ProductDetailView(DetailView):
         context = super().get_context_data(**kwargs)
 
         context['ratings'] = Rating.objects.order_by('-value')
-        context['middle_score'] = self.get_object().ratingproduct_set.aggregate(middle=Avg('rating__value'))
-        context['middle'] = float('{:.1f}'.format(context['middle_score'].get('middle') or 0))
+        context['middle_score'] = self.get_object(
+        ).ratingproduct_set.aggregate(middle=Avg('rating__value'))
+        context['middle'] = float('{:.1f}'.format(
+            context['middle_score'].get('middle') or 0))
         context['user_block'] = RatingProduct.objects.filter(ip=get_ip(self.request),
                                                              product_id=self.get_object().id).exists()
         context['user_rating'] = None
@@ -209,14 +217,18 @@ class ProductDetailView(DetailView):
                                                                is_main=True,
                                                                productfeature__value__isnull=False).distinct()
         context['main_fields'] = self.get_object().productfeature_set.all()
-        context['variant_values'] = context['main_fields'].filter(field__is_main=True).order_by('price')
+        context['variant_values'] = context['main_fields'].filter(
+            field__is_main=True).order_by('price')
 
-        context['features'] = context['main_fields'].filter(field__is_main=False)
+        context['features'] = context['main_fields'].filter(
+            field__is_main=False)
         try:
-            latest_visited_cat = self.request.META.get('HTTP_REFERER').split('/')[-2]
+            latest_visited_cat = self.request.META.get(
+                'HTTP_REFERER').split('/')[-2]
             bred_category = Category.objects.get(slug=latest_visited_cat)
         except:
-            bred_category = Category.objects.filter(product__slug__iexact=self.get_object().slug).first()
+            bred_category = Category.objects.filter(
+                product__slug__iexact=self.get_object().slug).first()
 
         context["breadcrumbs"] = bred_category.get_ancestors(include_self=True)
 
@@ -226,8 +238,8 @@ class ProductDetailView(DetailView):
         buy_with_this_item = self.get_object().buy_with_this_item.exclude(
             Q(id__in=recently_views.values_list('id', flat=True)) | Q(id=self.get_object().pk)).distinct()
         category_items = Product.objects.filter(show_products=True,
-            category__in=self.get_object().category.first().get_family().values_list(
-                'id', flat=True)).exclude(
+                                                category__in=self.get_object().category.first().get_family().values_list(
+                                                    'id', flat=True)).exclude(
             Q(id__in=recently_views.values_list('id', flat=True)) | Q(id=self.get_object().pk) |
             Q(id__in=buy_with_this_item.values_list('id', flat=True))).distinct()
 
@@ -252,14 +264,17 @@ def create_rating(request):
     product_id = data.get('product')
     try:
         product_rating, _ = RatingProduct.objects.update_or_create(product_id=product_id,
-                                                                   ip=get_ip(request),
-                                                                   defaults={'rating_id': rating_id.id}
+                                                                   ip=get_ip(
+                                                                       request),
+                                                                   defaults={
+                                                                       'rating_id': rating_id.id}
                                                                    )
 
     except Exception as e:
         return HttpResponse(status=400)
 
-    middle_score = RatingProduct.objects.filter(product_id=product_id).aggregate(middle=Avg('rating__value'))
+    middle_score = RatingProduct.objects.filter(
+        product_id=product_id).aggregate(middle=Avg('rating__value'))
     middle = float('{:.1f}'.format(middle_score.get('middle')))
     return JsonResponse({'success': 'Rating created', 'rating': middle})
 
@@ -319,11 +334,15 @@ class SaleOfferNewBestSellerView(ShopMixin):
         return products
 
     def get(self, request, **kwargs):
-        products = self.get_queryset(Product.objects.filter(is_active=True, show_products=True))
-        category_min_price = products.aggregate(min_price=Min('finally_price'))['min_price'] or 0
-        category_max_price = products.aggregate(max_price=Max('finally_price'))['max_price'] or 0
+        products = self.get_queryset(Product.objects.filter(
+            is_active=True, show_products=True))
+        category_min_price = products.aggregate(
+            min_price=Min('finally_price'))['min_price'] or 0
+        category_max_price = products.aggregate(
+            max_price=Max('finally_price'))['max_price'] or 0
 
-        filter_fields = FilterField.objects.filter(Q(productfeature__value__isnull=False)).distinct()
+        filter_fields = FilterField.objects.filter(
+            Q(productfeature__value__isnull=False)).distinct()
 
         featured_values = FilterValue.objects.filter(productfeature__field__show_in_filters=True,
                                                      productfeature__value__isnull=False).distinct()
@@ -342,16 +361,20 @@ class SaleOfferNewBestSellerView(ShopMixin):
 
         if request.GET.get('type') in ['new', 'sale', 'best_seller', 'special_offer']:
             if request.GET.get('type') == 'new' or not request.GET.get('type'):
-                st_content = BreadcrumbTexts.objects.filter(location='new').first()
+                st_content = BreadcrumbTexts.objects.filter(
+                    location='new').first()
                 context['st_content'] = st_content
             if request.GET.get('type') == 'sale':
-                st_content = BreadcrumbTexts.objects.filter(location='sale').first()
+                st_content = BreadcrumbTexts.objects.filter(
+                    location='sale').first()
                 context['st_content'] = st_content
             if request.GET.get('type') == 'best_seller':
-                st_content = BreadcrumbTexts.objects.filter(location='best_seller').first()
+                st_content = BreadcrumbTexts.objects.filter(
+                    location='best_seller').first()
                 context['st_content'] = st_content
             if request.GET.get('type') == 'special_offer':
-                st_content = BreadcrumbTexts.objects.filter(location='special_offer').first()
+                st_content = BreadcrumbTexts.objects.filter(
+                    location='special_offer').first()
                 context['st_content'] = st_content
 
             context.update({
@@ -372,13 +395,20 @@ class SearchView(ShopMixin):
         q = request.GET.get('q')
         products = Product.objects.filter(show_products=True)
         if q:
-            products = products.filter(Q(name__icontains=q) | Q(slug__icontains=q))
+            products = products.filter(
+                Q(name__icontains=q)
+                | Q(slug__icontains=q)
+                | Q(product_custom_id__icontains=q)
+                | Q(product_code__icontains=q)).distinct()
         page_obj = self.filter_products(products)
 
-        category_min_price = products.aggregate(min_price=Min('finally_price'))['min_price'] or 0
-        category_max_price = products.aggregate(max_price=Max('finally_price'))['max_price'] or 0
+        category_min_price = products.aggregate(
+            min_price=Min('finally_price'))['min_price'] or 0
+        category_max_price = products.aggregate(
+            max_price=Max('finally_price'))['max_price'] or 0
 
-        filter_fields = FilterField.objects.filter(productfeature__value__isnull=False).distinct()
+        filter_fields = FilterField.objects.filter(
+            productfeature__value__isnull=False).distinct()
         featured_values = FilterValue.objects.filter(productfeature__field__show_in_filters=True,
                                                      productfeature__value__isnull=False).distinct()
         colors = Color.objects.distinct()
@@ -410,7 +440,8 @@ def ajaxSearch(request):
     return_dict['products'] = list()
     if data or data == "":
         products = Product.objects.filter(Q(name__icontains=data) | Q(slug__icontains=data) |
-                                          Q(product_code__contains=data), Q(show_products=True)
+                                          Q(product_code__contains=data), Q(
+                                              show_products=True)
                                           ).distinct().order_by('?')[:15]
         for product in products:
             new_dict = dict()
@@ -428,7 +459,8 @@ def change_qty(request, pk):
     items = {k: v for k, v in request.GET.items() if k != "qty" and v != ""}
     values = list(items.values())
     qty = int(request.GET.get('qty'))
-    items_total = ProductFeature.objects.filter(id__in=values).aggregate(sum=Sum("price"))['sum'] or 0
+    items_total = ProductFeature.objects.filter(
+        id__in=values).aggregate(sum=Sum("price"))['sum'] or 0
 
     if product.sale:
         return JsonResponse(
@@ -437,7 +469,7 @@ def change_qty(request, pk):
                 "sale": floatformat(format(qty * calculate(product.sale + items_total, request.session.get('currency')))),
                 "obj_price": floatformat(format(calculate(product.price, request.session.get('currency')))),
                 "obj_sale": floatformat(format(calculate(product.sale, request.session.get('currency'))))
-             })
+            })
     return JsonResponse(
         {
             "price": floatformat(format(qty * calculate(product.price + items_total, request.session.get('currency')))),
