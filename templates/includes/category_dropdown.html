@@ -1,8 +1,8 @@
 <nav class="block-content" style="display: none;">
     <ul id="cat-names">
-        {% for category in categories %}
-            {% if category.children.count %}
-            {% for children1 in category.get_family %}
+        {% for cat in shop_categories %}
+            {% if cat.children.count %}
+            {% for children1 in cat.get_family %}
                 {% if children1.children.count and not children1.parent %}
                     <li class="{% if children1.children.count %}has-sub-cats{% endif %}">
                         <a href="{{ children1.get_absolute_url }}" class="sub-tit ">{{ children1.name }}</a>
@@ -22,7 +22,7 @@
             {% endfor %}
             {% else %}
                     <li class="has-sub-cats">
-                        <a href="{{ category.get_absolute_url }}" class="sub-tit">{{ category.name }}</a>
+                        <a href="{{ cat.get_absolute_url }}" class="sub-tit">{{ cat.name }}</a>
                     </li>
             {% endif %}
         {% endfor %}
