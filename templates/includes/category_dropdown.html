@@ -5,12 +5,13 @@
             {% for children1 in cat.get_family %}
                 {% if children1.children.count and not children1.parent %}
                     <li class="{% if children1.children.count %}has-sub-cats{% endif %}">
-                        <a href="{{ children1.get_absolute_url }}" class="sub-tit ">{{ children1.name }}</a>
+                        <a href="{{ children1.get_absolute_url }}" 
+                        class="sub-tit {% if children1.id == category.id %}active{% endif %}">{{ children1.name }}</a>
                         {% if children1.children.count %}
                             <ul>
                                 {% for children2 in children1.children.all %}
                                     <li class="sub-menu">
-                                        <a href="{{ children2.get_absolute_url }}">{{ children2.name }}</a>
+                                        <a href="{{ children2.get_absolute_url }}" class="{% if children2.id == category.id %}active{% endif %}">{{ children2.name }}</a>
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -22,7 +23,7 @@
             {% endfor %}
             {% else %}
                     <li class="has-sub-cats">
-                        <a href="{{ cat.get_absolute_url }}" class="sub-tit">{{ cat.name }}</a>
+                        <a href="{{ cat.get_absolute_url }}" class="sub-tit {% if cat.id == category.id %}active{% endif %}">{{ cat.name }}</a>
                     </li>
             {% endif %}
         {% endfor %}
