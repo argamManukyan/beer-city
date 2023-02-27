@@ -525,6 +525,9 @@
 
             const qty = document.getElementById(`qty-{{ obj.id }}`)
             const metaData = JSON.parse(qty.dataset.instance)
+
+            let maxChangeTriggerWorked = false
+
             if(metaData.has_volume){
                 if (qty.value * parseFloat(metaData.volume) > metaData.max_qty && qty.hasAttribute('max')){
                     qty.value = +qty.getAttribute('max')
@@ -533,8 +536,14 @@
                     if(document.getElementById('warningMaxQuantity')){
                         document.getElementById('warningMaxQuantity').style.display = 'block'
                     }
+                    maxChangeTriggerWorked
+                }else{
+                    qty.value = +qty.getAttribute('min')
+                    qty.setAttribute('disabled', false)
+                    if(document.getElementById('warningMaxQuantity')){
+                        document.getElementById('warningMaxQuantity').style.display = 'none'
+                    }
                 }
-                return
             }
 
             if (+qty.value < +qty.getAttribute('min')) {
