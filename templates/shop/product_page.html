@@ -526,7 +526,7 @@
             const qty = document.getElementById(`qty-{{ obj.id }}`)
             const metaData = JSON.parse(qty.dataset.instance)
             if(metaData.has_volume){
-                if (qty.value * parseFloat(metaData.volume) > metaData.max_qty){
+                if (qty.value * parseFloat(metaData.volume) > metaData.max_qty && qty.hasAttribute('max')){
                     qty.value = +qty.getAttribute('max')
                     document.getElementById('warningMaxQuantityValue').innerText = (qty.value * metaData.volume).toFixed(2);
                     qty.setAttribute('disabled', true)
