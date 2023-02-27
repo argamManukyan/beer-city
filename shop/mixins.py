@@ -18,11 +18,12 @@ class ShopMixin(View):
     def get_parents(self):
         return Category.objects.filter(parent=None)
 
-    def show_filter_data(self, products):
+    def show_filter_data(self, products, lazy: bool = False):
         data = {
             "link": self.generate_link(),
             "products": render_to_string('includes/filter_product.html', context={
                 "page_obj": self.filter_products(products),
+                "lazy": lazy,
             }, request=self.request)
         }
 

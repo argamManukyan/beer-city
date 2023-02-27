@@ -160,7 +160,7 @@ class CategoryDetailView(ShopMixin):
         brands = Brand.objects.filter(product__category__in=list_id_category).distinct()
         
         if self.request.is_ajax():
-            return self.show_filter_data(products)
+            return self.show_filter_data(products, lazy=True)
 
         context = {
             "category": category,
@@ -330,7 +330,7 @@ class SaleOfferNewBestSellerView(ShopMixin):
         colors = Color.objects.distinct()
 
         if self.request.is_ajax():
-            return self.show_filter_data(products)
+            return self.show_filter_data(products, lazy=True)
 
         context = {
             'page_obj': self.paginate_queryset(products),
@@ -384,7 +384,7 @@ class SearchView(ShopMixin):
         colors = Color.objects.distinct()
 
         if self.request.is_ajax():
-            return self.show_filter_data(products)
+            return self.show_filter_data(products, lazy=True)
 
         context = {
             "page_obj": page_obj,

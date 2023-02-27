@@ -2,7 +2,15 @@
 <div class="product-item">
     <div class="prod-item-img">
         <a href="{{ product.get_absolute_url }}">
-            <img class="lozad" data-src="{% if product.main_image %}{{ product.main_image.url }}{% endif %}" loading="lazy" alt="{{ product.name }}">
+            <img class="lozad" 
+                {% if not lazy %}
+                    data-src="{% if product.main_image %}{{ product.main_image.url }}{% endif %}"
+                {% else %} 
+                    src="{% if product.main_image %}{{ product.main_image.url }}{% endif %}"
+                {% endif %}
+                loading="lazy" 
+                alt="{{ product.name }}"
+            >
         </a>
         <!-- Product image end -->
 
