@@ -31,7 +31,7 @@ def partners(request):
         request.session['currency'] = settings.CURRENCY
         request.session['currency_icon'] = Currency.objects.get(code__icontains=settings.CURRENCY).symbol
 
-    return {"partners": Partners.objects.all(), 'shop_categories': Category.objects.all()}
+    return {"partners": Partners.objects.all(), 'shop_categories': Category.objects.filter(parent=None)}
 
 
 def informative_links(request):
