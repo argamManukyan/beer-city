@@ -16,7 +16,6 @@ def contact_us(request):
     contactuspage: ContactUsPage = ContactUsPage.objects.first()
 
     if request.method == 'POST':
-        print(request.POST)
         if form.is_valid():
             form = form.save()
             
