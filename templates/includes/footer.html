@@ -10,7 +10,7 @@
                    <img src="{% static 'img/icons/map-down.svg' %}" alt="Beer City">
                 </div>
             </div>
-            <div id="map_toggled">
+            <div id="map_toggled" {% if request.resolver_match.url_name == 'contact_us' %}style="display: block;"{% endif %}>
               <!-- MAP variable here -->
               {% if iframe %}
                 {{iframe|safe}}
