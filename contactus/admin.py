@@ -23,4 +23,4 @@ class ContactUsPageModelAdmin(SingleModelAdmin, TabbedDjangoJqueryTranslationAdm
 
 @admin.register(ContactUs)
 class ContactUsRequestAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'email', 'created_at']
+    list_display = ['id', 'name', 'email', 'phone_number', 'created_at']
