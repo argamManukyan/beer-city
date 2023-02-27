@@ -124,6 +124,7 @@ CUSTOM_CONTEXT_PROCESSORS = [
     'beercity.context_processors.to_header_items',
     'beercity.context_processors.to_header_items_two',
     'beercity.context_processors.bottom_header_items',
+    'beercity.context_processors.contact_us_page_iframe',
     'beercity.context_processors.header_categories',
     'beercity.context_processors.check_bonus_day_actuality',
     'beercity.context_processors.get_domain',
