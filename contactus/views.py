@@ -46,7 +46,7 @@ def contact_us(request):
         'st_content': st_content,
         'contactuspage': contactuspage, 
         'contact_icons': contactuspage.contact_icons.all() if contactuspage else [],
-        'contact_icons': contactuspage.social_buttons.all()  if contactuspage else [],
+        'social_buttons': contactuspage.social_buttons.all()  if contactuspage else [],
         }
     
     return render(request, 'flatpages/contacts.html', context)
