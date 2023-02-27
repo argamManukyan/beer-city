@@ -216,8 +216,8 @@
             body:data
            })
            const {cart_total,item_total} = await response.json()
-           document.getElementById(`item-total_${item_id}`).innerText = item_total;
-           document.getElementById('cart-total-price').innerText = cart_total;
+           document.getElementById(`item-total_${item_id}`).innerText = item_total.replace(/\B(?=(\d{3})+(?!\d))/g, ".");;
+           document.getElementById('cart-total-price').innerText = cart_total.replace(/\B(?=(\d{3})+(?!\d))/g, ".");;
          }
 
          async function removeFromBasket(item_id){
@@ -234,7 +234,7 @@
                const dt = await resp.json()
 
                 dt.items_count === 0 ? window.location.reload() : ''
-                document.getElementById('cart-total-price').innerText = dt.cart_total;
+                document.getElementById('cart-total-price').innerText = dt.cart_total.replace(/\B(?=(\d{3})+(?!\d))/g, ".");;
                 document.getElementById(`it-${item_id}`).remove()
                 const forloopNumbers = document.getElementsByClassName('forloop')
                 for (let i = 1; i <= forloopNumbers.length; i++) {
