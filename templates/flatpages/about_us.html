@@ -210,6 +210,7 @@
             
         </section>
         
+        {% if partners %}
          <!-- Partners -->
             <div class="partners">
                 <div class="cnt">
@@ -221,19 +222,20 @@
                                </div>
                            </div>
                        </div>
-                       
+                        {% for parner in partners %}
                         <div class="col col-auto">
                             <figure class="partner-img">
-                                <a href="#">
-                                    <img src="" alt="">
+                                <a href="{% if parner.url %}{{partner.url}}{% else %}javascript: void(0){% endif %}">
+                                    <img src="{% if parner.icon %}{{parner.icon.url}}{% else %}{% static 'img/icons/partner.jpg' %}{% endif %}" alt="{{parner.name}}">
                                 </a>
                             </figure>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
          <!-- Partners end -->
-         
+         {% endif %}
     </main>
     <!-- Main content end -->
     
