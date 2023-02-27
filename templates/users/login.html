@@ -21,9 +21,11 @@
       <!-- Open Graph end -->
       
       <!-- Alternate Languages -->
-      <link rel="alternate" hreflang="hy" href="{{ hy_url }}" />
-      <link rel="alternate" hreflang="en" href="{{ en_url }}">
-      <link rel="alternate" hreflang="ru" href="{{ ru_url }}">
+      {% if not request.GET.page %}
+    <link rel="alternate" hreflang="hy" href="{{ hy_url }}" />
+    <link rel="alternate" hreflang="en" href="{{ en_url }}">
+    <link rel="alternate" hreflang="ru" href="{{ ru_url }}">
+    {% endif %}
       <!-- Alternate Languages end -->
       <link rel="canonical" href="{{ absolute_url }}">
       

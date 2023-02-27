@@ -1,6 +1,4 @@
-{% load currency %}
-{% load static %}
-{% load i18n %}
+{% load currency %}{% load static %}{% load i18n %}
 <header>
     <div class="top-header m-none">
         <div class="cnt">
@@ -141,11 +139,8 @@
 
                 <div class="col col-auto logo">
                     <div class="logo-main">
-                        <a href="{% url 'home_page' %}" class="m-none">
+                        <a href="{% url 'home_page' %}">
                             <img src="{% static 'img/logo.svg' %}" alt="Beer City">
-                        </a>
-                        <a href="{% url 'home_page' %}" class="lg-none">
-                            <img src="{% static 'img/logo-md.svg' %}" alt="Beer City">
                         </a>
                     </div>
                 </div>

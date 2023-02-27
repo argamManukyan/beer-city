@@ -149,9 +149,8 @@ class CategoryDetailView(ShopMixin):
         page_obj = self.filter_products(products)
 
         filter_fields = FilterField.objects.filter(Q(productfeature__product__category__in=list_id_category) |
-                                                   Q(productfeature__product__category__slug=category.slug,
-                                                     show_in_filters=True),
-                                                   Q(productfeature__value__isnull=False)).distinct()
+                                                   Q(productfeature__product__category__slug=category.slug),
+                                                   Q(productfeature__value__isnull=False), show_in_filters=True).distinct()
 
         featured_values = FilterValue.objects.filter(Q(productfeature__product__category__in=list_id_category) |
                                                      Q(productfeature__product__category__slug=category.slug,

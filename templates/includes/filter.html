@@ -1,6 +1,4 @@
-{% load my_url %}
-{% load static %}
-{% load i18n %}
+{% load my_url %}{% load static %}{% load i18n %}
 <form class="shop-top-filter d-none" id="topFilter" onchange="topFilter(this)">
 {% include 'includes/top_filter.html' %}
 </form>
@@ -110,8 +108,7 @@
                                                     {% endfor %}
                                             >
                                             <span class="checkbox-square"></span>
-                                            <img src="{% if brand.icon %}{{brand.icon.url}}{% else %}{% static 'icons/brand.jpg' %}{% endif %}" 
-                                                style="height: 40px; width: 40px; border-radius: 15% 15% 15% 15%; padding-left: 8px;"/>
+                                            <img src="{% if brand.icon %}{{brand.icon.url}}{% else %}{% static 'icons/brand.jpg' %}{% endif %}" alt="{{ brand.name }}" class="min-brand_img">
                                         </span>{{ brand.name }}
                                         </label>
                                     </div>

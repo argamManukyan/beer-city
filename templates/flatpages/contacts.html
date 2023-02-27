@@ -6,57 +6,33 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
     <title>{% if contactuspage and contactuspage.meta_title %}{{contactuspage.meta_title}}{% else %}{% trans 'Կապ' %} | {{ request.get_host }}{% endif %}</title>
     <meta name="Description" content="{% if contactuspage and contactuspage.meta_description %}{{contactuspage.meta_description}}{% endif %}">
+      <!-- Open Graph -->
+      <meta property="og:locale" content="hy_HY">
+      <meta property="og:locale:alternate" content="en_US">
+      <meta property="og:locale:alternate" content="ru_RU">
+      <meta property="og:type" content="website">
+      <meta property="og:title" content="{% trans 'Կապ' %}">
+      <meta property="og:description" content="Beer City ☎ +374(33) 299 299">
+      <meta property="og:url" content="{{ absolute_url }}">
+      <meta property="og:site_name" content="{{ request.get_host|capfirst }}">
+      <meta property="og:image" content="{{ full_path }}{% static 'img/share/default.jpg' %}">
+      <meta property="og:image:secure_url" content="{{ full_path }}{% static 'img/share/default.jpg' %}">
+      <!-- Open Graph end -->
+      
+      <!-- Alternate Languages -->
+      {% if not request.GET.page %}
+        <link rel="alternate" hreflang="hy" href="{{ hy_url }}" />
+        <link rel="alternate" hreflang="en" href="{{ en_url }}">
+        <link rel="alternate" hreflang="ru" href="{{ ru_url }}">
+      {% endif %}
+      <!-- Alternate Languages end -->
+      <link rel="canonical" href="{{ absolute_url }}">
+    
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
     <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
-    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/css/intlTelInput.css">
     <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
     <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
-    <style>
-    .select2-container--default .select2-selection--single .select2-selection__rendered {
-            font-size: 16px;
-            height: 55px
-        }
-    .select2-container {
-    display: block;
-    width: auto !important;
-}
-    .select2-container--default .select2-selection--single {
-            min-height: 55px;
-            padding: 0 10px;
-            height: 55px;
-            font-size: 19px;
-            line-height: 22px;
-            background: rgba(34, 60, 5, 0.06);
-            border: 2px solid rgba(34, 60, 5, 0.08);
-            border-radius: 12px;
-            letter-spacing: 1px
-        }
-    .select2-container--default .select2-selection--single:focus-visible {
-            background: #fff
-        }
-    .select2-container--default .select2-selection--single .select2-selection__rendered {
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-align: center;
-            align-items: center;
-            font-size: 16px;
-            height: 52px
-        }
-    .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: 29px;
-            top: 13px;
-            right: 10px;
-            width: 25px
-        }
-    .select2-container--default .select2-selection--single .select2-selection__arrow b {
-            border-width: 7px 6px 0
-        }
-    .select2-container--default .select2-results__option--highlighted[aria-selected] {
-            background-color: #223C05;
-            color: #fff
-        }
-    </style>
 </head>
 
 <body>
@@ -104,9 +80,9 @@
                 <div class="contacts-page">
                     <div class="cnt section">
                         <div class="row ">
-                            <div class="col col-2 c-order">
+                            <div class="col col-70">
                                 <div class="form-contact left">
-                                    <h2>{% trans 'Հարցեր և Առաջարկներ' %}</h2>
+                                    <h2 class="text-center">{% trans 'Հարցեր և Առաջարկներ' %}</h2>
                                     <div class="only-form_cont">
 
                                         <!-- Form Message-->
@@ -116,12 +92,18 @@
                                         <form id="contact-form" method="post">
                                            <div class="input-fields all-auth">
                                                     <label for="name">{% trans 'Անուն Ազգանուն' %} *</label>
-                                                    <input type="text" id="name" name="name" placeholder="">
+                                                    <input type="text" id="name" name="name">
                                             </div>
 
                                             <div class="input-fields all-auth">
                                                 <label for="email">Էլ. փոստ *</label>
-                                                <input type="email" id="email" name="email" placeholder="">
+                                                <input type="email" id="email" name="email">
+                                            </div>
+                                            
+                                            <div class="input-fields all-auth">
+                                                <label for="phone">{% trans 'Հեռախոսահամար' %} *</label>
+                                                <input type="tel" name="phone" inputmode="tel" class="tel fw text" id="phone" required>
+                                                 <input type="hidden" name="phone_number" id="phone_number" value="">
                                             </div>
 
                                             <div class="input-fields all-auth">
@@ -141,7 +123,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col col-2">
+                            <div class="col col-30">
                                 <div class="form-contact">
                                     {% if contact_icons %}
                                     <h2>{% trans 'Կապ Մեզ Հետ' %}</h2>
@@ -189,13 +171,54 @@
 
     <script src="{% static 'js/canapea3.6_main.js' %}"></script>
     <script src="{% static 'js/canapea_script.js' %}"></script>
-    <script src="{% static 'js/canapea_swiper.js' %}"></script>
-    <script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/intlTelInput.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/4.0.8/jquery.inputmask.bundle.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
     <script>
-    // select2
-        $(".js-select2").select2();
+        
+     // Phone number mask
+      $(function () {
+        var input = document.querySelectorAll("input[name=phone]");
+        var iti_el = $('.iti.iti--allow-dropdown.iti--separate-dial-code');
+        if (iti_el.length) {
+            iti.destroy();
+        }
+        for (var i = 0; i < input.length; i++) {
+            iti = intlTelInput(input[i], {
+                autoHideDialCode: false
+                , autoPlaceholder: "aggressive"
+                , initialCountry: "auto"
+                , separateDialCode: true
+                , preferredCountries: ['ru', 'th']
+                , customPlaceholder: function (selectedCountryPlaceholder, selectedCountryData) {
+                    return '' + selectedCountryPlaceholder.replace(/[0-9]/g, 'X');
+                }
+                , geoIpLookup: function (callback) {
+                    $.get('https://ipinfo.io', function () {}, "jsonp").always(function (resp) {
+                        var countryCode = (resp && resp.country) ? resp.country : "";
+                        callback(countryCode);
+                    });
+                }
+                , utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.0/js/utils.js"
+            });
+            $('input[name="phone"]').on("focus click countrychange", function (e, countryData) {
+                var pl = $(this).attr('placeholder') + '';
+                var res = pl.replace(/X/g, '9');
+                if (res != 'undefined') {
+                    $(this).inputmask(res, {
+                        placeholder: "X"
+                        , clearMaskOnLostFocus: true
+                        , clearMask: true
+                    });
+                }
+            });
+            $('input[name="phone"]').on("focusout", function (e, countryData) {
+                var intlNumber = iti.getNumber();
+                console.log(intlNumber);
+            });
+        }
+    });
+    // Phone number mask end
         
      //Validate
      $(function () {
@@ -206,6 +229,9 @@
                     required: true,
                     email: true
                 },
+                phone: {
+                        required: true,
+                    },
                 question: {
                     required: true
                 },
@@ -224,13 +250,18 @@
                     required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
 
                 },
+                phone: {
+                       required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
+                    },
                 message: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
             },
             submitHandler: function (form) {
                 form.submit();
             }
         });
-    });
+        
+      });
+        
     </script>
 </body>
 

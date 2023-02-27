@@ -161,14 +161,14 @@
                         <div class="row">
                             <div class="col">
                                 <div class="two-version-title">
-                                    <h1>{% trans 'Ողջույն' %} {{ user.full_name }}</h1>
+                                    <h1>{% trans 'Ողջույն' %} {{ user.full_name }}
+                                    {% if user.birthday %} <br>
+                                        <span class="date-of-brth">{{ user.birthday|date:"d / F / Y" }}</span>
+                                    {% endif %} 
+                                    </h1>
                                 </div>
                             </div>
-                            {% if user.birthday %}
-                                <div class="for_date_of_birth">
-                                    <span>{{ user.birthday|date:"d / F / Y" }}</span>
-                                </div>
-                             {% endif %}      
+                                 
                             <div class="col col-30">
                                 <div class="user-info-left">
                                     <div class="tabs-head">
@@ -653,24 +653,11 @@
                     minlength: 2
                 },
 
-                dd: {
-                    required: true
-                },
-                mm: {
-                    required: true
-                },
-                yyyy: {
-                    required: true
-                },
-
                 city: {
                     required: true
                 },
                 state: {
                     required: true
-                },
-                email: {
-                    required: false
                 },
 
                 address: {
@@ -689,20 +676,6 @@
                     minlength: "{% trans 'Անունը պետք է լինի 2 նիշ կամ ավելի երկար' %}"
                 },
 
-                dd: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
-                },
-                mm: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
-                },
-                yyyy: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
-                },
-
-                email: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
-                    email: "{% trans 'Մուտքագրեք ճիշտ Էլ. Փոստի հասցե' %}"
-                },
                 city: {
                     required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
 
@@ -714,138 +687,6 @@
                 address: {
                     required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
 
-                },
-
-            },
-
-            submitHandler: function(form) {
-                form.submit();
-            },
-
-        });
-
-        // change info Company validate
-        $("#change-info-company").validate({
-            rules: {
-                company_name: {
-                    required: true,
-                    minlength: 4
-                },
-                register_city: {
-                    required: true
-                },
-                register_state: {
-                    required: true
-                },
-                register_address: {
-                    required: true
-                },
-
-                fact_city: {
-                    required: true
-                },
-                fact_state: {
-                    required: true
-                },
-                fact_address: {
-                    required: true
-                },
-
-                resfirst_name: {
-                    required: true,
-                    minlength: 2
-                },
-                reslast_name: {
-                    required: true,
-                    minlength: 4
-                },
-
-                res_position: {
-                    required: true,
-                },
-
-                tin: {
-                    required: true,
-                },
-
-                phone_number: {
-                    required: true,
-                },
-
-                dd: {
-                    required: true
-                },
-                mm: {
-                    required: true
-                },
-                yyyy: {
-                    required: true
-                },
-
-            },
-
-            messages: {
-                company_name: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
-                    minlength: "{% trans 'Անունը պետք է լինի 4 նիշ կամ ավելի երկար' %}"
-                },
-
-                register_city: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
-
-                },
-                register_state: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
-
-                },
-                register_address: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
-
-                },
-
-                fact_city: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
-
-                },
-                fact_state: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
-
-                },
-                fact_address: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
-
-                },
-
-                resfirst_name: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
-                    minlength: "{% trans 'Անունը պետք է լինի 2 նիշ կամ ավելի երկար' %}"
-                },
-                reslast_name: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
-                    minlength: "{% trans 'Ազգանունը պետք է լինի 4 նիշ կամ ավելի երկար' %}"
-                },
-
-                res_position: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
-                },
-
-                tin: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
-                },
-
-                phone_number: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
-
-                },
-
-                dd: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
-                },
-                mm: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
-                },
-                yyyy: {
-                    required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
                 },
 
             },
@@ -893,7 +734,6 @@
                 }
             });
         });
-
 
         $('#state').on('change', function() {
             $.ajax({

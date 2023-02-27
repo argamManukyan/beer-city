@@ -1,16 +1,46 @@
 {% load static %}{% load i18n %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
-    <meta charset='utf-8'/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
-    <title>{% trans 'Մեր Մասին' %} | {{ request.get_host }}</title>
-    <meta name="Description" content="">
-    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
-    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
-    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
-    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
-    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+      <meta charset='utf-8'/>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,    user-scalable=no'>
+      <title>{% trans 'Մեր Մասին' %} | {{ request.get_host }}</title>
+      <meta name="Description" content="">
+      <meta name="Description" content="
+            {% if LANGUAGE_CODE == 'en' %}
+                     EN
+            {% elif LANGUAGE_CODE == 'ru' %}
+                    RU
+            {% else %}
+                    AM 
+            {% endif %}
+       ">
+      <!-- Open Graph -->
+      <meta property="og:locale" content="hy_HY">
+      <meta property="og:locale:alternate" content="en_US">
+      <meta property="og:locale:alternate" content="ru_RU">
+      <meta property="og:type" content="website">
+      <meta property="og:title" content="{% trans 'Մեր Մասին' %}">
+      <meta property="og:description" content="Beer City ☎ +374(33) 299 299">
+      <meta property="og:url" content="{{ absolute_url }}">
+      <meta property="og:site_name" content="{{ request.get_host|capfirst }}">
+      <meta property="og:image" content="{{ full_path }}{% static 'img/share/default.jpg' %}">
+      <meta property="og:image:secure_url" content="{{ full_path }}{% static 'img/share/default.jpg' %}">
+      <!-- Open Graph end -->
+      
+      <!-- Alternate Languages -->
+      {% if not request.GET.page %}
+        <link rel="alternate" hreflang="hy" href="{{ hy_url }}" />
+        <link rel="alternate" hreflang="en" href="{{ en_url }}">
+        <link rel="alternate" hreflang="ru" href="{{ ru_url }}">
+      {% endif %}
+      <!-- Alternate Languages end -->
+      <link rel="canonical" href="{{ absolute_url }}">
+      
+      <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+      <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+      <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+      <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
 </head>
 
 <body>
@@ -61,25 +91,29 @@
             <div class="section about-page first">
                 <div class="cnt">
                     <div class="row align-items-center">
-                        <div class="col col-2">
-                            {% if abouts.url %}
-                                <div class="ab-p">
-                                    <video src="{{ abouts.url }}"></video>
-                                </div>
-                            {% elif not abouts.url and file_extension == 'video' %}
-                                <div class="ab-p">
-                                    <video src="{{ abouts.file.url }}"></video>
-                                </div>
-                            {% else %}
-                                <div class="ab-p">
-                                    <img src="{% static 'img/ab.jpg' %}" alt="">
+                      <div class="col col-2 ord1">
+                            {% if abouts.text %}
+                                <div class="txt-place">
+                                    {{ abouts.text|safe }}
                                 </div>
                             {% endif %}
                         </div>
-                        <div class="col col-2">
-                            {% if abouts.text %}
-                                <div class="ab-p_txt">
-                                    {{ abouts.text|safe }}
+                       <div class="col col-2">
+                            {% if abouts.url %}
+                             <div class="video-place">
+                               <video controls class="lozad"  data-poster="{% static 'img/video-poster.jpg' %}">
+                                  <source data-src="{{ abouts.url }}" type="video/mp4">  
+                               </video>
+                             </div>
+                            {% elif not abouts.url and file_extension == 'video' %}
+                                <div class="video-place">
+                                  <video controls class="lozad"  data-poster="{% static 'img/video-poster.jpg' %}">
+                                      <source data-src="{{ abouts.file.url }}" type="video/mp4">  
+                                   </video>
+                                </div>
+                            {% else %}
+                                <div class="video-place">
+                                    <img src="{% static 'img/ab.jpg' %}" alt="">
                                 </div>
                             {% endif %}
                         </div>
@@ -87,40 +121,18 @@
                 </div>
             </div>
             <!-- About first text end -->
-            {% if advantages %}
-                <!-- Bullets -->
-                <section class="section bullets-canapea">
-                    <div class="cnt">
-                        <div class="row no-margs">
-                            {% for adv in advantages %}
-                                <div class="col-4">
-                                    <div class="bullet-block text-center">
-                                        <div class="bullet-img">
-                                            <figure>
-                                                <img
-                                                        data-src="{% if adv.icon %}{{ adv.icon.url }}{% else %}{% static 'img/icons/b-1.svg' %}{% endif %}"
-                                                        class="lozad" alt="{{ adv.name }}">
-                                            </figure>
-                                        </div>
-                                        <div class="bullet-txt">
-                                            <h3>{{ adv.name }}</h3>
-                                            {% if adv.text %}<p>{{ adv.text|safe }}</p>{% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-
-                        </div>
-                    </div>
-                </section>
-                <!-- Bullets end -->
-            {% endif %}
-
+            
             {% if our_goals %}
                 <!-- About second text -->
                 <div class="section about-page second">
                     <div class="cnt">
                         <div class="row align-items-center">
+                           <div class="col col-2">
+                                <div class="ab-p">
+                                    <img src="{% if goal_img %}{{ goal_img.image.url }}{% else %}{% static 'img/ab2.jpg' %}{% endif %}"
+                                         alt="">
+                                </div>
+                            </div>
                             <div class="col col-2">
                                 <div class="ab-p_txt">
                                     <h2>{% trans 'Beer City' %}</h2>
@@ -137,22 +149,14 @@
                                     </ul>
                                 </div>
                             </div>
-
-                            <div class="col col-2">
-                                <div class="ab-p">
-                                    <img src="{% if goal_img %}{{ goal_img.image.url }}{% else %}{% static 'img/ab2.jpg' %}{% endif %}"
-                                         alt="">
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>
                 <!-- About second text end -->
             {% endif %}
-            <!-- Review -->
+            
             {% if bullets %}
-            <section class="section bullets-canapea">
+                <div class="section bullets-canapea">
                 <div class="cnt">
                     <div class="row no-margs">
                         {% for bullet in bullets %}
@@ -173,12 +177,12 @@
                         {% endfor %}
                     </div>
                 </div>
-            </section>
-        {% endif %}      
-            <!-- Review end -->
+            </div>
+            {% endif %}     
+             
             {% if posts %}
                 <!-- Blog related -->
-                <div class="blog-main">
+                <div class="section blog-main">
                     <div class="cnt">
 
                         <div class="row">
@@ -186,11 +190,9 @@
                                 <div class="section-title">
                                     <div class="tith3 align-items-center">
                                         <span class="tith3-name">{% trans 'Բլոգ' %}</span>
-                                        <a href="{% url 'blog_list' %}"
-                                           class="tith3-link flex-content-center"
-                                        >{% trans 'Տեսնել Ավելին' %}
-                                            <img src="{% static 'img/icons/see-arrow.svg' %}"
-                                                 alt="{% trans 'Տեսնել Ավելին' %}"></a>
+                                          <a href="{% url 'blog_list' %}" class="tith3-link flex-content-center">
+                                            {% trans 'Տեսնել Ավելին' %}
+                                          </a>
                                     </div>
                                 </div>
                             </div>
@@ -205,16 +207,44 @@
                 </div>
                 <!-- Blog related end -->
             {% endif %}
+            
         </section>
+        
+         <!-- Partners -->
+            <div class="partners">
+                <div class="cnt">
+                    <div class="row flex-center-evenly">
+                       <div class="col">
+                           <div class="section-title">
+                               <div class="tith3 flex-content-center">
+                                   <span class="tith3-name">{% trans 'Գործընկերներ' %}</span>
+                               </div>
+                           </div>
+                       </div>
+                       
+                        <div class="col col-auto">
+                            <figure class="partner-img">
+                                <a href="#">
+                                    <img src="" alt="">
+                                </a>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         <!-- Partners end -->
+         
     </main>
     <!-- Main content end -->
+    
+    <!-- Footer -->
     {% include 'includes/footer.html' %}
+    <!-- Footer end -->
+    
 </div>
 
 <script src="{% static 'js/canapea3.6_main.js' %}"></script>
 <script src="{% static 'js/canapea_script.js' %}"></script>
-<script src="{% static 'js/canapea_swiper.js' %}"></script>
-<script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
 </body>
 
 </html>
