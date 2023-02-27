@@ -1,30 +1,20 @@
 <nav class="block-content" style="display: none;">
     <ul id="cat-names">
-    {% for category in shop_categories %}
-        {% if category.children.count %}
-        {% for children1 in category.get_family %}
-            {% if children1.children.count and not children1.parent %}
-                <li class="{% if children1.children.count %}has-sub-cats{% endif %}">
-                    <a href="{{ children1.get_absolute_url }}" class="sub-tit {% if children1.get_absolute_url in request.get_fill_path %}active{% endif %}">{{ children1.name }}</a>
-                    {% if children1.children.count %}
-                        <ul>
-                            {% for children2 in children1.children.all %}
-                                <li class="sub-menu">
-                                    <a href="{{ children2.get_absolute_url }}" class="sub-tit {% if children2.get_absolute_url in request.get_fill_path %}active{% endif %}">{{ children2.name }}</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                </li>
-                {% else %}
-
-            {% endif %}
-        {% endfor %}
-        {% else %}
-            <li class="has-sub-cats">
-                <a href="{{ category.get_absolute_url }}" class="sub-tit  {% if category.get_absolute_url in request.get_fill_path %}active{% endif %}">{{ category.name }}</a>
+        
+        {% for children1 in category.children.all %}
+            <li class="{% if children1.children.count %}has-sub-cats{% endif %}">
+                <a href="{{ children1.get_absolute_url }}" class="sub-tit ">{{ children1.name }}</a>
+                {% if children1.children.count %}
+                    <ul>
+                        {% for children2 in children1.children.all %}
+                            <li class="sub-menu">
+                                <a href="{{ children2.get_absolute_url }}">{{ children2.name }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </li>
-        {% endif %}
-    {% endfor %}
+        {% endfor %}
+        
     </ul>
 </nav>
