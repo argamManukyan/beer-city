@@ -1,6 +1,6 @@
 <nav class="block-content" style="display: none;">
     <ul id="cat-names">
-    {% for category in categories %}
+    {% for category in shop_categories %}
         {% if category.children.count %}
         {% for children1 in category.get_family %}
             {% if children1.children.count and not children1.parent %}
