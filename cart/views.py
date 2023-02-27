@@ -46,7 +46,7 @@ class AddToCartView(View):
         cart.save()
 
         return JsonResponse({'cart_items': cart.item.count(),
-                             'cart_total': "{:.1f}".format(
+                             'cart_total': "{:.0f}".format(
                                  calculate(cart.cart_total, request.session['currency'], decimals=3)), },
                             status=200)
 
@@ -98,10 +98,10 @@ class ChangeQuantityBasketView(View):
             cart_total += i.item_total_price
         cart.cart_total = cart_total
         cart.save()
-        return JsonResponse({'cart_total': "{:.1f}".format(calculate(cart.cart_total,
+        return JsonResponse({'cart_total': "{:.0f}".format(calculate(cart.cart_total,
                                                                      request.session['currency'],
                                                                      decimals=3)),
-                             'item_total': "{:.1f}".format(calculate(cart_item.item_total_price,
+                             'item_total': "{:.0f}".format(calculate(cart_item.item_total_price,
                                                                      request.session['currency'],
                                                                      decimals=3))},
                             status=200)
