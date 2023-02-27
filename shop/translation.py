@@ -1,6 +1,6 @@
 from modeltranslation.translator import TranslationOptions, register
 
-from aboutus.models import OurGoals, AboutUs, Reviews, OurAdvantages
+from aboutus.models import OurGoals, AboutUs, Reviews
 from flatpages.models import FlatPages, Blog, BlogCategory, GalleryCategory, FAQModel
 from .models import *
 from users.models import State, Country
@@ -12,7 +12,7 @@ class AboutsTrans(TranslationOptions):
     fields = ['text']
     
     
-@register([OurGoals, Reviews, OurAdvantages])
+@register([OurGoals, Reviews])
 class OurGoalsTrans(TranslationOptions):
     fields = ['name', 'text']
 

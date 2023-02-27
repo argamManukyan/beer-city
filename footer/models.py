@@ -4,7 +4,7 @@ from beercity.utils import CustomLogoField
 
 
 class FooterCategory(models.Model):
-    title = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=255, unique=True, verbose_name='Անուն')
     my_order = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Դասավորել')
 
     def __str__(self):

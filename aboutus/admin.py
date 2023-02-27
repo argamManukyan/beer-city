@@ -16,7 +16,6 @@ class OurGoalsAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
     ...
 
 admin.site.register(OurGoals, OurGoalsAdmin)
-admin.site.register(OurAdvantages, TabbedDjangoJqueryTranslationAdmin)
 admin.site.register(GoalImage)
 # admin.site.register(Reviews, TabbedDjangoJqueryTranslationAdmin)
 

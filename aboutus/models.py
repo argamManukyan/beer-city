@@ -20,21 +20,6 @@ class OurGoals(CustomModel):
         verbose_name_plural = "Մեր նպատակները"
 
 
-class OurAdvantages(CustomModel):
-    my_order = models.PositiveIntegerField(verbose_name="Դասավորել", default=0)
-    icon = CustomLogoField(blank=True)
-    name = models.CharField(max_length=255, verbose_name="Նպատակի անուն")
-    text = models.TextField(verbose_name="Նկարագրություն", blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ['-my_order']
-        verbose_name = "Առավելություն"
-        verbose_name_plural = "Մեր առավելությունները"
-
-
 class Reviews(CustomModel):
     image = CustomLogoField()
     name = models.CharField(verbose_name="Անուն և ազգանուն", max_length=230)

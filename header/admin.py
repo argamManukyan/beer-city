@@ -5,10 +5,10 @@ from .models import *
 
 
 @admin.register(TopHeader)
-class TopHeaderAdmin(TabbedDjangoJqueryTranslationAdmin, SortableAdminMixin, admin.ModelAdmin):
+class TopHeaderAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
     pass
 
 
 @admin.register(BottomHeader)
-class BottomHeaderAdmin(TabbedDjangoJqueryTranslationAdmin, SortableAdminMixin, admin.ModelAdmin):
+class BottomHeaderAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
     pass
