@@ -538,9 +538,8 @@
                     }
                     maxChangeTriggerWorked = true
                 }else{
-                    qty.value = +qty.getAttribute('min')
-                    qty.setAttribute('disabled', false)
                     if(document.getElementById('warningMaxQuantity')){
+                        qty.setAttribute('disabled', false)
                         document.getElementById('warningMaxQuantity').style.display = 'none'
                     }
                 }
