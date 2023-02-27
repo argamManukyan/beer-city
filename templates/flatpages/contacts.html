@@ -96,7 +96,7 @@
                                             </div>
 
                                             <div class="input-fields all-auth">
-                                                <label for="email">Էլ. փոստ *</label>
+                                                <label for="email">{% trans 'Էլ. փոստ' %} *</label>
                                                 <input type="email" id="email" name="email">
                                             </div>
                                             
@@ -250,6 +250,15 @@
                 message: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}"
             },
             submitHandler: function (form) {
+                const formSend = document.getElementById('contact-form')
+                formSend.addEventListener('submit',function(e){
+                    e.preventDefault();
+                    const old_phone = document.getElementById('phone').value
+                    const code_of_phone = document.getElementsByClassName('iti__selected-dial-code')[0].textContent
+                    
+                    document.querySelector('input[name="phone_number"]').value = code_of_phone + old_phone;
+                    
+                })
                 form.submit();
             }
         });

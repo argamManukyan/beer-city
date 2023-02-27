@@ -61,6 +61,7 @@ class ContactUs(CustomModel):
     name = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     message = models.TextField(blank=True)
+    phone_number = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.name

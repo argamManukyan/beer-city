@@ -49,7 +49,7 @@ def social_buttons(request):
 
 
 def contact_us_page_iframe(request):
-    return {"iframe": ContactUsPage.objects.first().iframe}
+    return {"iframe": ContactUsPage.objects.first().iframe if ContactUsPage.objects.exists() else ''}
 
 
 def bank_icons(request):
