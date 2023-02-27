@@ -51,7 +51,7 @@ class SliderAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
                 f'<img src="{instance.lg_image.url}" height="120px" width="320px" />'
             )
 
-    get_lg_image.short_description = 'Desktop Նկար'
+    get_lg_image.short_description = 'Նկար'
 
     list_display = ['get_lg_image']
 
