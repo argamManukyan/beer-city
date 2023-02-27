@@ -108,7 +108,7 @@ class ColorModelAdmin(TabbedDjangoJqueryTranslationAdmin):
 
 @admin.register(Brand)
 class ColorModelAdmin(TabbedDjangoJqueryTranslationAdmin):
-    pass
+    search_fields = ['name']
 
 
 @admin.register(HomepageBanners)
