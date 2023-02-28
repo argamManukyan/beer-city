@@ -110,10 +110,10 @@ class HomePageView(View):
 
         new_products = Product.objects.exclude(id__in=used_ids)
         if new_products.exists():
-            new_products = new_products.order_by('?')[:50]
+            new_products = new_products.order_by('?')
             if len(new_products) < 16:
                 settings.SLIDING_COUNT = len(new_products)
-            new_products = random.sample(new_products, len(12))
+            new_products = random.sample(new_products, len(new_products))[:12]
             used_ids.extend([i.id for i in new_products])
 
         sale_products = Product.objects.filter(sale__gt=0).exclude(id__in=used_ids).order_by('?')[:12]
