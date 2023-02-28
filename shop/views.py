@@ -107,6 +107,8 @@ class HomePageView(View):
         bullets = Bullets.objects.all()
         video_and_text = Video.objects.filter(location='home').first()
 
+        sale_products = Product.objects.filter(sale__gt=0).exclude(id__in=used_ids).order_by('?')[:12]
+        best_seller = Product.objects.filter(best_seller=True).exclude(id__in=used_ids)[:12]
         new_products = Product.objects.filter(best_seller=False).exclude(id__in=used_ids)
         if new_products.exists():
             new_products = new_products.order_by('?')
@@ -115,9 +117,7 @@ class HomePageView(View):
             new_products = random.sample(list(new_products), len(new_products))[:12]
             used_ids.extend([i.id for i in new_products])
 
-        best_seller = Product.objects.filter(best_seller=True).exclude(id__in=used_ids)
         used_ids.extend([i.id for i in best_seller])
-        sale_products = Product.objects.filter(sale__gt=0).exclude(id__in=used_ids).order_by('?')[:12]
         context = {
             "slider": slider,
             "sale_products": sale_products,
