@@ -87,7 +87,7 @@ class ProductAdmin(SortableAdminMixin, TabbedDjangoJqueryTranslationAdmin):
     list_filter = ['category']
     search_fields = ['name', 'name_ru', 'name_en', 'product_code', 'product_custom_id']
     readonly_fields = ['product_custom_id', 'sold_count']
-    
+    exclude = ['special_offer']
     def get_image(self, obj):
         if obj.main_image:
             return mark_safe(
