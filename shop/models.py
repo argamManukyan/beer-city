@@ -244,10 +244,13 @@ class Product(CustomMetaModel):
 
     def get_product_custom_id(self):
         
-        rand_id = random.randrange(1000, 9999)
-        while self.__class__.objects.filter(product_custom_id=rand_id).exists():
-            rand_id = random.randrange(10000, 9999)
-        return rand_id
+        code_find = True
+        rand_id = None
+        while code_find:
+            rand_id = random.randrange(1000, 9999)
+            if not self.__class__.objects.filter(product_custom_id=rand_id).exists():
+                code_find = False
+                return rand_id
     
     def save(self, *args, **kwargs):
 

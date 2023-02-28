@@ -1,11 +1,12 @@
 from .models import *
 from .mixins import ShopMixin
-from itertools import product
+import pandas
 import json
 from decimal import Decimal
 import random
 from django.template.defaultfilters import floatformat
 import requests
+from django.db import transaction
 from currencies.models import Currency
 from currencies.utils import calculate
 from django.db.models import Min, Max, Q, Avg, Sum
@@ -110,7 +111,7 @@ class HomePageView(View):
         video_and_text = Video.objects.filter(location='home').first()
 
         # new_products = Product.objects.filter(~Q(id__in=used_ids))
-        new_products = Product.objects.all()
+        new_products = Product.objects.all()[:12]
         # if new_products.exists():
         #     if len(new_products) < 16:
         #         settings.SLIDING_COUNT = len(new_products)
