@@ -107,7 +107,7 @@ class HomePageView(View):
         bullets = Bullets.objects.all()
         video_and_text = Video.objects.filter(location='home').first()
 
-        new_products = Product.objects.exclude(id__in=used_ids)
+        new_products = Product.objects.filter(best_seller=False).exclude(id__in=used_ids)
         if new_products.exists():
             new_products = new_products.order_by('?')
             if len(new_products) < 16:
