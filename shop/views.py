@@ -97,7 +97,7 @@ class HomePageView(View):
         slider_image = SliderPhoneImage.objects.first()
         # Special offers
         # special_offers = Product.objects.filter(special_offer=True, show_products=True)[:12]
-        used_ids = []
+
 
         # Banners
         banners = HomepageBanners.objects.all()
@@ -106,8 +106,8 @@ class HomePageView(View):
             show_in_header=True).distinct()
         bullets = Bullets.objects.all()
         video_and_text = Video.objects.filter(location='home').first()
-
-        sale_products = Product.objects.filter(sale__gt=0).exclude(id__in=used_ids).order_by('?')[:12]
+        used_ids = []
+        sale_products = Product.objects.filter(sale__gt=0).order_by('?')[:12]
         used_ids.extend([i.id for i in sale_products])
         best_seller = Product.objects.filter(best_seller=True).exclude(id__in=used_ids)[:12]
         used_ids.extend([i.id for i in best_seller])
