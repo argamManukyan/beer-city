@@ -97,7 +97,6 @@ class HomePageView(View):
         slider_image = SliderPhoneImage.objects.first()
         # Special offers
         special_offers = Product.objects.filter(special_offer=True, show_products=True)[:12]
-
         used_ids = [i.id for i in special_offers]
 
         # Banners
@@ -116,8 +115,9 @@ class HomePageView(View):
             new_products = random.sample(list(new_products), len(new_products))[:12]
             used_ids.extend([i.id for i in new_products])
 
+        best_seller = Product.objects.filter(best_seller=True).exclude(id__in=used_ids)
+        used_ids.extend([i.id for i in best_seller])
         sale_products = Product.objects.filter(sale__gt=0).exclude(id__in=used_ids).order_by('?')[:12]
-
         context = {
             "slider": slider,
             "sale_products": sale_products,
