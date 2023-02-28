@@ -1,6 +1,5 @@
 from .models import *
 from .mixins import ShopMixin
-import pandas
 import json
 from decimal import Decimal
 import random
