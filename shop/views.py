@@ -96,8 +96,8 @@ class HomePageView(View):
         slider = Slider.objects.all()
         slider_image = SliderPhoneImage.objects.first()
         # Special offers
-        special_offers = Product.objects.filter(special_offer=True, show_products=True)[:12]
-        used_ids = [i.id for i in special_offers]
+        # special_offers = Product.objects.filter(special_offer=True, show_products=True)[:12]
+        used_ids = []
 
         # Banners
         banners = HomepageBanners.objects.all()
@@ -108,7 +108,9 @@ class HomePageView(View):
         video_and_text = Video.objects.filter(location='home').first()
 
         sale_products = Product.objects.filter(sale__gt=0).exclude(id__in=used_ids).order_by('?')[:12]
+        used_ids.extend([i.id for i in sale_products])
         best_seller = Product.objects.filter(best_seller=True).exclude(id__in=used_ids)[:12]
+        used_ids.extend([i.id for i in best_seller])
         new_products = Product.objects.filter(best_seller=False).exclude(id__in=used_ids)
         if new_products.exists():
             new_products = new_products.order_by('?')
@@ -117,11 +119,10 @@ class HomePageView(View):
             new_products = random.sample(list(new_products), len(new_products))[:12]
             used_ids.extend([i.id for i in new_products])
 
-        used_ids.extend([i.id for i in best_seller])
         context = {
             "slider": slider,
             "sale_products": sale_products,
-            "special_offers": special_offers,
+            # "special_offers": special_offers,
             "banners": banners,
             "homepage_categories": homepage_categories,
             "bullets": bullets,
