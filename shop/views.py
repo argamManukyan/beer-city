@@ -126,6 +126,7 @@ class HomePageView(View):
             "homepage_categories": homepage_categories,
             "bullets": bullets,
             "used_ids": used_ids,
+            "best_seller": best_seller,
             "slider_image": slider_image,
             "new_products": new_products,
             "video_and_text": video_and_text,
