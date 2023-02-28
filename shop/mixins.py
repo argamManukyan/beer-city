@@ -69,11 +69,14 @@ class ShopMixin(View):
                         q_condition_queries.append(
                             {f'productfeature__value__title': value, 'productfeature__field__filter_key': key})
 
-        if request.GET.get('min_price'):
-            products = products.filter(finally_price__gte=int(request.GET.get('min_price')))
-        if request.GET.get('max_price'):
-            products = products.filter(finally_price__lte=int(request.GET.get('max_price')))
-
+        try:
+            if request.GET.get('min_price'):
+                products = products.filter(finally_price__gte=int(request.GET.get('min_price')))
+            if request.GET.get('max_price'):
+                products = products.filter(finally_price__lte=int(request.GET.get('max_price')))
+        except Exception as e:
+            ...
+        
         if request.GET.getlist('top_filter'):
             for t_fil in request.GET.getlist('top_filter'):
                 if t_fil == 'new':
@@ -88,9 +91,12 @@ class ShopMixin(View):
         if len(q_condition_queries):
             for filter_item in q_condition_queries:
                 products = products.filter(**filter_item).distinct()
-        if request.GET.get('sorting'):
-            products = products.order_by(request.GET.get('sorting'))
-        else:
-            products = products.order_by('-id')
-
+        try:
+            if request.GET.get('sorting'):
+                products = products.order_by(request.GET.get('sorting'))
+            else:
+                products = products.order_by('-id')
+        except Exception as e:
+            ...
+        
         return self.paginate_queryset(products)
