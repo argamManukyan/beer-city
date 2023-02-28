@@ -475,3 +475,45 @@ def change_qty(request, pk):
             "price": floatformat(format(qty * calculate(product.price + items_total, request.session.get('currency')))),
             "obj_price": floatformat(format(calculate(product.price, request.session.get('currency')))),
         })
+
+
+# @transaction.atomic
+# def import_products(request):
+#     if request.method != 'POST':
+#         return
+#     data = request.FILES['excell']
+
+#     df = pandas.read_excel(data)
+
+#     for i in df.itertuples(index=False):
+#         datafield = i._asdict()
+#         main_data = {k: v for k, v in datafield.items() if not k.startswith('field') and k != 'categories'}
+#         product = Product.objects.create(**main_data)
+#         categories = list(map(int, datafield['categories'].split('//')))
+#         product.category.set(categories)
+#         product.save()
+
+#         measure_units = [
+#             {
+#                 'product_id': product.id,
+#                 'field_id': int(k.split('_')[-1]),
+#                 "value_id": int(str(v).split('.')[0])
+#                 if isinstance(v, float)
+#                 else v,
+#                 "measure_unit_id": int(str(v).split('.')[1])
+#                 if isinstance(v, float)
+#                 else None,
+#             }
+#             for k, v in datafield.items()
+#             if k.startswith('field_id')
+#         ]
+
+#         for i in measure_units:
+#             ProductFeature.objects.create(**i)
+
+#     return HttpResponse(status=200)
+    
+    
+    
+    
+    
