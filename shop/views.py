@@ -110,7 +110,7 @@ class HomePageView(View):
         video_and_text = Video.objects.filter(location='home').first()
 
         new_products = Product.objects.filter(~Q(id__in=used_ids))
-        if new_products.exists():
+        if new_products:
             if len(new_products) < 16:
                 settings.SLIDING_COUNT = len(new_products)
             new_products = random.sample(new_products.order_by('?')[:50], 12)
