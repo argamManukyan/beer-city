@@ -96,8 +96,7 @@ class HomePageView(View):
         slider = Slider.objects.all()
         slider_image = SliderPhoneImage.objects.first()
         # Special offers
-        special_offers = Product.objects.filter(special_offer=True, show_products=True)[
-            :settings.SLIDING_COUNT]
+        special_offers = Product.objects.filter(special_offer=True, show_products=True)[:12]
 
         used_ids = [special_offers.values_list('id', flat=True)]
 
@@ -109,15 +108,14 @@ class HomePageView(View):
         bullets = Bullets.objects.all()
         video_and_text = Video.objects.filter(location='home').first()
 
-        new_products = Product.objects.filter(~Q(id__in=used_ids))
+        new_products = Product.objects.exclude(id__in=used_ids)
         if new_products:
             if len(new_products) < 16:
                 settings.SLIDING_COUNT = len(new_products)
             new_products = random.sample(new_products.order_by('?')[:50], 12)
             used_ids.extend([i.id for i in new_products])
 
-        sale_products = Product.objects.filter(sale__gt=0).exclude(id__in=used_ids).order_by('?')[:16]
-        sale_products = Product.objects.filter(sale__gt=0)
+        sale_products = Product.objects.filter(sale__gt=0).exclude(id__in=used_ids).order_by('?')[:12]
 
         context = {
             "slider": slider,
