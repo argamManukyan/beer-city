@@ -98,7 +98,7 @@ class HomePageView(View):
         # Special offers
         special_offers = Product.objects.filter(special_offer=True, show_products=True)[:12]
 
-        used_ids = [special_offers.values_list('id', flat=True)]
+        used_ids = [i.id for i in special_offers]
 
         # Banners
         banners = HomepageBanners.objects.all()
