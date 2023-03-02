@@ -74,7 +74,6 @@ class AddToCartView(View):
                 'features': values,
                 'quantity': quantity
             }
-            print(dt)
             cart.item.create(**dt)
         cart_total = sum(i.item_total_price for i in cart.item.all())
         cart.cart_total = cart_total
