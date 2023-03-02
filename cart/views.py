@@ -55,13 +55,16 @@ class AddToCartView(View):
         quantity = data.pop('quantity')
         values = ','.join(list(filter(lambda x: int(x) > 0, data.values())))
         cart: Cart = get_cart(request).get('cart')
-
+        print(values)
         if cart.item.filter(product_id=product_id, features=values).exists():
             item = cart.item.filter(product_id=product_id, features__contains=values).first()
             from shop.models import Product
-            if product := Product.objects.filter(id=product_id, stored_quantity__gt=0):
-                if item.quantity + int(quantity) > product.first().stored_quantity:
-                    return HttpResponse(status=400)
+            if not (
+                product := Product.objects.filter(id=product_id, min_qty__gt=0)
+            ):
+                return HttpResponse(status=400)
+            if product.first().max_qty and item.quantity + int(quantity) > product.first().max_qty:
+                return HttpResponse(status=400)
             item.quantity += int(quantity)
             item.save()
         else:
