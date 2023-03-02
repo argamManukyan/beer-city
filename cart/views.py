@@ -70,7 +70,12 @@ class AddToCartView(View):
         cart.cart_total = cart_total
         cart.save()
 
-        return JsonResponse({'cart_items': cart.item.count()}, status=200)
+        return JsonResponse({
+            'cart_items': cart.item.count(),
+            'cart_total': "{:.0f}".format(
+                calculate(cart.cart_total, request.session['currency'], decimals=3)
+            ),
+            }, status=200)
 
 class RemoveFromBAsketView(View):
 
