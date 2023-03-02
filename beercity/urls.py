@@ -24,6 +24,7 @@ urlpatterns = [
     path('add-to-cart/', csrf_exempt(AddToCartView.as_view())),
     path('change-qty/', csrf_exempt(ChangeQuantityBasketView.as_view())),
     path('remove-basket/', csrf_exempt(RemoveFromBAsketView.as_view())),
+    
     path('like/', csrf_exempt(like_post), name='like_post'),
     path('index/', include('shop.urls')),
     path('index/', include('wish.urls')),

@@ -102,7 +102,15 @@
                                        <img src="{{ item.product.main_image.url }}">
                                     </td>
                                     <td class="order-item-name"> 
-                                       <a href="{{ item.product.get_absolute_url }}">{{ item.product.name}}</a>
+                                       <a href="{{ item.product.get_absolute_url }}">{{ item.product.name}}
+                                        {% if item.features %}
+                                            {% for it in item.features|return_values %}
+                                                <div style="margin-top: 2px; font-style: italic; font-weight: normal;">
+                                                    <span>{{ it.field.title }}</span> - <span>{{ it.value }}</span>{% if it.price %}<span> ({% if it.price > 0 %}+{% endif %} {{ it.price }} {{ request.session.currency }})</span>{% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                       </a>
                                     </td>
                                     <td class="order-item-price nowrap" width="2%">
                                        <span class="wh-point">{{ item.item_price|currency:request.session.currency }}</span>

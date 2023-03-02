@@ -15,16 +15,12 @@ class CartItem(models.Model):
     def save(self, *args, **kwargs):
         price_item = self.product.get_price
         self.item_price = price_item
+        values = self.features.split(',')
 
-        ids = []
-        for k, v in self.features.items():
-            if str(v).isdigit() and int(v) > 0:
-                ids.append(v)
-
-        if ids:
-            total_price = ProductFeature.objects.filter(id__in=ids).values('id').aggregate(total=Sum('price'))[
-                'total'] if len(ids) > 0 else 0
+        if values and self.features:
+            total_price = sum(i['price'] for i in ProductFeature.objects.filter(id__in=values).values('price'))
             self.item_price += total_price
+            self.features = ','.join(values)
         else:
             self.features = {}
         self.item_total_price = int(self.item_price) * int(self.quantity)

@@ -1,7 +1,7 @@
 import json
 from decimal import Decimal
 
-from cart.models import CartItem
+from cart.models import Cart, CartItem
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.generic import View
@@ -21,35 +21,56 @@ class CartView(View):
 
 class AddToCartView(View):
 
+    # def post(self, request, **kwargs):
+    #     data = json.loads(request.body)
+    #     product_id = data.pop('product_id')
+    #     quantity = data.pop('quantity')
+
+    #     cart = get_cart(request).get('cart')
+    #     data = {k: v for k, v in data.items() if v}
+
+    #     if data != {} and cart.item.filter(product_id=product_id, features__contains=data).exists():
+    #         item = cart.item.filter(product_id=product_id, features__contains=data).first()
+    #         item.quantity += int(quantity)
+    #         item.save()
+    #     elif data == {} and cart.item.filter(product_id=product_id, features={}).exists():
+    #         item = cart.item.filter(product_id=product_id, features={}).first()
+    #         item.quantity += int(quantity)
+    #         item.save()
+    #     else:
+    #         cart.item.create(product_id=product_id, features=data, quantity=quantity)
+    #     cart_total = 0
+    #     for i in cart.item.all():
+    #         cart_total += i.item_total_price
+    #     cart.cart_total = cart_total
+    #     cart.save()
+
+    #     return JsonResponse({'cart_items': cart.item.count(),
+    #                          'cart_total': "{:.0f}".format(
+    #                              calculate(cart.cart_total, request.session['currency'], decimals=3)), },
+    #                         status=200)
     def post(self, request, **kwargs):
         data = json.loads(request.body)
         product_id = data.pop('product_id')
         quantity = data.pop('quantity')
+        values = ','.join(list(filter(lambda x: int(x) > 0, data.values())))
+        cart: Cart = get_cart(request).get('cart')
 
-        cart = get_cart(request).get('cart')
-        data = {k: v for k, v in data.items() if v}
-
-        if data != {} and cart.item.filter(product_id=product_id, features__contains=data).exists():
-            item = cart.item.filter(product_id=product_id, features__contains=data).first()
-            item.quantity += int(quantity)
-            item.save()
-        elif data == {} and cart.item.filter(product_id=product_id, features={}).exists():
-            item = cart.item.filter(product_id=product_id, features={}).first()
+        if cart.item.filter(product_id=product_id, features=values).exists():
+            item = cart.item.filter(product_id=product_id, features__contains=values).first()
+            from shop.models import Product
+            if product := Product.objects.filter(id=product_id, stored_quantity__gt=0):
+                if item.quantity + int(quantity) > product.first().stored_quantity:
+                    return HttpResponse(status=400)
             item.quantity += int(quantity)
             item.save()
         else:
-            cart.item.create(product_id=product_id, features=data, quantity=quantity)
-        cart_total = 0
-        for i in cart.item.all():
-            cart_total += i.item_total_price
+            cart.item.create(product_id=product_id, features=values, quantity=quantity)
+        cart_total = sum(i.item_total_price for i in cart.item.all())
         cart.cart_total = cart_total
         cart.save()
 
-        return JsonResponse({'cart_items': cart.item.count(),
-                             'cart_total': "{:.0f}".format(
-                                 calculate(cart.cart_total, request.session['currency'], decimals=3)), },
-                            status=200)
-
+        return JsonResponse({'cart_items': cart.item.count()}, status=200)
 
 class RemoveFromBAsketView(View):
 
