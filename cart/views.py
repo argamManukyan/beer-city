@@ -51,12 +51,13 @@ class AddToCartView(View):
     #                         status=200)
     def post(self, request, **kwargs):
         data = json.loads(request.body)
-        print(data, 'data')
+        values = ''
         product_id = data.pop('product_id')
         quantity = data.pop('quantity')
-        values = ','.join(list(filter(lambda x: int(x) > 0, data.values())))
+        if data.values():
+            values = ','.join(list(filter(lambda x: int(x) > 0, data.values())))
         cart: Cart = get_cart(request).get('cart')
-        print(data)
+
         if cart.item.filter(product_id=product_id, features=values).exists():
             item = cart.item.filter(product_id=product_id, features__contains=values).first()
             from shop.models import Product
