@@ -346,7 +346,7 @@ class SaleOfferNewBestSellerView(ShopMixin):
         featured_values = FilterValue.objects.filter(productfeature__field__show_in_filters=True,
                                                      productfeature__value__isnull=False).distinct()
         colors = Color.objects.distinct()
-
+        brands = Brand.objects.all()
         if self.request.is_ajax():
             return self.show_filter_data(products, lazy=True)
 
@@ -355,6 +355,7 @@ class SaleOfferNewBestSellerView(ShopMixin):
             'filter_fields': filter_fields,
             'featured_values': featured_values,
             'colors': colors,
+            'brands': brands
 
         }
 
