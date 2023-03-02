@@ -341,8 +341,7 @@ class SaleOfferNewBestSellerView(ShopMixin):
         category_max_price = products.aggregate(
             max_price=Max('finally_price'))['max_price'] or 0
 
-        filter_fields = FilterField.objects.filter(
-            Q(productfeature__value__isnull=False)).distinct()
+        filter_fields = FilterField.objects.filter(productfeature__value__isnull=False, show_in_filters=True).distinct()
 
         featured_values = FilterValue.objects.filter(productfeature__field__show_in_filters=True,
                                                      productfeature__value__isnull=False).distinct()

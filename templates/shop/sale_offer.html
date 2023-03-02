@@ -51,9 +51,11 @@
                                         <span>{% trans 'Բաժիններ' %}</span>
                                     </a>
                                 </li>
-                                <li class="breadcrumbs-item">
-                                    <span>{{ st_content.page_title|capfirst }}</span>
-                                </li>
+                                {% if st_content.page_title %}
+                                    <li class="breadcrumbs-item">
+                                        <span>{{ st_content.page_title|capfirst }}</span>
+                                    </li>
+                                {% endif %}
                             </ul>
                             </div>
                         </div>
