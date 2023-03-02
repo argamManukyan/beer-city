@@ -9,6 +9,8 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 from django.conf import settings
 
+from beercity.utils import email_connection
+
 admin_email = settings.EMAIL_HOST_USER
 
 
@@ -26,10 +28,11 @@ class SendMail:
         url = 'http://' + site + reverse('users:activate', kwargs={"uid64": uid64, 'token': token})
         recipient_list = [user.email]
         message = render_to_string('users/email/activation.html', {'user': user, 'site': site, 'link': url})
-
+        connection = email_connection()
+        
         send_mail(_('Պրոֆիլի ակտիվացում'), message, from_email=admin_email, recipient_list=recipient_list,
-                  html_message=message)
-        print(True)
+                  html_message=message, connection=connection)
+
     @staticmethod
     def send_password_reset_mail(data):
         user = data.get('user')
@@ -45,6 +48,7 @@ class SendMail:
         )
         recipient_list = [user.email]
         message = render_to_string('users/email/password-reset.html', {'user': user, 'site': site, 'link': url}, request=request)
+        connection = email_connection()
 
         send_mail(_('Գաղտնաբառի վերականգնում'), message, from_email=admin_email, recipient_list=recipient_list,
-                  html_message=message, fail_silently=True)
+                  html_message=message, fail_silently=True, connection=connection)

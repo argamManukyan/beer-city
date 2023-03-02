@@ -1,7 +1,7 @@
-import random
 import time
 from threading import current_thread
-
+from django.conf import settings
+from django.core.mail import get_connection
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.deprecation import MiddlewareMixin
@@ -60,3 +60,15 @@ class GlobalRequestMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
         _requests[current_thread().ident] = request
+        
+
+def email_connection(email=settings.EMAIL_HOST_USER):
+    """Email connection handler"""
+    
+    return get_connection(
+        username=email,
+        password=settings.EMAIL_HOST_PASSWORD,
+        host=settings.EMAIL_HOST,
+        port=settings.EMAIL_PORT,
+        use_tls=True,
+    )
