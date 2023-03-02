@@ -22,7 +22,7 @@ class CartItem(models.Model):
             self.item_price += total_price
             self.features = ','.join(values)
         else:
-            self.features = {}
+            self.features = ''
         self.item_total_price = int(self.item_price) * int(self.quantity)
 
         # self.item_price = total_price + self.product.get_price

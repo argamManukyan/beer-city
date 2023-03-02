@@ -57,7 +57,6 @@ class AddToCartView(View):
         if data.values():
             values = ','.join(list(filter(lambda x: int(x) > 0, data.values())))
         cart: Cart = get_cart(request).get('cart')
-
         if cart.item.filter(product_id=product_id, features=values).exists():
             item = cart.item.filter(product_id=product_id, features__contains=values).first()
             from shop.models import Product
@@ -70,7 +69,13 @@ class AddToCartView(View):
             item.quantity += int(quantity)
             item.save()
         else:
-            cart.item.create(product_id=product_id, features=values, quantity=quantity)
+            dt = {
+                'product_id': product_id,
+                'features': values,
+                'quantity': quantity
+            }
+            print(dt)
+            cart.item.create(**dt)
         cart_total = sum(i.item_total_price for i in cart.item.all())
         cart.cart_total = cart_total
         cart.save()
