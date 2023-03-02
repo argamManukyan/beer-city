@@ -10,7 +10,7 @@ class CartItem(models.Model):
     quantity = models.IntegerField(default=0, blank=True, null=True)
     item_price = models.IntegerField(default=0, blank=True, null=True)
     item_total_price = models.IntegerField(default=0, blank=True, null=True)
-    features = models.JSONField(null=True, blank=True)
+    features = models.TextField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         price_item = self.product.get_price
