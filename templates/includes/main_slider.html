@@ -13,7 +13,7 @@
                             <a href="{{ slide.url }}" class="button big yellow">{% trans 'Անցնել Գնումների' %}
                                 <img src="{% static 'img/icons/big-arrow-black.svg' %}" alt="{% trans 'Անցնել Գնումների' %}">
                             </a>
-                            <a href="#" class="button big transparent">{% trans 'Կապ մեզ հետ' %}
+                         <a href="{% url 'contact_us' %}" class="button big transparent">{% trans 'Կապ մեզ հետ' %}
                             </a>
                         </div>
                         {% endif %}

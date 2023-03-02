@@ -1,17 +1,35 @@
-{% load i18n %}
-{% load static %}
-<!DOCTYPE html>
+{% load i18n %}{% load static %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset='utf-8'/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name='viewport'
-          content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
     <title>{% if page.meta_title %}{{ page.meta_title }}{% else %}{{ page.page_name }} | {{ domain }}{% endif %}</title>
     <meta name="Description" content="{% if page.meta_description %}{{ page.meta_description }}{% endif %}">
+    <!-- Open Graph -->
+      <meta property="og:locale" content="hy_HY">
+      <meta property="og:locale:alternate" content="en_US">
+      <meta property="og:locale:alternate" content="ru_RU">
+      <meta property="og:type" content="website">
+      <meta property="og:title" content="{{ page.page_name }}">
+      <meta property="og:description" content="Beer City ☎ +374(33) 299 299">
+      <meta property="og:url" content="{{ absolute_url }}">
+      <meta property="og:site_name" content="{{ request.get_host|capfirst }}">
+      <meta property="og:image" content="{{ full_path }}{% static 'img/share/default.jpg' %}">
+      <meta property="og:image:secure_url" content="{{ full_path }}{% static 'img/share/default.jpg' %}">
+      <!-- Open Graph end -->
+      
+      <!-- Alternate Languages -->
+      {% if not request.GET.page %}
+        <link rel="alternate" hreflang="hy" href="{{ hy_url }}" />
+        <link rel="alternate" hreflang="en" href="{{ en_url }}">
+        <link rel="alternate" hreflang="ru" href="{{ ru_url }}">
+      {% endif %}
+      <!-- Alternate Languages end -->
+      <link rel="canonical" href="{{ absolute_url }}">
+      
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
     <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
-    <link rel="stylesheet" href="{% static 'css/canapea_swiper.css' %}">
     <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
     <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
 </head>
@@ -73,8 +91,5 @@
 
 <script src="{% static 'js/canapea3.6_main.js' %}"></script>
 <script src="{% static 'js/canapea_script.js' %}"></script>
-<script src="{% static 'js/canapea_swiper.js' %}"></script>
-<script src="{% static 'js/canapea_swiperexpress.js' %}"></script>
 </body>
-
 </html>

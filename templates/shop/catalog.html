@@ -56,16 +56,13 @@
             <div class="catalog-menu">
                 <div class="cnt">
                     {% for main_category in main_categories %}
-                        <div class="row foreach-links">
+                        <div class="row foreach-links flex-content-center">
 
                             <div class="col">
                                 <div class="section-title">
                                     <div class="tith3 align-items-center">
                                         <span class="tith3-name">{{ main_category.name }}</span>
-                                        <a href="{{ main_category.get_absolute_url }}"
-                                           class="tith3-link flex-content-center">{% trans 'Դիտել' %}
-                                            <img src="{% static 'img/icons/see-arrow.svg' %}"
-                                                 alt="{% trans 'Տեսնել բոլորը' %}"></a>
+                                        <a href="{{ main_category.get_absolute_url }}"  class="tith3-link flex-content-center">{% trans 'Դիտել' %} </a>
                                     </div>
                                 </div>
                             </div>

@@ -52,24 +52,14 @@
     
     <main class="content">
         <section class="section page-content">
-            <!-- Page Banner -->
-            <div class="page-banner" style="background-image: url({% if st_content.breadcrumbs_image %}{{ st_content.breadcrumbs_image.url }}{% else %}{% static 'img/shop-banner.jpg' %}{% endif %});">
+            
+            <div class="no-page-banner" style="background-image: url({% static 'img/shop-banner.jpg' %})"></div>
+            <!-- Breadcrumbs -->
+            <div class="breadcrumbs">
                 <div class="cnt">
                     <div class="row">
                         <div class="col">
-                            <div class="page-banner-text">
-                                {% if st_content.page_title %}
-                                    <h1>{{ st_content.page_title }}</h1>
-                                {% endif %}
-                                {% if st_content.breadcrumbs_text %}
-                                  <p>{{ st_content.breadcrumbs_text|safe }}</p>      
-                                {% endif %}
-                            </div>
-                        </div>
-                        <!-- Breadcrumbs -->
-                        <div class="col">
-                            <div class="breadcrumbs">
-                                <ul class="breadcrumbs-list align-items-center">
+                            <ul class="breadcrumbs-list align-items-center">
                                 <li class="breadcrumbs-item">
                                     <a href="{% url 'home_page' %}" class="breadcrumbs-link">
                                         <span>{% trans 'Գլխավոր' %}</span>
@@ -79,13 +69,12 @@
                                     <span>{% trans 'Մեր մասին' %}</span>
                                 </li>
                             </ul>
-                            </div>
                         </div>
-                        <!-- Breadcrumbs end-->
                     </div>
                 </div>
+
             </div>
-            <!-- Page Banner end -->
+            <!-- Breadcrumbs end-->
             
             <!-- About first text -->
             <div class="section about-page first">

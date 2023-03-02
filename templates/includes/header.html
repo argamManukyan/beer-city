@@ -99,7 +99,7 @@
                 <div class="col col-auto m-none">
                   <ul class="main-memu-links align-items-center">
                        <li class="menu-butt">
-                            <a href="{% url 'menu' %}" class="button button-outline-dark flex-content-center">
+                            <a href="{% url 'catalog' %}" class="button button-outline-dark flex-content-center">
                                 <img src="{% static 'img/icons/menu-icon.svg' %}"
                                      alt="{% trans 'Մենյու' %}">
                                 {% trans 'Մենյու' %}
@@ -129,7 +129,7 @@
                                 <span class="only_icon_des flex-content-center">
                                     <img src="{% static 'img/icons/wish-middle.svg' %}"
                                          alt="{% trans 'Ցանկությունների ցուցակ' %}">
-                                 <span class="in-cart-qty flex-content-center" id="wishCount">{{ wish_ids|length }}</span>
+                                 <span class="in-cart-qty flex-content-center wishCount">{{ wish_ids|length }}</span>
                                 </span>
                                 <span class="cqs trs">{% trans 'Ցանկալի' %}</span>
                             </a>
@@ -160,7 +160,7 @@
                                 <span class="only_icon_des flex-content-center">
                                     <img src="{% static 'img/icons/wish-middle.svg' %}"
                                          alt="{% trans 'Ցանկությունների ցուցակ' %}">
-                                 <span class="in-cart-qty flex-content-center" id="wishCount">{{ wish_ids|length }}</span>
+                                 <span class="in-cart-qty flex-content-center wishCount">{{ wish_ids|length }}</span>
                                 </span>
                                 <span class="cqs trs">{% trans 'Ցանկալի' %}</span>
                             </a>
@@ -308,7 +308,7 @@
     <div class="nav-offcanvas-menu">
         <ul class="another-links">
             <li class="menu-butt-mobile">
-                <a href="{% url 'menu' %}">
+                <a href="{% url 'catalog' %}">
                     <span class="mbm-name align-items-center">
                         <img src="{% static 'img/icons/menu-icon-mobile.svg' %}"
                              alt="{% trans 'Մենյու' %}">{% trans 'Մենյու' %}
