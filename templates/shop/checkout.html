@@ -107,8 +107,7 @@
                                             <tbody>
                                                 {% for item in cart_items %}
                                                 <tr id="it-{{ item.pk }}" class="order-item">
-                                                    <td class="order-item-nom"><b class="forloop">{{ forloop.counter
-                                                            }}</b></td>
+                                                    <td class="order-item-nom"><b class="forloop">{{ forloop.counter}}</b></td>
 
                                                     <td class="order-item-img" align="center">
                                                         <img src="{{ item.product.main_image.url }}"
@@ -116,8 +115,7 @@
                                                     </td>
 
                                                     <td class="order-item-name">
-                                                        <a href="{{ item.product.get_absolute_url }}">{{
-                                                            item.product.name}}
+                                                        <a href="{{ item.product.get_absolute_url }}">{{item.product.name}}
                                                             {% if item.features %}
                                                             {% for it in item.features|return_values %}
                                                             <div
@@ -143,9 +141,9 @@
                                                     </td>
 
                                                     <td class="order-item-sum nowrap" width="2%">
-                                                        <span id="item-total_{{ item.pk }}" class="wh-point">{{
-                                                            item.item_total_price|currency:request.session.currency
-                                                            }}</span>
+                                                        <span id="item-total_{{ item.pk }}" class="wh-point">
+                                                            {{item.item_total_price|currency:request.session.currency}}
+                                                            </span>
                                                         <span class="valyuta">{{request.session.currency_icon}}</span>
                                                     </td>
 
@@ -213,7 +211,7 @@
                                                         <tr valign="top" id="payment-block-0" style="display:none;">
                                                             <th>
                                                                 <input type="radio" id="pay-type-0" class="payment-item"
-                                                                    name="payments" value="">
+                                                                    name="payments" value="1">
                                                             </th>
                                                             <td>
                                                                 <label class="label" for="pay-type-0">
@@ -228,7 +226,7 @@
                                                         <tr valign="top" id="payment-block-1">
                                                             <th>
                                                                 <input type="radio" id="pay-type-1" class="payment-item"
-                                                                    name="payments" value="" checked="true">
+                                                                    name="payments" value="2" checked="true">
                                                             </th>
                                                             <td>
                                                                 <label class="label" for="pay-type-1">
@@ -243,7 +241,7 @@
                                                         <tr valign="top" id="payment-block-2">
                                                             <th>
                                                                 <input type="radio" id="pay-type-2" class="payment-item"
-                                                                    name="payments" value="">
+                                                                    name="payments" value="3">
                                                             </th>
                                                             <td>
                                                                 <label class="label" for="pay-type-2">
@@ -268,7 +266,7 @@
                                                         <tr valign="top" id="payment-block-3">
                                                             <th>
                                                                 <input type="radio" id="pay-type-3" class="payment-item"
-                                                                    name="payments" value="">
+                                                                    name="payments" value="4">
                                                             </th>
                                                             <td>
                                                                 <label class="label" for="pay-type-3">
@@ -276,8 +274,9 @@
                                                                 </label>
                                                                 <div class="delivery-description">
                                                                     <ul class="soc-icons align-items-center">
-                                                                        <li><img src="{% static 'img/icons/iDram.svg' %}"
-                                                                                alt="iDram"></li>
+                                                                        <li>
+                                                                            <img src="{% static 'img/icons/iDram.svg' %}" alt="iDram">
+                                                                        </li>
                                                                     </ul>
                                                                     <p>{% trans 'Կարող եք վճարել «Իդրամ» վճարային համակարգի միջոցով:' %}<br></p>
                                                                 </div>
@@ -302,8 +301,7 @@
                                                     <div class="two-group align-items-center">
                                                         <input type="number" class="bp-ok-ok" name="promosystem"
                                                             value="" placeholder="">
-                                                        <button type="button"
-                                                            class="button yellow-butt normal">ОК</button>
+                                                        <button type="button" class="button yellow-butt normal">ОК</button>
                                                     </div>
 
                                                 </div>
@@ -318,8 +316,10 @@
                                                 <div class="bp-block-title">
                                                     <h4 class="bp-block-hint flex-center-between active">
                                                         {% trans 'Բոնուս' %}
-                                                        <img src="{% static 'img/icons/cat-filter.svg' %}"
-                                                            class="cat-left border-icons up-cat" alt="Promo">
+                                                        <img src="{% static 'img/icons/cat-filter.svg' %}" 
+                                                            class="cat-left border-icons up-cat"
+                                                            alt="Promo"
+                                                        >
                                                     </h4>
                                                 </div>
 
@@ -328,8 +328,7 @@
                                                         <input type="number" class="bp-ok" min="1" max="1000"
                                                             onkeyup="if(this.value>1000){this.value='1000';}else if(this.value<0){this.value='0';}"
                                                             name="bonussystem" value="" placeholder="">
-                                                        <button type="button"
-                                                            class="button yellow-butt normal">ОК</button>
+                                                        <button type="button" class="button yellow-butt normal">ОК</button>
                                                     </div>
 
                                                 </div>
@@ -380,10 +379,10 @@
 
                                             <div class="two-inputs flex-center-between changes-blocks">
                                                 <div class="input-fields all-partners">
-                                                    <label for="district_name" class="label-ord-in">
+                                                    <label for="state" class="label-ord-in">
                                                         {% trans 'Քաղաք / Մարզ' %}
                                                     </label>
-                                                    <select id="id_district" class="js-select2" name="district_name">
+                                                    <select id="state" class="js-select2" name="state">
 
                                                         <option value="">{% trans ' -- Ընտրել --' %}</option>
                                                         <option value="">Երևան</option>
@@ -393,10 +392,10 @@
                                                 </div>
 
                                                 <div class="input-fields all-partners">
-                                                    <label for="state_name" class="label-ord-in">
+                                                    <label for="region" class="label-ord-in">
                                                         {% trans 'Շրջանը / Մարզը' %}
                                                     </label>
-                                                    <select id="id_state" class="js-select2" name="state_name">
+                                                    <select id="region" class="js-select2" name="region">
                                                         <option value="">{% trans ' -- Ընտրել --' %}</option>
                                                         <option value="">Աջափնյակ</option>
                                                         <option value="">Ավան</option>
@@ -497,8 +496,8 @@
                         required: true,
                         email: true
                     },
-                    district_name: "required",
-                    state_name: "required",
+                    state: "required",
+                    region: "required",
                     address: "required",
                 },
 
@@ -510,8 +509,8 @@
                         required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
                         email: "{% trans 'Մուտքագրեք Ձեր Էլ. Փոստի հասցեն' %}"
                     },
-                    district_name: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
-                    state_name: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                    state: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                    region: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
                     address: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
                 },
 

@@ -15,7 +15,7 @@ class State(models.Model):
         verbose_name_plural = 'Մարզեր'
 
 
-class Country(models.Model):
+class Region(models.Model):
     state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=100)
     price = models.PositiveIntegerField(default=0)
@@ -36,7 +36,7 @@ class User(AbstractUser):
     sent_verification_code = models.BooleanField(default=False)
     address = models.TextField(blank=True, null=True)
     avatar = CustomLogoField(blank=True, null=True)
-    city = models.ForeignKey(Country,
+    city = models.ForeignKey(Region,
                              on_delete=models.SET_NULL,
                              null=True,
                              blank=True,

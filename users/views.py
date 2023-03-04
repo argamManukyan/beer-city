@@ -21,7 +21,7 @@ from django.views.decorators.cache import never_cache
 from .email import SendMail
 from .forms import UserForm
 from .settings import CUSTOM_MESSAGES
-from users.models import User, State, Country
+from users.models import User, State, Region
 
 
 class SignupView(View):
@@ -218,12 +218,12 @@ class ProfileView(LoginRequiredMixin, View):
         max_days_count = range(1, 32)
 
         states = State.objects.all().order_by('id')
-        cities = Country.objects.filter(state=states.first())
+        cities = Region.objects.filter(state=states.first())
 
         if request.is_ajax():
 
             try:
-                cities = Country.objects.filter(Q(state_id=int(request.GET['id'])))
+                cities = Region.objects.filter(Q(state_id=int(request.GET['id'])))
                 return JsonResponse(data=list(cities.values('name', 'price', 'id')), safe=False)
             except:
                 return JsonResponse(data={}, safe=False)

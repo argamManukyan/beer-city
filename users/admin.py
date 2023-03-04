@@ -32,7 +32,7 @@ class StateResource(ModelResource):
     state = fields.Field(attribute='state', column_name='state', widget=ForeignKeyWidget(State, 'name_hy'))
 
     class Meta:
-        model = Country
+        model = Region
 
 
 class ExcellModelImport(ImportExportModelAdmin):
@@ -44,4 +44,4 @@ class GenericModelField(ExcellModelImport):
 
 
 admin.site.register(State, ImportExportModelAdmin)
-admin.site.register(Country, GenericModelField)
+admin.site.register(Region, GenericModelField)
