@@ -1,10 +1,8 @@
-from sys import meta_path
 from .models import *
 from .mixins import ShopMixin
 import json
 from decimal import Decimal
 import random
-import pandas
 from django.template.defaultfilters import floatformat
 import requests
 from django.db import transaction
