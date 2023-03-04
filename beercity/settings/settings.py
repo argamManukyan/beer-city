@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'adminsortable2',
     'django_cleanup',
-    'auditlog',
+    # 'auditlog',
     'ckeditor',
     'ckeditor_uploader',
     'mptt',
@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'flatpages',
     'aboutus',
     'contactus',
+    'orders',
 ]
 
 LOCALE_PATHS = [
@@ -87,7 +88,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
-    'auditlog.middleware.AuditlogMiddleware',
     'beercity.utils.GlobalRequestMiddleware',
 ]
 

@@ -1,8 +1,10 @@
+from sys import meta_path
 from .models import *
 from .mixins import ShopMixin
 import json
 from decimal import Decimal
 import random
+import pandas
 from django.template.defaultfilters import floatformat
 import requests
 from django.db import transaction
@@ -477,6 +479,7 @@ def change_qty(request, pk):
         })
 
 
+# @csrf_exempt
 # @transaction.atomic
 # def import_products(request):
 #     if request.method != 'POST':
@@ -484,31 +487,48 @@ def change_qty(request, pk):
 #     data = request.FILES['excell']
 
 #     df = pandas.read_excel(data)
-
+#     sell_names = {'name_hy', 'name_ru','name_en','is_active','price','sale','brand_id'}
+#     fields = ['field_id_4', 'field_id_14',  'field_id_17', 'field_id_7']
+#     valued_fields = ['val_id_9', 'val_id_15', 'val_id_16', 'val_id_3', 'val_id_1']
+    
 #     for i in df.itertuples(index=False):
+#         time.sleep(1)
 #         datafield = i._asdict()
-#         main_data = {k: v for k, v in datafield.items() if not k.startswith('field') and k != 'categories'}
+        
+#         main_data = {k: v for k, v in datafield.items() if k in sell_names}
 #         product = Product.objects.create(**main_data)
 #         categories = list(map(int, datafield['categories'].split('//')))
 #         product.category.set(categories)
 #         product.save()
+#         field_elements = []
+        
+#         for k, v in datafield.items():
+#             if k:
+#                 if k in fields:
+#                     fielded_without_vals = {
+#                         "field_id": k.split('_')[-1],
+#                         "product_id": product.id,
+#                         "value_id": v
+#                     }
+            
+#                     field_elements.append(fielded_without_vals)
 
-#         measure_units = [
-#             {
-#                 'product_id': product.id,
-#                 'field_id': int(k.split('_')[-1]),
-#                 "value_id": int(str(v).split('.')[0])
-#                 if isinstance(v, float)
-#                 else v,
-#                 "measure_unit_id": int(str(v).split('.')[1])
-#                 if isinstance(v, float)
-#                 else None,
-#             }
-#             for k, v in datafield.items()
-#             if k.startswith('field_id')
-#         ]
-
-#         for i in measure_units:
+#                 if k in valued_fields and not isinstance(v, float):
+#                     v_spl = str(v).split('/')[0]
+#                     meas = str(v).split('/')[1]
+#                     if FilterValue.objects.filter(title_en=v_spl).exists():
+#                         val_id = FilterValue.objects.filter(title_en=v_spl).first()
+#                     else:
+#                         val_id = FilterValue.objects.create(title_en=v_spl, title_hy=v_spl, title_ru=v_spl)
+#                     fielded_without_vals = {
+#                         "field_id": k.split('_')[-1],
+#                         "product_id": product.id,
+#                         "value_id": val_id.id,
+#                         "measure_unit_id": meas
+#                     }
+#                     field_elements.append(fielded_without_vals)
+        
+#         for i in field_elements:
 #             ProductFeature.objects.create(**i)
 
 #     return HttpResponse(status=200)

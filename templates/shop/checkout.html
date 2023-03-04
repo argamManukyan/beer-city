@@ -1,0 +1,568 @@
+{% load currency %}{% load static %}{% load my_url %}{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% trans 'Պատվերի ձևակերպում' %} | {{ request.get_host|capfirst }}</title>
+    <meta name="Description" content="Beer City ☎ +374(33) 299 299">
+    <!-- Open Graph -->
+    <meta property="og:locale" content="hy_HY">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:locale:alternate" content="ru_RU">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{% trans 'Պատվերի ձևակերպում' %}">
+    <meta property="og:description" content="Beer City ☎ +374(33) 299 299">
+    <meta property="og:url" content="{{ absolute_url }}">
+    <meta property="og:site_name" content="{{ request.get_host|capfirst }}">
+    <meta property="og:image" content="{{ full_path }}{% static 'img/share/default.jpg' %}">
+    <meta property="og:image:secure_url" content="{{ full_path }}{% static 'img/share/default.jpg' %}">
+    <!-- Open Graph end -->
+    <!-- Alternate Languages -->
+    {% if not request.GET.page %}
+    <link rel="alternate" hreflang="hy" href="{{ hy_url }}" />
+    <link rel="alternate" hreflang="en" href="{{ en_url }}">
+    <link rel="alternate" hreflang="ru" href="{{ ru_url }}">
+    {% endif %}
+    <!-- Alternate Languages end -->
+    <link rel="canonical" href="{{ absolute_url }}">
+
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/css/intlTelInput.css">
+    <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
+</head>
+
+<body>
+
+    <div id="root">
+
+        <!-- Header -->
+        {% include 'includes/header.html' %}
+        <!-- Header end -->
+
+        <!-- Main content -->
+        <main class="content">
+            <section class="section page-content">
+                <div class="no-page-banner" style="background-image: url({% static 'img/shop-banner.jpg' %})"></div>
+                <!-- Breadcrumbs -->
+                <div class="breadcrumbs">
+                    <div class="cnt">
+                        <div class="row">
+                            <div class="col">
+                                <ul class="breadcrumbs-list align-items-center">
+                                    <li class="breadcrumbs-item">
+                                        <a href="{% url 'home_page' %}" class="breadcrumbs-link">
+                                            <span>{% trans 'Գլխավոր' %}</span>
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumbs-item">
+                                        <span>{% trans 'Պատվերի ձևակերպում' %}</span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Breadcrumbs end-->
+
+
+                <!-- Checkout -->
+                <div class="checkout-page">
+                    <div class="cnt">
+
+                        <!-- Page title -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="two-version-title">
+                                    <h1>{% trans 'Պատվերի ձևակերպում' %}</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Page tTitle end -->
+
+                        <!-- Cart items -->
+                        <div class="full-cart-items">
+                            <div class="row">
+                                <div class="col">
+                                    <div id="order-table">
+                                        <table id="cartTableALL">
+                                            <thead>
+                                                <tr class="order-head">
+                                                    <th class="order-item-nom" width="1%">№</th>
+                                                    <th class="order-head-img" width="2%">{% trans 'Նկար' %}</th>
+                                                    <th class="order-head-name">{% trans 'Անվանում' %}</th>
+                                                    <th class="order-head-price" width="3%">{% trans 'Գին' %}</th>
+                                                    <th class="order-head-cnt nowrap">{% trans 'Քանակ' %}</th>
+                                                    <th class="order-head-sum">{% trans 'Գումար' %}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for item in cart_items %}
+                                                <tr id="it-{{ item.pk }}" class="order-item">
+                                                    <td class="order-item-nom"><b class="forloop">{{ forloop.counter
+                                                            }}</b></td>
+
+                                                    <td class="order-item-img" align="center">
+                                                        <img src="{{ item.product.main_image.url }}"
+                                                            alt="{{ item.product.name}}">
+                                                    </td>
+
+                                                    <td class="order-item-name">
+                                                        <a href="{{ item.product.get_absolute_url }}">{{
+                                                            item.product.name}}
+                                                            {% if item.features %}
+                                                            {% for it in item.features|return_values %}
+                                                            <div
+                                                                style="margin-top: 2px; font-style: italic; font-weight: normal;">
+                                                                <span>{{ it.field.title }}</span> - <span>{{ it.value }}
+                                                                </span>{% if it.price %}<span>
+                                                                ({% if it.price > 0 %}+{% endif %} {{ it.price }} {{request.session.currency }})</span>
+                                                                {% endif %}
+                                                            </div>
+                                                            {% endfor %}
+                                                            {% endif %}
+                                                        </a>
+                                                    </td>
+
+                                                    <td class="order-item-price nowrap" width="2%">
+                                                        <span class="wh-point">{{
+                                                            item.item_price|currency:request.session.currency }}</span>
+                                                        <span class="valyuta">{{request.session.currency_icon}}</span>
+                                                    </td>
+
+                                                    <td class="order-item-cnt" width="4%">
+                                                        <b class="forloop">{{ forloop.counter }}</b>
+                                                    </td>
+
+                                                    <td class="order-item-sum nowrap" width="2%">
+                                                        <span id="item-total_{{ item.pk }}" class="wh-point">{{
+                                                            item.item_total_price|currency:request.session.currency
+                                                            }}</span>
+                                                        <span class="valyuta">{{request.session.currency_icon}}</span>
+                                                    </td>
+
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Cart items end -->
+
+                        <!-- Form -->
+                        <div class="form-checkout-page">
+                            <form id="checkout-form" method="POST">
+                                <input type="hidden" name="">
+                                <div class="row flex-content-center">
+
+                                    <!-- Deliver and payment col -->
+                                    <div class="col col-2">
+                                        <div class="delivery-payment_methods">
+
+                                            <div class="delivery-methods">
+                                                <h2 class="dpm-title align-items-center">
+                                                    <img src="{% static 'img/icons/delivery-method.svg' %}"
+                                                        alt="{% trans 'Առաքման եղանակ' %}">{% trans 'Առաքման եղանակ' %}
+                                                </h2>
+                                                <table id="delivery-list" class="methods-list">
+                                                    <tbody class="align-items-center">
+
+                                                        <tr valign="top" class="dlp-tr" id="delivery-block-1">
+                                                            <td>
+                                                                <label class="label" for="del-type-1">{% trans 'Առաքում' %}</label>
+                                                            </td>
+                                                            <th>
+                                                                <input type="radio" id="del-type-1" class="del-item"
+                                                                    name="delivery" value="2" checked="">
+                                                            </th>
+                                                        </tr>
+
+                                                        <tr valign="top" class="dlp-tr" id="delivery-block-2">
+                                                            <td>
+                                                                <label class="label" for="del-type-2">{% trans 'Կվերցնեմ ինքս' %}</label>
+                                                            </td>
+                                                            <th>
+                                                                <input type="radio" id="del-type-2" class="del-item"
+                                                                    name="delivery" value="1">
+                                                            </th>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div class="payment-methods">
+                                                <h2 class="dpm-title align-items-center">
+                                                    <img src="{% static 'img/icons/payment-method.svg' %}"
+                                                        alt="{% trans 'Վճարման եղանակ' %}">{% trans 'Վճարման եղանակ' %}
+                                                </h2>
+
+                                                <table id="payments-list" class="methods-list">
+                                                    <tbody>
+
+                                                        <tr valign="top" id="payment-block-0" style="display:none;">
+                                                            <th>
+                                                                <input type="radio" id="pay-type-0" class="payment-item"
+                                                                    name="payments" value="">
+                                                            </th>
+                                                            <td>
+                                                                <label class="label" for="pay-type-0">
+                                                                    <b>{% trans 'Կանխիկ տեղում' %}</b>
+                                                                </label>
+                                                                <div class="delivery-description">
+                                                                    <p>{% trans 'Վճարումը իրականացվում է Beer City խանութ-սրահում:' %}</p>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr valign="top" id="payment-block-1">
+                                                            <th>
+                                                                <input type="radio" id="pay-type-1" class="payment-item"
+                                                                    name="payments" value="" checked="true">
+                                                            </th>
+                                                            <td>
+                                                                <label class="label" for="pay-type-1">
+                                                                    <b>{% trans 'Կանխիկ առաքման պահին' %}</b>
+                                                                </label>
+                                                                <div class="delivery-description">
+                                                                    <p>{% trans 'Կարող եք վճարել առաքչին հենց առաքման ժամանակ:' %}</p>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr valign="top" id="payment-block-2">
+                                                            <th>
+                                                                <input type="radio" id="pay-type-2" class="payment-item"
+                                                                    name="payments" value="">
+                                                            </th>
+                                                            <td>
+                                                                <label class="label" for="pay-type-2">
+                                                                    <b>{% trans 'Անկանխիկ (ARCA/ VISA/ MASTERCARD)' %}</b>
+                                                                </label>
+                                                                <div class="delivery-description">
+                                                                    <ul class="payments-icons align-items-center">
+                                                                        <li><img src="{% static 'img/icons/master.svg' %}"
+                                                                                alt="master card"></li>
+                                                                        <li><img src="{% static 'img/icons/visa.svg' %}"
+                                                                                alt="visa card"></li>
+                                                                        <li><img src="{% static 'img/icons/arca.svg' %}"
+                                                                                alt="arca card"></li>
+                                                                    </ul>
+                                                                    <p>{% trans 'Կարող եք վճարել բանկային քարտի միջոցով' %}
+                                                                        <br>(ARCA/VISA/MASTERCARD)
+                                                                    </p>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr valign="top" id="payment-block-3">
+                                                            <th>
+                                                                <input type="radio" id="pay-type-3" class="payment-item"
+                                                                    name="payments" value="">
+                                                            </th>
+                                                            <td>
+                                                                <label class="label" for="pay-type-3">
+                                                                    <b>{% trans 'Անկանխիկ ("Idram")' %} </b>
+                                                                </label>
+                                                                <div class="delivery-description">
+                                                                    <ul class="soc-icons align-items-center">
+                                                                        <li><img src="{% static 'img/icons/iDram.svg' %}"
+                                                                                alt="iDram"></li>
+                                                                    </ul>
+                                                                    <p>{% trans 'Կարող եք վճարել «Իդրամ» վճարային համակարգի միջոցով:' %}<br></p>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <!-- Promo code -->
+                                            <div id="PromoCode" class="bp-block">
+
+                                                <div class="bp-block-title">
+                                                    <h4 class="bp-block-hint flex-center-between active">
+                                                        {% trans 'Պրոմո կոդ' %}
+                                                        <img src="{% static 'img/icons/cat-filter.svg' %}"
+                                                            class="cat-left border-icons up-cat" alt="Promo">
+                                                    </h4>
+                                                </div>
+
+                                                <div class="bp-block-content">
+                                                    <div class="two-group align-items-center">
+                                                        <input type="number" class="bp-ok-ok" name="promosystem"
+                                                            value="" placeholder="">
+                                                        <button type="button"
+                                                            class="button yellow-butt normal">ОК</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <!-- Promo code -->
+
+                                            <hr>
+
+                                            <!-- Bonus -->
+                                            <div id="BonusSystem" class="bp-block">
+
+                                                <div class="bp-block-title">
+                                                    <h4 class="bp-block-hint flex-center-between active">
+                                                        {% trans 'Բոնուս' %}
+                                                        <img src="{% static 'img/icons/cat-filter.svg' %}"
+                                                            class="cat-left border-icons up-cat" alt="Promo">
+                                                    </h4>
+                                                </div>
+
+                                                <div class="bp-block-content">
+                                                    <div class="two-group align-items-center">
+                                                        <input type="number" class="bp-ok" min="1" max="1000"
+                                                            onkeyup="if(this.value>1000){this.value='1000';}else if(this.value<0){this.value='0';}"
+                                                            name="bonussystem" value="" placeholder="">
+                                                        <button type="button"
+                                                            class="button yellow-butt normal">ОК</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <!--Bonus code -->
+
+                                        </div>
+
+
+                                    </div>
+                                    <!-- Deliver and payment col end -->
+
+                                    <!-- order Form -->
+                                    <div class="col col-2">
+                                        <div class="form-order">
+                                            <h2 class="dpm-title align-items-center">
+                                                <img src="{% static 'img/icons/form-order.svg' %}"
+                                                    alt="{% trans 'Պատվերի մանրամասներ' %}">{% trans 'Պատվերի մանրամասներ' %}
+                                            </h2>
+
+                                            <div class="two-inputs flex-center-between">
+                                                <div class="input-fields all-auth">
+                                                    <label for="first_name">{% trans 'Անուն' %} *</label>
+                                                    <input type="text" id="first_name" name="first_name">
+                                                </div>
+
+                                                <div class="input-fields all-auth">
+                                                    <label for="last_name">{% trans 'Ազգանուն *' %} *</label>
+                                                    <input type="text" id="last_name" name="last_name">
+                                                </div>
+                                            </div>
+
+                                            <div class="two-inputs flex-center-between">
+                                                <div class="input-fields all-partners">
+                                                    <input type="hidden" name="phone_number" value="" id="pN">
+                                                    <label for="phone" class="label-ord-in er">
+                                                        {% trans 'Հեռախոսահամար' %} *</label>
+                                                    <input type="tel" name="phone" maxlength="150" id="phoneNumber"
+                                                        onkeyup="document.getElementById('pN').value = document.querySelector('.iti__selected-dial-code').textContent"
+                                                        value="">
+                                                </div>
+
+                                                <div class="input-fields all-auth">
+                                                    <label for="email">{% trans 'Էլ. փոստ' %} *</label>
+                                                    <input type="email" id="email" name="email">
+                                                </div>
+                                            </div>
+
+                                            <div class="two-inputs flex-center-between changes-blocks">
+                                                <div class="input-fields all-partners">
+                                                    <label for="district_name" class="label-ord-in">
+                                                        {% trans 'Քաղաք / Մարզ' %}
+                                                    </label>
+                                                    <select id="id_district" class="js-select2" name="district_name">
+
+                                                        <option value="">{% trans ' -- Ընտրել --' %}</option>
+                                                        <option value="">Երևան</option>
+                                                        <option value="">Արագածոտն</option>
+
+                                                    </select>
+                                                </div>
+
+                                                <div class="input-fields all-partners">
+                                                    <label for="state_name" class="label-ord-in">
+                                                        {% trans 'Շրջանը / Մարզը' %}
+                                                    </label>
+                                                    <select id="id_state" class="js-select2" name="state_name">
+                                                        <option value="">{% trans ' -- Ընտրել --' %}</option>
+                                                        <option value="">Աջափնյակ</option>
+                                                        <option value="">Ավան</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="input-fields all-partners">
+                                                <label for="address">{% trans 'Հասցե' %} *</label>
+                                                <textarea id="address" name="address" class="fw" rows="3"></textarea>
+                                            </div>
+
+                                            <div class="input-fields all-partners">
+                                                <label for="notes" class="label-ord-in">{% trans 'Նշումներ' %}</label>
+                                                <textarea name="notes" cols="20" rows="3" id="notes"></textarea>
+                                            </div>
+
+                                            <div class="delivery-total-sum mob-clone m-none">
+                                                <h4 class="text-center">{% trans 'Ընդհանուր վճարման ենթակա գումար' %}</h4>
+                                                <div class="amount-sum flex-center-between">
+                                                    <p class="money-tit">{% trans 'Գումար' %}:</p>
+                                                    <p class="money-qty">
+                                                        <span class="amount-p wh-point cart-amount">7.600</span>
+                                                        <span class="valyuta">AMD</span>
+                                                    </p>
+                                                </div>
+                                                <div class="deliver-sum flex-center-between">
+                                                    <p class="money-tit">{% trans 'Առաքում' %}:</p>
+                                                    <p class="money-qty">
+                                                        <span class="delivery-p wh-point delivery-price">26.500</span>
+                                                        <span class="valyuta">AMD</span>
+                                                    </p>
+                                                </div>
+                                                <div class="total-cost-sum flex-center-between">
+                                                    <p>{% trans 'Ընդհանուր' %}:</p>
+                                                    <p>
+                                                        <span class="total-cost-p wh-point cart-total">34.100</span>
+                                                        <span class="valyuta">AMD</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <br>
+
+                                            <div class="input-fields">
+                                                <input type="hidden" name="delPrice" id="delPrice">
+                                                <input type="submit" id="order-button"
+                                                    value="{% trans 'Ձևակերպել պատվերը' %}"
+                                                    class="button big dark flex-content-center">
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <!-- order Form end -->
+
+                                </div>
+                            </form>
+                        </div>
+                        <!-- Form end -->
+
+                    </div>
+                </div>
+                <!-- Checkout end -->
+
+
+            </section>
+        </main>
+        <!-- Main content end -->
+
+        <!-- Footer -->
+        {% include 'includes/footer.html' %}
+        <!-- Footer end -->
+    </div>
+
+
+    <script src="{% static 'js/canapea3.6_main.js' %}"></script>
+    <script src="{% static 'js/canapea_script.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/intlTelInput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+
+
+    <script>
+
+        //select2
+        $(".js-select2").select2();
+
+        // Validate datepicker
+        $(function () {
+            $('#checkout-form').validate({
+                rules: {
+                    first_name: "required",
+                    last_name: "required",
+                    phone: "required",
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    district_name: "required",
+                    state_name: "required",
+                    address: "required",
+                },
+
+                messages: {
+                    first_name: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                    last_name: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                    phone: { required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}" },
+                    email: {
+                        required: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                        email: "{% trans 'Մուտքագրեք Ձեր Էլ. Փոստի հասցեն' %}"
+                    },
+                    district_name: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                    state_name: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                    address: "{% trans 'Դաշտը պարտադիր է լրացման համար' %}",
+                },
+
+                submitHandler: function (form) {
+                    document.getElementById('delPrice').value = document.getElementById('delivery-price').textContent
+                    form.submit();
+                    document.getElementById('order-button').setAttribute('disabled', true)
+                }
+            });
+
+        });
+
+
+        // Phone number mask
+        $(function () {
+            var input = document.querySelector("input[name=phone]"),
+                iti = window.intlTelInput(input, {
+                    autoPlaceholder: "aggressive",
+                    geoIpLookup: function (callback) {
+                        $.get("https://ipinfo.io", function () {
+                        }, "jsonp").always(function (resp) {
+                            var countryCode = (resp && resp.country) ? resp.country : "";
+                            callback(countryCode);
+                        });
+                    },
+                    initialCountry: "auto",
+                    nationalMode: true,
+                    placeholderNumberType: "MOBILE",
+                    preferredCountries: ['cn', 'jp'],
+                    separateDialCode: true,
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/utils.js",
+                });
+
+            var setMask = function (placeholder) {
+                if (!placeholder) placeholder = "";
+                mask = placeholder.replace(/\d/gi, '9');
+                $('input[name=phone]').mask(mask);
+            }
+
+            input.addEventListener('countrychange', function (e) {
+                setMask(input.getAttribute('placeholder'));
+            });
+
+            iti.promise.then(function () {
+                setMask(input.getAttribute('placeholder'));
+            });
+            document.getElementById('pN').value = `+${window.intlTelInputGlobals.getInstance(input).s.dialCode}`
+
+        });   
+    </script>
+
+</body>
+
+</html>

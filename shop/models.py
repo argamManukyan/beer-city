@@ -2,7 +2,6 @@ import random
 import time
 from datetime import timedelta
 from colorfield.fields import ColorField
-from auditlog.registry import auditlog
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -96,8 +95,6 @@ class Category(MPTTModel, CustomMetaModel):
             parent = parent.parent
 
         return '-->'.join(title_list[::-1]) or ''
-
-auditlog.register(Category)
 
 
 class CategoryBonuses(models.Model):
@@ -248,7 +245,7 @@ class Product(CustomMetaModel):
         rand_id = None
         while code_find:
             rand_id = random.randrange(1000, 9999)
-            if not self.__class__.objects.filter(product_custom_id=rand_id).exists():
+            if not self.__class__.objects.filter(product_custom_id=f'BC0{rand_id}').exists():
                 code_find = False
                 return rand_id
     

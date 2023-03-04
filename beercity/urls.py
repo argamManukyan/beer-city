@@ -15,6 +15,7 @@ urlpatterns = [
     path('currencies/', include('currencies.urls')),
     path('setcurrency/', csrf_exempt(setcurrency), name='setcurrency'),
     path('add-rating/', create_rating, name='create_rating'),
+    # path('import_products/', csrf_exempt(import_products) ),
     path('add_to_wish/', add_to_wish, name='add_to_wish'),
     path('rosetta/', include('rosetta.urls')),
     path('result/', ajaxSearch, name='ajaxsearch'),
@@ -27,6 +28,7 @@ urlpatterns = [
     
     path('like/', csrf_exempt(like_post), name='like_post'),
     path('index/', include('shop.urls')),
+    path('index/', include('orders.urls')),
     path('index/', include('wish.urls')),
     path('index/', include('contactus.urls')),
     path('index/', include('cart.urls')),
@@ -38,6 +40,7 @@ urlpatterns = [
 #
 urlpatterns += i18n_patterns(
     path('index/', include('shop.urls')),
+    path('index/', include('orders.urls')),
     path('index/', include('contactus.urls')),
     path('index/', include('wish.urls')),
     path('index/', include('cart.urls')),
