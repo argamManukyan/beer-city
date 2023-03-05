@@ -24,7 +24,7 @@ class OrderItemAdmin(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemAdmin]
-    fields = [i.name for i in Order._meta.fields]
+    list_display = [i.name for i in Order._meta.fields]
 
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Bonus)
