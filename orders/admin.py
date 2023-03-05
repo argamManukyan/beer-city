@@ -10,7 +10,9 @@ class OrderItemAdmin(admin.TabularInline):
     def get_image(self, obj: OrderItem):
         if obj.product_image:
             return mark_safe(f'<img src="{obj.product_image.url}" width="100px" height="100px" />')
-        return mark_safe(f'<img src="/media/defaults/product.jpg" width="120px" height="120px" />')
+        return mark_safe(
+            '<img src="/media/defaults/product.jpg" width="120px" height="120px" />'
+        )
     
     get_image.short_description = 'Նկար'
     
@@ -22,6 +24,7 @@ class OrderItemAdmin(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemAdmin]
+    fields = [i.name for i in Order._meta.fields]
 
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Bonus)
