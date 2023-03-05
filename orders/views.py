@@ -23,7 +23,7 @@ class CreateOrderView(View):
 
     def get(self, request, *args, **kwargs):
         
-        if not self.cart or self.cart.item.count():
+        if not self.cart or self.cart.cart_total == 0:
             return redirect('home_page')
 
         # Getting addresses
