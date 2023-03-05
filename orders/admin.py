@@ -26,6 +26,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemAdmin]
     list_display = [i.name for i in Order._meta.fields if i.name not in ['created_at', 'updated_at']]
     list_display.extend(['created_at', 'updated_at'])
+    list_filter = ['payments', 'delivery']
     
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Bonus)
