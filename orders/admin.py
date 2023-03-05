@@ -24,8 +24,9 @@ class OrderItemAdmin(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemAdmin]
-    list_display = [i.name for i in Order._meta.fields]
-
+    list_display = [i.name for i in Order._meta.fields if i.name not in ['created_at', 'updated_at']]
+    list_display.extend(['created_at', 'updated_at'])
+    
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Bonus)
 admin.site.register(PromoCodes)
