@@ -119,4 +119,4 @@ class CreateOrderView(View):
             ...
         
 
-        return JsonResponse({}, status=200)
+        return redirect('home_page')
