@@ -430,21 +430,21 @@
                                                 <div class="amount-sum flex-center-between">
                                                     <p class="money-tit">{% trans 'Գումար' %}:</p>
                                                     <p class="money-qty">
-                                                        <span class="amount-p wh-point cart-amount">7.600</span>
+                                                        <span class="amount-p wh-point cart-amount">{{cart.cart_total|currency: request.session.currency}}</span>
                                                         <span class="valyuta">AMD</span>
                                                     </p>
                                                 </div>
                                                 <div class="deliver-sum flex-center-between">
                                                     <p class="money-tit">{% trans 'Առաքում' %}:</p>
                                                     <p class="money-qty">
-                                                        <span class="delivery-p wh-point delivery-price">26.500</span>
+                                                        <span class="delivery-p wh-point delivery-price"></span>
                                                         <span class="valyuta">AMD</span>
                                                     </p>
                                                 </div>
                                                 <div class="total-cost-sum flex-center-between">
                                                     <p>{% trans 'Ընդհանուր' %}:</p>
                                                     <p>
-                                                        <span class="total-cost-p wh-point cart-total">34.100</span>
+                                                        <span class="total-cost-p wh-point cart-total"></span>
                                                         <span class="valyuta">AMD</span>
                                                     </p>
                                                 </div>
