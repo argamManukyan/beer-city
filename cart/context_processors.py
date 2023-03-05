@@ -1,4 +1,3 @@
-from shop.views import get_ip
 from .models import Cart
 
 

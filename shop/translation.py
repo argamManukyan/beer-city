@@ -31,7 +31,7 @@ class StateTranslation(TranslationOptions):
     fields = ['name', 'large_text', 'short_text', 'meta_title', 'meta_description']
 
 
-@register([Region, Brand])
+@register([Region, Brand, State])
 class CountryTranslation(TranslationOptions):
     fields = ['name',]
 

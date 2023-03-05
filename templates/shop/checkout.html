@@ -131,19 +131,18 @@
                                                     </td>
 
                                                     <td class="order-item-price nowrap" width="2%">
-                                                        <span class="wh-point">{{
-                                                            item.item_price|currency:request.session.currency }}</span>
+                                                        <span class="wh-point">{{ item.item_price|currency:request.session.currency }}</span>
                                                         <span class="valyuta">{{request.session.currency_icon}}</span>
                                                     </td>
 
                                                     <td class="order-item-cnt" width="4%">
-                                                        <b class="forloop">{{ forloop.counter }}</b>
+                                                        <b class="forloop">{{item.quantity}}</b>
                                                     </td>
 
                                                     <td class="order-item-sum nowrap" width="2%">
                                                         <span id="item-total_{{ item.pk }}" class="wh-point">
                                                             {{item.item_total_price|currency:request.session.currency}}
-                                                            </span>
+                                                        </span>
                                                         <span class="valyuta">{{request.session.currency_icon}}</span>
                                                     </td>
 
@@ -161,10 +160,10 @@
                         <div class="form-checkout-page">
                             <form id="checkout-form" method="POST">
                                 <input type="hidden" name="">
-                                <div class="row flex-content-center">
+                                <div class="row">
 
                                     <!-- Deliver and payment col -->
-                                    <div class="col col-2">
+                                    <div class="col col-40">
                                         <div class="delivery-payment_methods">
 
                                             <div class="delivery-methods">
@@ -175,26 +174,25 @@
                                                 <table id="delivery-list" class="methods-list">
                                                     <tbody class="align-items-center">
 
-                                                        <tr valign="top" class="dlp-tr" id="delivery-block-1">
+                                                        <tr valign="top" class="dlp-tr align-items-center" id="delivery-block-1">
+                                                           <th>
+                                                                <input type="radio" id="del-type-1" class="del-item"
+                                                                    name="delivery" value="1" checked="">
+                                                            </th>
                                                             <td>
                                                                 <label class="label" for="del-type-1">{% trans 'Առաքում' %}</label>
                                                             </td>
-                                                            <th>
-                                                                <input type="radio" id="del-type-1" class="del-item"
-                                                                    name="delivery" value="2" checked="">
-                                                            </th>
                                                         </tr>
 
-                                                        <tr valign="top" class="dlp-tr" id="delivery-block-2">
+                                                        <tr valign="top" class="dlp-tr align-items-center" id="delivery-block-2">
+                                                           <th>
+                                                                <input type="radio" id="del-type-2" class="del-item"
+                                                                    name="delivery" value="2">
+                                                            </th>
                                                             <td>
                                                                 <label class="label" for="del-type-2">{% trans 'Կվերցնեմ ինքս' %}</label>
                                                             </td>
-                                                            <th>
-                                                                <input type="radio" id="del-type-2" class="del-item"
-                                                                    name="delivery" value="1">
-                                                            </th>
                                                         </tr>
-
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -208,7 +206,7 @@
                                                 <table id="payments-list" class="methods-list">
                                                     <tbody>
 
-                                                        <tr valign="top" id="payment-block-0" style="display:none;">
+                                                        <tr valign="top" id="payment-block-0" style="display:none;" class="d-flex">
                                                             <th>
                                                                 <input type="radio" id="pay-type-0" class="payment-item"
                                                                     name="payments" value="1">
@@ -223,7 +221,7 @@
                                                             </td>
                                                         </tr>
 
-                                                        <tr valign="top" id="payment-block-1">
+                                                        <tr valign="top" id="payment-block-1" class="d-flex">
                                                             <th>
                                                                 <input type="radio" id="pay-type-1" class="payment-item"
                                                                     name="payments" value="2" checked="true">
@@ -238,7 +236,7 @@
                                                             </td>
                                                         </tr>
 
-                                                        <tr valign="top" id="payment-block-2">
+                                                        <tr valign="top" id="payment-block-2" class="d-flex">
                                                             <th>
                                                                 <input type="radio" id="pay-type-2" class="payment-item"
                                                                     name="payments" value="3">
@@ -256,14 +254,13 @@
                                                                         <li><img src="{% static 'img/icons/arca.svg' %}"
                                                                                 alt="arca card"></li>
                                                                     </ul>
-                                                                    <p>{% trans 'Կարող եք վճարել բանկային քարտի միջոցով' %}
-                                                                        <br>(ARCA/VISA/MASTERCARD)
+                                                                    <p>{% trans 'Կարող եք վճարել բանկային քարտի միջոցով' %} (ARCA/VISA/MASTERCARD)
                                                                     </p>
                                                                 </div>
                                                             </td>
                                                         </tr>
 
-                                                        <tr valign="top" id="payment-block-3">
+                                                        <tr valign="top" id="payment-block-3" class="d-flex">
                                                             <th>
                                                                 <input type="radio" id="pay-type-3" class="payment-item"
                                                                     name="payments" value="4">
@@ -273,7 +270,7 @@
                                                                     <b>{% trans 'Անկանխիկ ("Idram")' %} </b>
                                                                 </label>
                                                                 <div class="delivery-description">
-                                                                    <ul class="soc-icons align-items-center">
+                                                                    <ul class="payments-icons align-items-center">
                                                                         <li>
                                                                             <img src="{% static 'img/icons/iDram.svg' %}" alt="iDram">
                                                                         </li>
@@ -282,6 +279,7 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
+                                                        
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -291,6 +289,7 @@
 
                                                 <div class="bp-block-title">
                                                     <h4 class="bp-block-hint flex-center-between active">
+                                                       <img src="{% static 'img/icons/promocode.svg' %}" alt="{% trans 'Պրոմո կոդ' %}">
                                                         {% trans 'Պրոմո կոդ' %}
                                                         <img src="{% static 'img/icons/cat-filter.svg' %}"
                                                             class="cat-left border-icons up-cat" alt="Promo">
@@ -308,18 +307,16 @@
                                             </div>
                                             <!-- Promo code -->
 
-                                            <hr>
-
                                             <!-- Bonus -->
                                             <div id="BonusSystem" class="bp-block">
 
                                                 <div class="bp-block-title">
                                                     <h4 class="bp-block-hint flex-center-between active">
+                                                       <img src="{% static 'img/icons/bonusmoney.svg' %}" alt="{% trans 'Բոնուս' %}">
                                                         {% trans 'Բոնուս' %}
                                                         <img src="{% static 'img/icons/cat-filter.svg' %}" 
                                                             class="cat-left border-icons up-cat"
-                                                            alt="Promo"
-                                                        >
+                                                            alt="Promo">
                                                     </h4>
                                                 </div>
 
@@ -330,7 +327,10 @@
                                                             name="bonussystem" value="" placeholder="">
                                                         <button type="button" class="button yellow-butt normal">ОК</button>
                                                     </div>
-
+                                                    <div class="user-bonus_aty">
+                                                        <span class="b-tit">{% trans 'Իմ Բոնուսները։' %}</span>
+                                                        <span>100 {% trans 'բալ' %}</span>
+                                                    </div> 
                                                 </div>
                                             </div>
                                             <!--Bonus code -->
@@ -342,7 +342,7 @@
                                     <!-- Deliver and payment col end -->
 
                                     <!-- order Form -->
-                                    <div class="col col-2">
+                                    <div class="col col-60">
                                         <div class="form-order">
                                             <h2 class="dpm-title align-items-center">
                                                 <img src="{% static 'img/icons/form-order.svg' %}"
@@ -383,11 +383,16 @@
                                                         {% trans 'Քաղաք / Մարզ' %}
                                                     </label>
                                                     <select id="state" class="js-select2" name="state">
-
-                                                        <option value="">{% trans ' -- Ընտրել --' %}</option>
-                                                        <option value="">Երևան</option>
-                                                        <option value="">Արագածոտն</option>
-
+                                                        {% if not user or not user.profile.state_id %}
+                                                            <option value="">{% trans ' -- Ընտրել --' %}</option>
+                                                        {% endif %}
+                                                        {% for state in states %}
+                                                            <option 
+                                                            data-id="{{ state.id }}" 
+                                                            value="{{ state.name }}"
+                                                            {% if user and user.profile.state_id == state.id %}selected{% endif %}>{{ state.name }}
+                                                            </option>
+                                                        {% endfor %}
                                                     </select>
                                                 </div>
 
@@ -396,9 +401,15 @@
                                                         {% trans 'Շրջանը / Մարզը' %}
                                                     </label>
                                                     <select id="region" class="js-select2" name="region">
-                                                        <option value="">{% trans ' -- Ընտրել --' %}</option>
-                                                        <option value="">Աջափնյակ</option>
-                                                        <option value="">Ավան</option>
+                                                        {% if not user or not user.profile.city_id %}
+                                                            <option value="">{% trans ' -- Ընտրել --' %}</option>
+                                                        {% endif %}
+                                                        {% for region in regions %}
+                                                            <option data-price="{{ region.price|currency:request.session.currency|floatformat:0}}"
+                                                                value="{{ region.name }}"
+                                                                {% if user and user.profile.city_id == region.id %}selected{% endif %}>{{ region.name }}
+                                                            </option>
+                                                        {% endfor %}
                                                     </select>
                                                 </div>
 
@@ -559,7 +570,67 @@
             });
             document.getElementById('pN').value = `+${window.intlTelInputGlobals.getInstance(input).s.dialCode}`
 
-        });   
+        });  
+        
+    $('body').on('change', 'input:radio[name="delivery"]', function () {
+        if ($(this).is(':checked') && $(this).attr('id') === 'del-type-2') {
+            $('#checkout-form').attr('action', '');
+            $('#payment-block-1').hide();
+            $('#payment-block-0').show();
+            $('.changes-blocks').hide();
+            const cartTotPrice = document.querySelector('.cart-amount').textContent.replace('.', '')
+            $('.delivery-price').html(0)
+            $('#takeDate').css('display', 'block')
+            $('#takeTime').css('display', 'block')
+            $('#delDate').css('display', 'none')
+            $('#delTime').css('display', 'none')
+
+            $('.cart-total').html((cartTotPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+        } else {
+            $('#payment-block-1').show();
+            ;
+            $('#payment-block-0').hide();
+            $('.changes-blocks').show();
+            $('#takeDate').css('display', 'none')
+            $('#takeTime').css('display', 'none')
+            $('#delDate').css('display', 'block')
+            $('#delTime').css('display', 'block')
+            window.location.reload()
+
+        }
+    });
+
+    $('#state').on('change', function () {
+        $.ajax({
+            method: 'GET',
+            data: {id: $(this).find(":selected")[0].attributes['data-id'].value},
+            url: `{{request.get_raw_uri}}`,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function (data) {
+                if (data) {
+                    console.log(data)
+                    const cartTotPrice = document.querySelector('.cart-amount').textContent.replace('.', '')
+                    $('.delivery-price').html(data[0].price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                    $('.cart-total').html((parseFloat(data[0].price) + parseFloat(cartTotPrice)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                    $('#region').html('')
+                    for (let i = 0; i < data.length; i++) {
+                        $('#region').append(`<option data-price="${data[i].price}" value="${data[i].name}">${data[i].name}</option>`)
+                    }
+                }
+            },
+        })
+    })
+
+    $('#region').on('change', function () {
+        const current_price = $(this).find(":selected")[0].attributes['data-price'].value
+        const cart_all_price = document.querySelector('.cart-amount').textContent.replace('.', '')
+        $('.delivery-price').html(current_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+        $('.cart-total').html((parseFloat(current_price) + parseFloat(cart_all_price)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+    })
+
+
     </script>
 
 </body>

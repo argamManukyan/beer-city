@@ -2,6 +2,8 @@ from django.db import models
 from beercity.utils import CustomModel
 from django.utils.translation import ugettext_lazy as _
 
+from shop.models import ProductFeature
+
 class Order(CustomModel):
     
     class DeliveryTypeItem(models.TextChoices):
@@ -19,7 +21,7 @@ class Order(CustomModel):
         IN_PROGRESS = 1, _('Ընթացքի մեջ')
         IN_THE_WAY = 2, _('Ճանապարհին')
         DELIVERED = 3,  _('Առաքված')
-        READY_FOR_TACKING = 4, _('Պատրաստ է վերցնելու') # For taking type
+        READY_FOR_TAKING = 4, _('Պատրաստ է վերցնելու') # For taking type
         
     class OrderPayingStatusItem(models.IntegerChoices):
         WAITING = 1, _('Սպասման մեջ')
@@ -41,19 +43,20 @@ class Order(CustomModel):
     
     # Action types
     
-    delivery_type = models.CharField(
+    delivery = models.CharField(
         max_length=30, 
         choices=DeliveryTypeItem.choices, 
         verbose_name='Առաքման ձև'
     )
-    payment_type = models.CharField(
+    payments = models.CharField(
         max_length=30, 
         choices=PaymentTypeItem.choices, 
         verbose_name='Վճարման եղանակ'
     )
     order_delivery_status = models.IntegerField(
         choices=OrderDeliveryStatusItem.choices,
-        verbose_name='Առաքման կարգավիճակ'
+        verbose_name='Առաքման կարգավիճակ',
+        blank=True, null=True
     )
     order_payment_status = models.IntegerField(
         choices=OrderPayingStatusItem.choices,
@@ -107,10 +110,46 @@ class Order(CustomModel):
         verbose_name='Պատվերի աբողջական արժեք'
     )
     
+    def save(self, *args, **kwargs):
+        
+        delivery_price = self.delivery_price or 0
+        cart_total = self.cart_total_price or 0
+        self.order_total_price = delivery_price + cart_total
+
+        super(Order, self).save(*args, **kwargs)
     
     class Meta:
         verbose_name = 'Պատվեր'
         verbose_name_plural = 'Պատվերներ'
+    
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    product = models.ForeignKey('shop.Product', on_delete=models.SET_NULL, null=True, blank=True)
+    product_name = models.CharField(max_length=250, verbose_name='Ապրանքի անուն')
+    product_image = models.ImageField(verbose_name='Նկար')
+    product_price = models.FloatField(default=0.0, verbose_name='Գին')
+    quantity = models.IntegerField(default=0, verbose_name='Քանակ')
+    item_total_price = models.FloatField(default=0, verbose_name='Գումար')
+    description = models.CharField(max_length=300, blank=True, null=True, verbose_name='Նկարագրություն')
+
+    def __str__(self):
+        return self.product_name
+    
+    def save(self, *args, **kwargs):
+        self.item_total_price = self.product_price * self.quantity
+        
+        if self._state.adding:
+            ids = self.description.split(',')
+
+            if ids and self.description:
+                item_about = [f'{value.field.title} - {value.value.title}' 
+                              for value in ProductFeature.objects.filter(id__in=ids)] if ids else []
+                item_about = ' (' + ',  '.join(item_about) + ')' if item_about else ''
+
+                self.product_name = self.product_name + item_about
+
+        super().save(*args, **kwargs)
     
 
 class PromoCodes(CustomModel):
