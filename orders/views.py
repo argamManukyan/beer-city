@@ -22,6 +22,9 @@ class CreateOrderView(View):
         return get_cart(self.request)['cart']
 
     def get(self, request, *args, **kwargs):
+        
+        if not self.cart or self.cart.item.count():
+            return redirect('home_page')
 
         # Getting addresses
         states = State.objects.all().order_by('id')
