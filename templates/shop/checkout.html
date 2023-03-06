@@ -587,8 +587,9 @@
 
             $('.cart-total').html((cartTotPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
         } else {
+            document.getElementsByName('payments').forEach(el => el.removeAttribute('checked'));
+            document.getElementById('pay-type-0').setAttribute('checked', 'checked')
             $('#payment-block-1').show();
-            ;
             $('#payment-block-0').hide();
             $('.changes-blocks').show();
             $('#takeDate').css('display', 'none')
