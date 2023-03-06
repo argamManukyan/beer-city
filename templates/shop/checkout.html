@@ -585,9 +585,7 @@
             $('#delDate').css('display', 'none')
             $('#delTime').css('display', 'none')
             document.getElementsByName('payments').forEach(el => el.removeAttribute('checked'));
-            document.getElementsByName('payments').forEach(el => console.log(el));
             document.getElementById('pay-type-0').setAttribute('checked', 'checked')
-
             $('.cart-total').html((cartTotPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
         } else {
             $('#payment-block-1').show();
