@@ -120,3 +120,9 @@ class CreateOrderView(View):
         
 
         return redirect('home_page')
+
+
+class OrderDetailView(View):
+    
+    def get(self, request, *args, **kwargs):
+        return render(request, 'shop/order_detail.html', {})
