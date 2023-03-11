@@ -253,7 +253,7 @@ class ProfileView(LoginRequiredMixin, View):
             "max_days_count": max_days_count,
             "states": states,
             "cities": cities,
-            "promocode": promocode
+            "promocode": promocode.first() if promocode.exists() else None
         }
         return render(request, 'users/account.html', context)
 
