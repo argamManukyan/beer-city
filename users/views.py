@@ -248,13 +248,15 @@ class ProfileView(LoginRequiredMixin, View):
                 return JsonResponse(data={}, safe=False)
 
         promocode = PromoCodes.objects.filter(user=request.user)
+        initial_settings = ApplicationConstants.objects.values('bonus_to_amd').first()
         
         context = {
             "user": user,
             "max_days_count": max_days_count,
             "states": states,
             "cities": cities,
-            "promocode": promocode.first() if promocode.exists() else None
+            "promocode": promocode.first() if promocode.exists() else None,
+            "bonus_to_amd": initial_settings['bonus_to_amd'] if initial_settings else 0
         }
         return render(request, 'users/account.html', context)
 

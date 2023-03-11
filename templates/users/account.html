@@ -191,7 +191,7 @@
                                                 </div>
                                                
                                                 <div class="dis-fields">
-                                                    <p class="label-dis-in">Էլ. փոստ</p>
+                                                    <p class="label-dis-in">{% trans 'Էլ. փոստ' %}</p>
                                                     <p class="info-dis-in">{{ user.email }}</p>
                                                 </div>
 
@@ -373,7 +373,7 @@
                                             <div class="only_form_bonus">
                                                 <div class="form-heads-bonus">
                                                     <h3>{% trans 'Ձեր բոնուսները' %}</h3>
-                                                    <p>{% trans '1 բոնուսային բալը' %} = 10 AMD</p>
+                                                    <p>{% trans '1 բոնուսային բալը' %} = {{bonus_to_amd}} {{request.session.currency}}</p>
                                                 </div>
                                                 <div class="bonus-qty-view">
                                                     <div class="fileld-bonus-qty align-items-center">
@@ -382,7 +382,7 @@
                                                         </div>
                                                         <div class="qty-bonus">
                                                             <span>{% trans 'Քանակ:' %}</span>
-                                                            <span><b>100 {% trans 'Բալ:' %}</b></span>
+                                                            <span><b>{{user.bonuses_count}} {% trans 'Բալ:' %}</b></span>
                                                         </div>
                                                     </div>
                                                 </div>
