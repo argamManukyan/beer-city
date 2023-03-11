@@ -1,11 +1,10 @@
-import decimal
 import json
-from currencies.templatetags import currency as cr
+from currencies.utils import calculate
 from django.template import Library
 from django.template.defaultfilters import floatformat
-from django.http import JsonResponse
-from shop.models import Product, Category, ProductFeature, FilterValue
+from shop.models import Product, Category, ProductFeature
 from beercity.utils import current_request
+from orders.models import ApplicationConstants
 
 register = Library()
 
@@ -221,3 +220,14 @@ def volumeChecker(product: Product):
 @register.filter
 def checkPcs(props: dict):
     return props["volume"]
+
+
+@register.filter
+def tomoney(bonuses_count: float, curr_code: str):
+    bal_to_amd = ApplicationConstants.objects.first()
+    
+    if not bal_to_amd:
+        return 0
+    
+    bonus_total = bonuses_count * bal_to_amd.bonus_to_amd
+    return calculate(bonus_total, curr_code, decimals=0)

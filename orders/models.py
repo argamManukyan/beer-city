@@ -31,6 +31,7 @@ class Order(CustomModel):
         REFUNDED = 4, _('Վերադարձված')
                
     # Creator's data
+    user = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True, blank=True)
     first_name = models.CharField(max_length=100, verbose_name='Անուն')
     last_name = models.CharField(max_length=100, verbose_name='Ազգանուն')
     phone = models.CharField(max_length=30, verbose_name='Հեռ.')
@@ -227,7 +228,12 @@ class Bonus(CustomModel):
     )
     
     def __str__(self):
-        return f'{self.from_price} - {self.to_price} -> {self.percent} {self.sale_type}'
+        return f'{self.from_price} - {self.to_price} -> {self.percent} {self.get_sale_type_display()}'
+    
+    def amount(self, cart_amount):
+        if self.sale_type == PromoCodes.SaleType.AMOUNT:
+            return self.percent
+        return self.percent * cart_amount / 100
     
     class Meta:
         verbose_name = 'Բոնուս'

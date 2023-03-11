@@ -54,6 +54,13 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
+    def set_bonuses(self, bonuses):
+        if self.bonuses_count:
+            self.bonuses_count += bonuses
+        else:    
+            self.bonuses_count = bonuses
+        self.save()
+    
     def __str__(self):
         return self.full_name or self.email
 

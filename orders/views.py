@@ -10,9 +10,10 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.utils.translation import ugettext_lazy as _
 
+from currencies.utils import calculate
 from cart.context_processors import get_cart
 from cart.models import Cart, CartItem
-from orders.models import Order, OrderItem, PromoCodes
+from orders.models import Bonus, Order, OrderItem, PromoCodes
 from orders.service import make_bank_request, make_idram_request
 from users.models import Region, State
 from users.settings import CUSTOM_MESSAGES
@@ -50,7 +51,7 @@ def check_promo_code(request, promo_code, view_checking=False) -> Union[tuple, J
     )
 
     data = {
-        'message': amount,
+        'message': calculate(amount, request.session.currency, decimals=1) ,
         'html': template
     }
     
@@ -142,6 +143,14 @@ class CreateOrderView(View):
         }
         return method_dependencies[payment_method]
     
+    @staticmethod
+    def calculate_bonuses(amount: float) -> Union[float, int]:
+        bonus_list = Bonus.objects.filter(to_price__gte=amount).order_by('from_price')
+        if bonus_list.exists():
+            bonus = bonus_list.first()
+            return bonus.amount(amount)    
+        return 0
+        
     def post(self, request, *args, **kwargs):
         form = OrderForm(request.POST or None)
 
@@ -179,11 +188,16 @@ class CreateOrderView(View):
 
             order.delivery_price = 0
             order.order_delivery_status = Order.OrderDeliveryStatusItem.READY_FOR_TAKING.value
-
+        
         order.sale_price = bonus_count
         order.cart_total_price = self.cart.cart_total
         order.save()
-        
+        if request.user.is_authenticated:
+            order.user = request.user
+            order.save()
+            bonuses = self.calculate_bonuses(order.order_total_price)
+            request.user.set_bonuses(bonuses)
+
         # Adding order items and then deleting a cart
         self._adding_order_items(order=order, items=self.cart.item.all())
         Cart.objects.filter(id=self.cart.id).delete()

@@ -9,7 +9,7 @@ from .models import *
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email', 'city', 'state')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email', 'city', 'state', 'bonuses_count')}),
         (_('Permissions'), {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),

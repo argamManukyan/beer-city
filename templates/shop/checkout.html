@@ -338,8 +338,8 @@
                                                             class="bp-ok" 
                                                             id="bonuses_count"
                                                             min="1" 
-                                                            max="1000"
-                                                            onkeyup="if(this.value<0){this.value='0';}"
+                                                            max="{{user.bonuses_count}}"
+                                                            onkeyup="if(this.value<0){this.value='';}if(this.value > {{user.bonuses_count}}){this.value=''}"
                                                             name="bonussystem" 
                                                             value="" 
                                                             placeholder=""
@@ -348,7 +348,7 @@
                                                     </div>
                                                     <div class="user-bonus_aty">
                                                         <span class="b-tit">{% trans 'Իմ Բոնուսները։' %}</span>
-                                                        <span>{{user.bonuses_count}} {% trans 'բալ' %}</span>
+                                                        <span>{{user.bonuses_count}} {% trans 'բալ' %} ≈ <span class="wh-point">{{user.bonuses_count|tomoney:request.session.currency}} {{request.session.currency}}</span></span>
                                                     </div> 
                                                 </div>
                                             </div>
@@ -434,7 +434,7 @@
 
                                             </div>
 
-                                            <div class="input-fields all-partners">
+                                            <div class="input-fields all-partners" id="addressBlock">
                                                 <label for="address">{% trans 'Հասցե' %} *</label>
                                                 <textarea id="address" name="address" class="fw" rows="3"></textarea>
                                             </div>
@@ -606,6 +606,7 @@
             $('#delTime').css('display', 'none')
             document.getElementsByName('payments').forEach(el => el.removeAttribute('checked'));
             document.getElementById('pay-type-0').setAttribute('checked', 'checked')
+            $('#addressBlock').css('display', 'none')
             $('.cart-total').html((cartTotPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
         } else {
             $('#payment-block-1').show();
