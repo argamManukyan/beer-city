@@ -105,7 +105,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for item in cart.item.all %}
+                                                {% for item in cart_items %}
                                                 <tr id="it-{{ item.pk }}" class="order-item">
                                                     <td class="order-item-nom"><b class="forloop">{{ forloop.counter}}</b></td>
 
