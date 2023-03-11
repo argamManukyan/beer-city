@@ -174,6 +174,7 @@ class CreateOrderView(View):
             if bonus_count > 0:
                 order.used_promo_code = promosystem
             
+            
         if bonussystem:
             bonus_count = 0
         
