@@ -1,4 +1,9 @@
+import datetime
 from typing import Callable, List, Union
+
+from django.template.loader import render_to_string
+from django.utils import timezone
+from django.conf import settings
 from django.http import JsonResponse
 from django.db.models import Q
 from django.shortcuts import redirect, render
@@ -7,13 +12,59 @@ from django.utils.translation import ugettext_lazy as _
 
 from cart.context_processors import get_cart
 from cart.models import Cart, CartItem
-from orders.models import Order, OrderItem
+from orders.models import Order, OrderItem, PromoCodes
 from orders.service import make_bank_request, make_idram_request
 from users.models import Region, State
-
+from users.settings import CUSTOM_MESSAGES
 
 from .forms import OrderForm
 
+
+def check_promo_code(request, promo_code, view_checking=False) -> Union[tuple, JsonResponse]:
+    
+    promo = PromoCodes.objects.filter(name=promo_code, is_active=True)
+    cart_amount = get_cart(request)['cart'].cart_total
+    
+    if not promo.exists():
+        return helper_check_promo_code('PROMO_CODE_NOT_FOUND', request, 404, view_checking)
+    promo: PromoCodes = promo.first()
+    current_datetime = timezone.now() + datetime.timedelta(hours=4)
+
+    if promo.to_date < current_datetime:
+        promo.is_active = False
+        promo.save()
+        return helper_check_promo_code('PROMO_CODE_EXPIRED', request, 400, view_checking)
+    amount = promo.amount(cart_amount)
+    
+    if cart_amount < amount:
+        return helper_check_promo_code('PROMO_CODE_CANT_BE_USED', request, 400, view_checking)
+        
+    template = render_to_string('includes/checkout_helpers/promocode_checkout.html', {'amount': amount}, request=request)
+
+    data = {
+        'message': amount,
+        'html': template
+    }
+    
+    if view_checking:
+        return data['message'], promo
+    else:
+       return JsonResponse(data, status=200)
+
+
+def helper_check_promo_code(message, request, status, view_checking) -> Union[str, JsonResponse]:
+    template = render_to_string(
+        'includes/checkout_helpers/promocode_fail.html',
+        {"message": CUSTOM_MESSAGES[message]},
+        request=request,
+    )
+    data = {
+        'message': 'expired',
+        'html': template
+    }
+    return data['message'] if view_checking else JsonResponse(data, status=status)
+    
+    
 
 class CreateOrderView(View):
 
@@ -61,7 +112,6 @@ class CreateOrderView(View):
         """Method for adding order items."""
         
         for item in items:
-            print(item)
             OrderItem.objects.create(
                 order=order,
                 product=item.product,
@@ -83,7 +133,6 @@ class CreateOrderView(View):
             Order.PaymentTypeItem.IN_MARKET.value: "in_market",
         }
         return method_dependencies[payment_method]
-               
     
     def post(self, request, *args, **kwargs):
         form = OrderForm(request.POST or None)
@@ -92,7 +141,26 @@ class CreateOrderView(View):
             return redirect(request.META.get('HTTP_REFERER'))
 
         order: Order = form.save(commit=False)
-
+        bonus_count = 0
+        promosystem = request.POST.get('promosystem')
+        bonussystem = request.POST.get('bonussystem')
+        
+        if promosystem:
+            check_promo = check_promo_code(request=request, promo_code=promosystem, view_checking=True)
+            
+            if isinstance(check_promo, str):
+                bonus_count = 0  
+            else:
+                bonus_count, promo =  check_promo
+                promo.decrement_max_usability()
+            
+            if bonus_count > 0:
+                order.used_promo_code = promosystem
+            
+        if bonussystem:
+            bonus_count = 0
+        
+        
         if order.delivery == Order.DeliveryTypeItem.DELIVERY.value:
 
             delivery_price = self._estimate_delivery_coast(request.POST)
@@ -104,6 +172,7 @@ class CreateOrderView(View):
             order.delivery_price = 0
             order.order_delivery_status = Order.OrderDeliveryStatusItem.READY_FOR_TAKING.value
 
+        order.sale_price = bonus_count
         order.cart_total_price = self.cart.cart_total
         order.save()
         

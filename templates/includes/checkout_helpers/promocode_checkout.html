@@ -1,12 +1,22 @@
 {% load currency %}{% load static %}{% load my_url %}{% load i18n %}
-<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
+<div class="deliver-sum flex-center-between" style="color: brown;" id="promoDisplay">
+    <p class="money-tit"><b  style="color: brown;">{% trans 'Զեղչվում է' %}՝</b></p>
+    <p class="money-qty">
+        <b  style="color: brown;">
+            <span class="sale-p minicon" style="margin-right: -3px;">-</span>
+            <span class="sale-p wh-point sale-price"></span>
+        </b>
+        <span class="valyuta"><b  style="color: brown;">{{request.session.currency}}</b></span>
+    </p>
+</div>
 
+
+{% load currency %}{% load static %}{% load my_url %}{% load i18n %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{% trans 'Պատվերի ձևակերպում' %} | {{ request.get_host|capfirst }}</title>
     <meta name="Description" content="Beer City ☎ +374(33) 299 299">
     <!-- Open Graph -->
@@ -29,13 +39,12 @@
     {% endif %}
     <!-- Alternate Languages end -->
     <link rel="canonical" href="{{ absolute_url }}">
-
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
     <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/css/intlTelInput.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
     <link rel="stylesheet" href="{% static 'css/canapea_color.css' %}">
     <link rel="stylesheet" href="{% static 'css/canapea_style.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
 </head>
 
 <body>
@@ -297,27 +306,16 @@
                                                 </div>
 
                                                 <div class="bp-block-content">
-                                                    <div class="two-group align-items-center" id="promoSection">
-                                                        <input 
-                                                        type="text" 
-                                                        class="bp-ok-ok" 
-                                                        name="promosystem"
-                                                        value="" 
-                                                        placeholder=""
-                                                        oninput="validatePromo()"
-                                                        id="promo_code"
-                                                        >
-                                                        <button 
-                                                            type="button" 
-                                                            id="promo_button"
-                                                            class="button yellow-butt normal" 
-                                                        >ОК</button>
+                                                    <div class="two-group align-items-center">
+                                                        <input type="number" class="bp-ok-ok" name="promosystem"
+                                                            value="" placeholder="">
+                                                        <button type="button" class="button yellow-butt normal">ОК</button>
                                                     </div>
 
                                                 </div>
                                             </div>
                                             <!-- Promo code -->
-                                            {% if request.user and user.bonuses_count %}
+
                                             <!-- Bonus -->
                                             <div id="BonusSystem" class="bp-block">
 
@@ -333,27 +331,19 @@
 
                                                 <div class="bp-block-content">
                                                     <div class="two-group align-items-center">
-                                                        <input 
-                                                            type="number" 
-                                                            class="bp-ok" 
-                                                            id="bonuses_count"
-                                                            min="1" 
-                                                            max="1000"
-                                                            onkeyup="if(this.value<0){this.value='0';}"
-                                                            name="bonussystem" 
-                                                            value="" 
-                                                            placeholder=""
-                                                        >
-                                                        <button type="button" class="button yellow-butt normal" id="bonus_button">ОК</button>
+                                                        <input type="number" class="bp-ok" min="1" max="1000"
+                                                            onkeyup="if(this.value>1000){this.value='1000';}else if(this.value<0){this.value='0';}"
+                                                            name="bonussystem" value="" placeholder="">
+                                                        <button type="button" class="button yellow-butt normal">ОК</button>
                                                     </div>
                                                     <div class="user-bonus_aty">
                                                         <span class="b-tit">{% trans 'Իմ Բոնուսները։' %}</span>
-                                                        <span>{{user.bonuses_count}} {% trans 'բալ' %}</span>
+                                                        <span>100 {% trans 'բալ' %}</span>
                                                     </div> 
                                                 </div>
                                             </div>
                                             <!--Bonus code -->
-                                            {% endif %}
+
                                         </div>
 
 
@@ -381,7 +371,7 @@
                                             </div>
 
                                             <div class="two-inputs flex-center-between">
-                                                <div class="input-fields all-partners">
+                                                <div class="input-fields all-auth">
                                                     <input type="hidden" name="phone_number" value="" id="pN">
                                                     <label for="phone" class="label-ord-in er">
                                                         {% trans 'Հեռախոսահամար' %} *</label>
@@ -397,7 +387,7 @@
                                             </div>
 
                                             <div class="two-inputs flex-center-between changes-blocks">
-                                                <div class="input-fields all-partners">
+                                                <div class="input-fields all-auth s2">
                                                     <label for="state" class="label-ord-in">
                                                         {% trans 'Քաղաք / Մարզ' %}
                                                     </label>
@@ -415,7 +405,7 @@
                                                     </select>
                                                 </div>
 
-                                                <div class="input-fields all-partners">
+                                                <div class="input-fields all-auth s2">
                                                     <label for="region" class="label-ord-in">
                                                         {% trans 'Շրջանը / Մարզը' %}
                                                     </label>
@@ -434,12 +424,12 @@
 
                                             </div>
 
-                                            <div class="input-fields all-partners">
+                                            <div class="input-fields all-auth">
                                                 <label for="address">{% trans 'Հասցե' %} *</label>
                                                 <textarea id="address" name="address" class="fw" rows="3"></textarea>
                                             </div>
 
-                                            <div class="input-fields all-partners">
+                                            <div class="input-fields all-auth">
                                                 <label for="notes" class="label-ord-in">{% trans 'Նշումներ' %}</label>
                                                 <textarea name="notes" cols="20" rows="3" id="notes"></textarea>
                                             </div>
@@ -450,22 +440,21 @@
                                                     <p class="money-tit">{% trans 'Գումար' %}:</p>
                                                     <p class="money-qty">
                                                         <span class="amount-p wh-point cart-amount">{{cart.cart_total|currency:request.session.currency}}</span>
-                                                        <span class="valyuta">{{request.session.currency}}</span>
+                                                        <span class="valyuta">AMD</span>
                                                     </p>
                                                 </div>
                                                 <div class="deliver-sum flex-center-between">
                                                     <p class="money-tit">{% trans 'Առաքում' %}:</p>
                                                     <p class="money-qty">
                                                         <span class="delivery-p wh-point delivery-price"></span>
-                                                        <span class="valyuta">{{request.session.currency}}</span>
+                                                        <span class="valyuta">AMD</span>
                                                     </p>
                                                 </div>
-                                                
                                                 <div class="total-cost-sum flex-center-between">
                                                     <p>{% trans 'Ընդհանուր' %}:</p>
                                                     <p>
                                                         <span class="total-cost-p wh-point cart-total"></span>
-                                                        <span class="valyuta">{{request.session.currency}}</span>
+                                                        <span class="valyuta">AMD</span>
                                                     </p>
                                                 </div>
                                             </div>
@@ -630,13 +619,10 @@
             },
             success: function (data) {
                 if (data) {
+                    console.log(data)
                     const cartTotPrice = document.querySelector('.cart-amount').textContent.replace('.', '')
-                    let salePrice = 0
-                    if(document.querySelector('#promoDisplay')){
-                        salePrice += parseFloat(document.querySelector('.sale-price').textContent.replace('.', ''))
-                    }
-                    displayPrice(cart_total=cartTotPrice, delivery_price= delivery_price=data[0].price, sale_price=salePrice)
-                                
+                    $('.delivery-price').html(data[0].price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                    $('.cart-total').html((parseFloat(data[0].price) + parseFloat(cartTotPrice)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
                     $('#region').html('')
                     for (let i = 0; i < data.length; i++) {
                         $('#region').append(`<option data-price="${data[i].price}" value="${data[i].name}">${data[i].name}</option>`)
@@ -649,63 +635,8 @@
     $('#region').on('change', function () {
         const current_price = $(this).find(":selected")[0].attributes['data-price'].value
         const cart_all_price = document.querySelector('.cart-amount').textContent.replace('.', '')
-        let salePrice = 0
-        if(document.querySelector('#promoDisplay')){
-            salePrice += parseFloat(document.querySelector('.sale-price').textContent.replace('.', ''))
-        }
-
-        displayPrice(cart_total=cart_all_price, delivery_price=current_price, sale_price=salePrice)
-    })
-
-    function displayPrice(cart_total, delivery_price, sale_price=0){
-        $('.delivery-price').html(delivery_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-        $('.cart-total').html(
-            (parseFloat(delivery_price) + parseFloat(cart_total) - parseFloat(sale_price)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-        
-    }
-
-    const promoButton = document.querySelector('#promo_button')
-    const url = window.location.protocol + `//{{request.get_host}}` + '/promocode'
-
-    function removeUneccessary(idName){
-        if(document.querySelector(`#${idName}`)){
-            document.querySelector(`#${idName}`).remove()
-        }
-    }
-
-    function validatePromo(){
-        removeUneccessary('promoDisplay')
-        removeUneccessary('failPromo')
-        
-        if(displayedSection){
-            const current_price = $('.delivery-price').text().replace('.', '') || 0
-            const cart_all_price = document.querySelector('.cart-amount').textContent.replace('.', '')
-
-            displayedSection.remove()
-            displayPrice(cart_total=cart_all_price, delivery_price=current_price)
-        }
-    }
-    
-    promoButton.addEventListener('click', function(e){
-        const promoCode = document.getElementById('promo_code').value
-        fetch(`${url}/${promoCode}/`)
-        .then(response => response.json())
-        .then(function(data){
-            const current_price = $('.delivery-price').text().replace('.', '') || 0
-            const cart_all_price = document.querySelector('.cart-amount').textContent.replace('.', '')
-
-            if(typeof data.message === "number"){
-                removeUneccessary('failPromo')
-                removeUneccessary('promoDisplay')
-                document.querySelector('.deliver-sum').insertAdjacentHTML('afterend',data.html)
-                $('.sale-price').text(data.message.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                displayPrice(cart_total=cart_all_price, delivery_price=current_price, sale_price=data.message)
-            }else{
-                removeUneccessary('promoDisplay')
-                removeUneccessary('failPromo')
-                document.querySelector('#promoSection').insertAdjacentHTML('afterend',data.html)
-            }
-        });
+        $('.delivery-price').html(current_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+        $('.cart-total').html((parseFloat(current_price) + parseFloat(cart_all_price)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
     })
 
 

@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ValidationError
 from beercity.utils import CustomModel
 from django.utils.translation import ugettext_lazy as _
 
@@ -79,7 +80,6 @@ class Order(CustomModel):
     )
     
     # Sales
-    
     used_promo_code = models.CharField(
         max_length=50, 
         blank=True, 
@@ -93,7 +93,11 @@ class Order(CustomModel):
     )
     
     # Pricing 
-    
+    sale_price = models.FloatField(
+        blank=True, 
+        null=True, 
+        verbose_name='Պատվերից զեղչվել է'
+    )
     cart_total_price = models.FloatField(
         blank=True, 
         null=True, 
@@ -114,9 +118,11 @@ class Order(CustomModel):
         
         delivery_price = self.delivery_price or 0
         cart_total = self.cart_total_price or 0
-        self.order_total_price = delivery_price + cart_total
-
+        sale_price = self.sale_price or 0
+        self.order_total_price = delivery_price + cart_total - sale_price
         super(Order, self).save(*args, **kwargs)
+    
+    
     
     class Meta:
         verbose_name = 'Պատվեր'
@@ -175,13 +181,35 @@ class PromoCodes(CustomModel):
     percent = models.FloatField(
         verbose_name='Զեղչ -ի չափը'
     )
+    user = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
     
-        
     class Meta:
         verbose_name = 'Promo կոդ'
         verbose_name_plural = 'Promo կոդեր'
         
+    def save(self, *args, **kwargs):
+        if isinstance(self.max_usability, int) and self.max_usability == 0:
+            self.is_active = 0
+        super().save(*args, **kwargs)
+    
+    def amount(self, cart_amount):
+        if self.sale_type == self.SaleType.AMOUNT:
+            return self.percent
+        return self.percent * cart_amount / 100
+    
+    def decrement_max_usability(self):
+        if self.max_usability:
+            self.max_usability -= 1
+            self.save()
+    
+    def clean(self) -> None:
+        if self.percent and self.percent > 100 and self.sale_type and self.sale_type == self.SaleType.PERCENT:
+            raise ValidationError({"percent": 'Մաքսիմում թույլատրելի արժեքը՝ 100'})
         
+        if self.percent and self.percent < 0 and self.sale_type and self.sale_type == self.SaleType.PERCENT:
+            raise ValidationError({"percent": 'Մինիմում թույլատրելի արժեքը՝ 0'})
+         
     def __str__(self):
         return self.name
         
