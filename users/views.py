@@ -138,14 +138,14 @@ class ActivationEmail(View):
                 user=user
             )
 
-        data = {
-            'full_name': user.full_name, 
-            'request': request, 
-            'email': user.email,
-            'promo_code': promo_code.name,
-        }
+            data = {
+                'full_name': user.full_name, 
+                'request': request, 
+                'email': user.email,
+                'promo_code': promo_code.name,
+            }
 
-        SendMail.send_promo_code(data)
+            SendMail.send_promo_code(data)
         return redirect('users:signin')
 
 
