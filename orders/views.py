@@ -39,7 +39,11 @@ def check_promo_code(request, promo_code, view_checking=False) -> Union[tuple, J
     if cart_amount < amount:
         return helper_check_promo_code('PROMO_CODE_CANT_BE_USED', request, 400, view_checking)
         
-    template = render_to_string('includes/checkout_helpers/promocode_checkout.html', {'amount': amount}, request=request)
+    template = render_to_string(
+        'includes/checkout_helpers/promocode_checkout.html',
+        {'amount': amount},
+        request=request
+    )
 
     data = {
         'message': amount,
