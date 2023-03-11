@@ -248,6 +248,7 @@ class ProfileView(LoginRequiredMixin, View):
                 return JsonResponse(data={}, safe=False)
 
         promocode = PromoCodes.objects.filter(user=request.user)
+        
         context = {
             "user": user,
             "max_days_count": max_days_count,
