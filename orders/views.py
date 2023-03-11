@@ -30,7 +30,7 @@ def check_promo_code(request, promo_code, view_checking=False) -> Union[tuple, J
     promo: PromoCodes = promo.first()
     current_datetime = timezone.now() + datetime.timedelta(hours=4)
 
-    if promo.to_date < current_datetime:
+    if promo.to_date and promo.to_date < current_datetime:
         promo.is_active = False
         promo.save()
         return helper_check_promo_code('PROMO_CODE_EXPIRED', request, 400, view_checking)
