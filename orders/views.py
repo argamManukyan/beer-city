@@ -22,7 +22,7 @@ from .forms import OrderForm
 
 def check_promo_code(request, promo_code, view_checking=False) -> Union[tuple, JsonResponse]:
     
-    promo = PromoCodes.objects.filter(name__exact=promo_code, is_active=True)
+    promo = PromoCodes.objects.filter(name__iexact=promo_code, is_active=True)
     cart_amount = get_cart(request)['cart'].cart_total
     
     if not promo.exists():
