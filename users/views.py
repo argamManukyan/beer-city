@@ -247,12 +247,13 @@ class ProfileView(LoginRequiredMixin, View):
             except:
                 return JsonResponse(data={}, safe=False)
 
-        # months = list(calendar.month_name)[1:]
+        promocode = PromoCodes.objects.filter(user=request.user)
         context = {
             "user": user,
             "max_days_count": max_days_count,
             "states": states,
             "cities": cities,
+            "promocode": promocode
         }
         return render(request, 'users/account.html', context)
 
