@@ -51,7 +51,7 @@ def check_promo_code(request, promo_code, view_checking=False) -> Union[tuple, J
     )
 
     data = {
-        'message': calculate(amount, request.session.currency, decimals=1) ,
+        'message': calculate(amount, request.session['currency'], decimals=1) ,
         'html': template
     }
     
@@ -175,7 +175,7 @@ class CreateOrderView(View):
                 order.used_promo_code = promosystem
             
             
-        if bonussystem:
+        if bonussystem and not promosystem:
             bonus_count = 0
         
         
