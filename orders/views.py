@@ -28,6 +28,10 @@ def check_promo_code(request, promo_code, view_checking=False) -> Union[tuple, J
     if not promo.exists():
         return helper_check_promo_code('PROMO_CODE_NOT_FOUND', request, 404, view_checking)
     promo: PromoCodes = promo.first()
+    
+    if promo.name != promo_code:
+        return helper_check_promo_code('PROMO_CODE_NOT_FOUND', request, 404, view_checking)
+    
     current_datetime = timezone.now() + datetime.timedelta(hours=4)
 
     if promo.to_date and promo.to_date < current_datetime:
