@@ -56,7 +56,7 @@ class SendMail:
     @staticmethod
     def send_promo_code(data: dict):
        
-        message = render_to_string('users/email/password-reset.html', data, request=data['request'])
+        message = render_to_string('users/email/promo_code.html', data, request=data['request'])
         connection = email_connection()
         
         send_mail(_('Հաշիվն ակտիվացված է'),
