@@ -52,3 +52,18 @@ class SendMail:
 
         send_mail(_('Գաղտնաբառի վերականգնում'), message, from_email=admin_email, recipient_list=recipient_list,
                   html_message=message, fail_silently=True, connection=connection)
+
+    @staticmethod
+    def send_promo_code(data: dict):
+       
+        message = render_to_string('users/email/password-reset.html', data, request=data['request'])
+        connection = email_connection()
+        
+        send_mail(_('Հաշիվն ակտիվացված է'),
+                  message,
+                  from_email=admin_email,
+                  recipient_list=data['email'],
+                  html_message=message, 
+                  fail_silently=True, 
+                  connection=connection
+                )

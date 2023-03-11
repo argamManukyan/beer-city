@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import Order, Bonus, PromoCodes, OrderItem
+from singlemodeladmin import SingleModelAdmin
+
+from .models import Order, Bonus, PromoCodes, OrderItem, ApplicationConstants
 
 
 class OrderItemAdmin(admin.TabularInline):
@@ -31,3 +33,10 @@ class OrderAdmin(admin.ModelAdmin):
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Bonus)
 admin.site.register(PromoCodes)
+
+
+class ApplicationConstantsAdmin(SingleModelAdmin):
+    ...
+    
+
+admin.site.register(ApplicationConstants, ApplicationConstantsAdmin)

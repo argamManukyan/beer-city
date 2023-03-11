@@ -1,6 +1,6 @@
 import datetime
-import json
-import time
+import random
+from string import ascii_letters
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -17,6 +17,8 @@ from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
 from django.views.decorators.cache import never_cache
+
+from orders.models import PromoCodes, ApplicationConstants
 
 from .email import SendMail
 from .forms import UserForm
@@ -122,11 +124,28 @@ class ActivationEmail(View):
 
         messages.success(request, CUSTOM_MESSAGES['PROFILE_ACTIVATED'])
 
-        data = {}
-        data['request'] = request
-        data['type'] = 'activation'
-        data['email'] = user.email
 
+        initial_settings = ApplicationConstants.objects.values('promo_percent_type', 'promo_sale')
+
+        if initial_settings.exists():
+            initial_settings: ApplicationConstants = initial_settings.first()
+            name = ''.join(random.sample(ascii_letters, 8))
+            promo_code = PromoCodes.objects.create(
+                name=name, 
+                max_usability=1, 
+                sale_type=initial_settings.promo_percent_type,
+                percent=initial_settings.promo_sale,
+                user=user
+            )
+
+        data = {
+            'full_name': user.full_name, 
+            'request': request, 
+            'email': user.email,
+            'promo_code': promo_code.name,
+        }
+
+        SendMail.send_promo_code(data)
         return redirect('users:signin')
 
 

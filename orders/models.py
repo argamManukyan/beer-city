@@ -176,7 +176,7 @@ class PromoCodes(CustomModel):
     sale_type = models.CharField(
         choices=SaleType.choices, 
         max_length=30, 
-        verbose_name='Զեղչ -ի ձևը'
+        verbose_name='Տիպը'
     )
     percent = models.FloatField(
         verbose_name='Զեղչ -ի չափը'
@@ -220,7 +220,7 @@ class Bonus(CustomModel):
     sale_type = models.CharField(
         choices=PromoCodes.SaleType.choices, 
         max_length=30, 
-        verbose_name='Զեղչ -ի ձևը'
+        verbose_name='Տիպը'
     )
     percent = models.FloatField(
         verbose_name='Զեղչ -ի չափը'
@@ -232,3 +232,28 @@ class Bonus(CustomModel):
     class Meta:
         verbose_name = 'Բոնուս'
         verbose_name_plural = 'Բոնուսներ'
+        
+
+class ApplicationConstants(models.Model):
+    
+    bonus_to_amd = models.FloatField(default=1, verbose_name='1 բոնուսային միավորը AMD -ի տեսքով')
+    promo_percent_type = models.CharField(
+        choices=PromoCodes.SaleType.choices, max_length=120, verbose_name='Տիպը'
+    )
+    promo_sale = models.FloatField(default=1, verbose_name='Տրամադրվող զեղչի չափ')
+    
+    def clean(self) -> None:
+        if (
+            self.promo_sale
+            and self.promo_sale > 100
+            and self.promo_sale == PromoCodes.SaleType.PERCENT
+        ):
+            raise ValidationError({"percent": 'Մաքսիմում թույլատրելի արժեքը՝ 100'})
+
+        if (
+            self.promo_sale 
+            and self.promo_sale < 0 
+            and self.promo_percent_type 
+            and self.promo_percent_type == PromoCodes.SaleType.PERCENT
+        ):
+            raise ValidationError({"percent": 'Մինիմում թույլատրելի արժեքը՝ 0'})
