@@ -133,8 +133,8 @@ class ActivationEmail(View):
             promo_code = PromoCodes.objects.create(
                 name=name, 
                 max_usability=1, 
-                sale_type=initial_settings.promo_percent_type,
-                percent=initial_settings.promo_sale,
+                sale_type=initial_settings['promo_percent_type'],
+                percent=initial_settings['promo_sale'],
                 user=user
             )
 
