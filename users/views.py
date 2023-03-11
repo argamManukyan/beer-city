@@ -141,7 +141,7 @@ class ActivationEmail(View):
             data = {
                 'full_name': user.full_name, 
                 'request': request, 
-                'email': user.email,
+                'email': [user.email],
                 'promo_code': promo_code.name,
             }
 
